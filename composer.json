@@ -1,0 +1,21 @@
+{
+    "name": "start/cargo-mvc",
+    "description" : "n",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "Tests"
+        }
+    },
+    "authors": [
+        {
+            "name": "Piotr Glaza",
+            "email": "daftu44@gmail.com"
+        }
+    ],
+    "require": {}
+}
