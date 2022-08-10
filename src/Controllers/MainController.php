@@ -17,7 +17,8 @@ class MainController extends AbstractController
    {
     $router->attachRoute('MainController', 'home');
     $router->attachRoute('MainController', 'index');
-    $router->attachRoute('MainController', 'street', ['numbero']);
+    $router->attachRoute('MainController', 'street');
+    $router->attachRoute('MainController', 'multiParams', ['name', 'age']);
    }
 
    /** 
@@ -36,4 +37,12 @@ class MainController extends AbstractController
    {
     echo "The street number is " . $number;
    }
+   public function multiParams
+          (
+          string $name,
+          int $age
+          )
+    {
+      echo "The street number is " . $name;
+    }
 }
