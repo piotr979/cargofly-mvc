@@ -61,7 +61,8 @@ class Router
 
         // adds new entry to routes
         // contains 'callback' and also 'params'
-        $callback = Closure::fromCallable([new MainController, $routeName]);
+        $routeController = "App\Controllers\\" . $controller;
+        $callback = Closure::fromCallable([new $routeController, $routeName]);
         $this->routes[$routing]['callback'] = $callback;
         $this->routes[$routing]['params'] = $params;
     }

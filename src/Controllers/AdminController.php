@@ -7,7 +7,7 @@ namespace App\Controllers;
 use App\Controllers\AbstractController;
 use App\Services\Router;
 
-class MainController extends AbstractController
+class AdminController extends AbstractController
 {
 
     /**
@@ -18,10 +18,8 @@ class MainController extends AbstractController
 
     // also all methods can be retrieved with ReflectionClass
     // TO BE DONE
-    $router->attachRoute('MainController', 'home');
-    $router->attachRoute('MainController', 'index');
-    $router->attachRoute('MainController', 'street', ['number']);
-    $router->attachRoute('MainController', 'multiParams', ['name', 'age']);
+    $router->attachRoute('AdminController', 'homes');
+  
    }
 
    /**
@@ -35,22 +33,9 @@ class MainController extends AbstractController
    /** 
     * Route: home
     */
-   public function home()
+   public function homes()
    {
     var_dump($this->view->renderView('home.php'));
    }
    
-
-   public function street(int $number)
-   {
-    echo "The street number is " . $number;
-   }
-   public function multiParams
-          (
-          string $name,
-          int $age
-          )
-    {
-      echo "The street number is " . $name;
-    }
 }
