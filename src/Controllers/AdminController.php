@@ -18,7 +18,8 @@ class AdminController extends AbstractController
 
     // also all methods can be retrieved with ReflectionClass
     // TO BE DONE
-    $router->attachRoute('AdminController', 'homes');
+    $router->attachRoute('AdminController', 'adminMain');
+    $router->attachRoute('AdminController', 'multiAdmin', ['name']);
   
    }
 
@@ -26,16 +27,15 @@ class AdminController extends AbstractController
     * Launched when url is empty ('/' precisely speaking)
     * However it can be changed in request class
     */
-   public function index()
+
+   public function adminMain()
    {
-    echo "test index";
+    echo "This is adminMain route.";
    }
-   /** 
-    * Route: home
-    */
-   public function homes()
+
+   public function multiAdmin(string $name)
    {
-    var_dump($this->view->renderView('home.php'));
+    echo "This is multiAdmin route with " . $name;
    }
    
 }

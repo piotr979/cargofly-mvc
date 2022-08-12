@@ -1,0 +1,1 @@
+{"version":1,"defects":{"Test\\Units\\DatabaseConnectionTest::testItCanConnectToDatabaseWithPDO":4},"times":{"Test\\Units\\DatabaseConnectionTest::testItCanConnectToDatabaseWithPDO":0.005}}

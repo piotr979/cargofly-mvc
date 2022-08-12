@@ -43,7 +43,6 @@ class Request
         // if route exsists  check if has any params
         if (isset($allRoutes[$matches['route']])) {
 
-            dump($matches['route']);
             // if route is blank redirect to index or another page
            
             // check if route exists;
@@ -52,6 +51,7 @@ class Request
             $params = $matchedRoute['params'];
             $pregParams = '';
           
+            $routeIntercepted['route'] = $routeName;
             if (count($params) > 0) {
 
                   // now iterate over our $params and based on this
@@ -86,13 +86,11 @@ class Request
                  // now it's time to combine route name with params
                  // and return them
                 
-                 $routeWithParams['params'] = $paramsForRouteOnly;
-              
+                 $routeIntercepted['params'] = $paramsForRouteOnly;
             }
           
             // if there are no params code below is run only    
-            $routeWithParams['route'] = $routeName;
-            return $routeWithParams;
+            return $routeIntercepted;
 
         } else {
             return false;

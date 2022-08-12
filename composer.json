@@ -17,5 +17,7 @@
             "email": "daftu44@gmail.com"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
 }

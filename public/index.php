@@ -6,6 +6,12 @@
 include_once __DIR__ . '/../src/Services/Dump.php';
 
 /**
+ * Database settings (constants like DB_HOST, etc.)
+ */
+
+require_once __DIR__ . '/../config/database.php';
+
+/**
  * Others is a config file with secondary settings
  */
 require_once __DIR__ . '/../config/others.php';
@@ -19,6 +25,7 @@ use App\App;
 
 $app = new App;
 $app->run();
+
 /**
  * url defines the path from the browser when the page is open
  * it will be used for further processing of the route
