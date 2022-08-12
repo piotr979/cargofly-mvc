@@ -30,15 +30,16 @@ class MainController extends AbstractController
     */
    public function index()
    {
-    echo "test index";
+    echo $this->twig->render('home.php', ['name' => 'Fabien']);
    }
    /** 
     * Route: home
     */
    public function home()
-   {
-    $myView = $this->viewRenderer->viewBuilder('home.php');
-    echo $myView;
+   { 
+    echo $this->twig->render('home.html.twig', ['name' => 'Fabien']);
+    //$myView = $this->viewRenderer->viewBuilder('home.php');
+   // echo $myView;
    }
    
 

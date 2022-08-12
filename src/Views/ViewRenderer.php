@@ -34,7 +34,8 @@ class ViewRenderer
     public function injectViewToBase($view, $baseView, $replacement)
     {
         $viewCombined = include ROOT_DIR . '/templates/{$baseView}';
-        dump($viewCombined);
+       
     }
+   
 
 }

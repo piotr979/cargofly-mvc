@@ -31,6 +31,9 @@ class App
         $this->request = new Request();
         $this->mainController = new MainController();
         $this->adminController = new AdminController();
+
+      
+
     }
     public function run()
     {
@@ -50,7 +53,7 @@ class App
          * Fixtures to run
          */
         // Uncomment function below to run fixtures
-        $fixtureLauncher = new FixtureLauncher($this->db->getConnection());
+        //$fixtureLauncher = new FixtureLauncher($this->db->getConnection());
         // Uncomment function above to run fixtures
 
     }
