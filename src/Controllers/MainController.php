@@ -37,7 +37,8 @@ class MainController extends AbstractController
     */
    public function home()
    {
-    var_dump($this->view->renderView('home.php'));
+    $myView = $this->viewRenderer->viewBuilder('home.php');
+    echo $myView;
    }
    
 

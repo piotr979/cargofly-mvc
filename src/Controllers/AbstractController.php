@@ -5,15 +5,15 @@ declare(strict_types = 1);
 namespace App\Controllers;
 
 use App\Services\Router;
-use App\Views\TemplateView;
+use App\Views\ViewRenderer;
 
 abstract class AbstractController {
    
-    public TemplateView $view;
+    public ViewRenderer $viewRenderer;
 
     function __construct()
     {
-        $this->view = new TemplateView();
+        $this->viewRenderer = new ViewRenderer();
     }
     abstract function attachRoutes(Router $router);
 }

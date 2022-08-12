@@ -21,19 +21,23 @@ class UserFixture extends AbstractFixture
                 PRIMARY KEY (id)
             )
             ";
+          
         $this->modifyDatabase($mysql);
     }
     public function addNewUser($login, $pass, $role = "ROLE_USER")
     {
+
+        $hashedPass = password_hash($pass, PASSWORD_DEFAULT);
         $mysql = "INSERT INTO 
                     user (login, password, role)
                     VALUE ( :login, :password, :role )";
+                    
         $this->modifyDatabase($mysql, 
                             [
                             'login' => $login, 
-                            'password' => $pass,
+                            'password' => $hashedPass,
                             'role' => "ROLE_ADMIN"
                             ]
-                        );
+                    );
     }
 }
