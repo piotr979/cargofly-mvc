@@ -1,0 +1,35 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Forms;
+
+/**
+ * Input form element creator inteface
+ */
+interface FormInputInterface
+{
+    /**
+     * Creates HTML input element 
+     * @param string $inputType like text,number, etc.
+     * @param string $placeholder Placeholder text in the input
+     * @param string $inputName input's name for POST action
+     * @param string label if not empty label will be added to input
+     * @param string $inputCssClasses css classes for input element
+     * @param string $labelCssClasses css classes for label
+     */
+    public function addInput( 
+                            string $inputType, 
+                            string $placeholder, 
+                            string $inputName,
+                            string $label = '',
+                            string $inputCssClasses = '',
+                            string $labelCssClasses = '')
+                            ;
+
+    /**
+     * Builds inputs (to be used after chaining)
+     */
+    public function build(): array;
+    
+}

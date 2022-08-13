@@ -8,6 +8,7 @@ use App\Controllers\AdminController;
 use App\Controllers\MainController;
 use App\Fixtures\UserFixture;
 use App\Fixtures\FixtureLauncher;
+use App\Forms\FormInputBuilder;
 use App\Services\Router;
 use App\Services\Request;
 use App\Models\Database\PDOClient;
@@ -56,7 +57,25 @@ class App
         //$fixtureLauncher = new FixtureLauncher($this->db->getConnection());
         // Uncomment function above to run fixtures
 
-    }
+        $formBuilder = new FormInputBuilder();
+        $elements = [];
+        $elements[] = $formBuilder
+                ->addInput(
+                    inputType: 'text',
+                    placeholder: '', 
+                    inputName: 'address', 
+                    label: 'address', 
+                    inputCssClasses: 'd-block')
+                ->addInput(
+                    inputType: 'text',
+                    placeholder: 'test2', 
+                    inputName: 'age', 
+                    label: 'age', 
+                    inputCssClasses: 'd-block')
+                ->build();
+                ;
+        dump($elements);
+    }  
     public function resolve($url)
     {
         $routeWithParams = $this->request->makeRouteWithParamsFromUrl($url,
