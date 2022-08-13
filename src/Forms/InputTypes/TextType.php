@@ -13,13 +13,19 @@ class TextType extends AbstractInputType implements InputTypeInterface
     public function __construct(array $attr = [])
     {
         parent::__construct();
-        
+
+        if (isset($attr['label'])) {
+            $this->input .= $this->addLabel(
+                                text: $attr['label'], 
+                                labelFor: '',
+                                cssClasses: $attr['labelCssClasses'] ?? '');
+        }
         $this->input .= $this->inputStart();
         $this->input .= sprintf(" type='text'");
 
-        if (isset($attr['placeholder'])) {
-                $this->input .= sprintf(" placeholder='%s'", $attr['placeholder']);
-        }
+        
+        $this->input .= sprintf(" placeholder='%s'", $attr['placeholder'] ?? '');
+        $this->input .= sprintf(" class='%s'", $attr['inputCssClasses'] ?? '');
 
         $this->input .= $this->inputEnd();
         $this->getInput();

@@ -61,18 +61,24 @@ class App
         $formBuilder = new FormInputBuilder();
         $elements = [];
         $elements[] = $formBuilder
-                ->addInput(
+                ->add(
                     TextType::class, 
-                    ['placeholder' => 'Hodler']
+                    [
+                    'placeholder' => 'Hodler',
+                    'label' => 'This is label',
+                    'labelCssClasses' => 'd-block',
+                    'inputCssClasses' => 'd-block'
+                    ]
                 )
-                ->addInput(
+                ->add(
                     TextType::class, 
-                    ['placeholder' => 'Butek']
+                    ['placeholder' => 'Butek',
+                    'labelCssClasses' => 'd-block']
                 )
                 ->build();
                 ;
 
-        echo $elements[0][0]->getInput();
+        echo $elements[0][1]->getInput();
     }  
     public function resolve($url)
     {

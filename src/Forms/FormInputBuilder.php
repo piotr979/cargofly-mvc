@@ -11,7 +11,7 @@ class FormInputBuilder implements FormInputInterface
 {
     private $inputs = [];
 
-    public function addInput(
+    public function add(
                             string $inputType,
                             array $attr = []
     )

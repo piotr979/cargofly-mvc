@@ -21,7 +21,7 @@ interface FormInputInterface
      * @param string $inputCssClasses css classes for input element
      * @param string $labelCssClasses css classes for label
      */
-    public function addInput( 
+    public function add( 
                             string $inputType,
                             array $attr = []
                             )                   

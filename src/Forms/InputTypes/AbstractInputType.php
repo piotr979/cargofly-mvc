@@ -26,12 +26,30 @@ abstract class AbstractInputType
     {
         return $this->input;
     }
-    public function inputStart()
+
+    /**
+     * @return string html code (opening)
+     */
+    public function inputStart(): string 
     {
         return sprintf("<input");
     }
-    public function inputEnd()
+    /**
+     * @return string closing html tag
+     */
+    public function inputEnd(): string
     {
-        return  sprintf(">");
+        return sprintf(">");
+    }
+
+    /**
+     * Adds label to input (optional)
+     */
+    public function addLabel(
+                            string $text, 
+                            string $labelFor = '', 
+                            string $cssClasses = ''): string
+    {
+        return sprintf("<label for='%s' class='%s' >%s</label>", $labelFor, $cssClasses, $text);
     }
 }
