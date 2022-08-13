@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Forms;
 
+use App\Forms\InputTypes\InputTypeInterface;
+use App\Forms\InputTypes\TextType;
+
 /**
  * Input form element creator inteface
  */
@@ -19,12 +22,9 @@ interface FormInputInterface
      * @param string $labelCssClasses css classes for label
      */
     public function addInput( 
-                            string $inputType, 
-                            string $placeholder, 
-                            string $inputName,
-                            string $label = '',
-                            string $inputCssClasses = '',
-                            string $labelCssClasses = '')
+                            string $inputType,
+                            array $attr = []
+                            )                   
                             ;
 
     /**

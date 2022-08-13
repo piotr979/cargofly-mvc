@@ -9,6 +9,7 @@ use App\Controllers\MainController;
 use App\Fixtures\UserFixture;
 use App\Fixtures\FixtureLauncher;
 use App\Forms\FormInputBuilder;
+use App\Forms\InputTypes\TextType;
 use App\Services\Router;
 use App\Services\Request;
 use App\Models\Database\PDOClient;
@@ -61,20 +62,17 @@ class App
         $elements = [];
         $elements[] = $formBuilder
                 ->addInput(
-                    inputType: 'text',
-                    placeholder: '', 
-                    inputName: 'address', 
-                    label: 'address', 
-                    inputCssClasses: 'd-block')
+                    TextType::class, 
+                    ['placeholder' => 'Hodler']
+                )
                 ->addInput(
-                    inputType: 'text',
-                    placeholder: 'test2', 
-                    inputName: 'age', 
-                    label: 'age', 
-                    inputCssClasses: 'd-block')
+                    TextType::class, 
+                    ['placeholder' => 'Butek']
+                )
                 ->build();
                 ;
-        dump($elements);
+
+        echo $elements[0][0]->getInput();
     }  
     public function resolve($url)
     {

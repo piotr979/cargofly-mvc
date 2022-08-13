@@ -18,7 +18,7 @@ class AbstractFixture
     }
 
     /**
-     * Modifies database simply by executing mysql code,
+     * Modifies database by executing mysql code,
      * @param string $mysql 
      * @param array $params consists of two elements key and value for bindValue
      */
