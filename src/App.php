@@ -58,27 +58,7 @@ class App
         //$fixtureLauncher = new FixtureLauncher($this->db->getConnection());
         // Uncomment function above to run fixtures
 
-        $formBuilder = new FormInputBuilder();
-        $elements = [];
-        $elements[] = $formBuilder
-                ->add(
-                    TextType::class, 
-                    [
-                    'placeholder' => 'Hodler',
-                    'label' => 'This is label',
-                    'labelCssClasses' => 'd-block',
-                    'inputCssClasses' => 'd-block'
-                    ]
-                )
-                ->add(
-                    TextType::class, 
-                    ['placeholder' => 'Butek',
-                    'labelCssClasses' => 'd-block']
-                )
-                ->build();
-                ;
-
-        echo $elements[0][1]->getInput();
+       
     }  
     public function resolve($url)
     {

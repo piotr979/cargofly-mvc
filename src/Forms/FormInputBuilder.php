@@ -7,27 +7,24 @@ namespace App\Forms;
 use App\Forms\FormInputInterface;
 use App\Forms\InputTypes\TextType;
 
+/**
+ * Creates new input html element
+ */
 class FormInputBuilder implements FormInputInterface
 {
+    /**
+     * @var array inputs holds all inputs created by chaining
+     */
     private $inputs = [];
 
-    public function add(
-                            string $inputType,
-                            array $attr = []
-    )
+    /**
+     * Adds new input
+     * @param string $inputType type of input (TextType, RadioType, etc)
+     * @param array $attr attributes of the input
+     */
+    public function add( string $inputType, array $attr = []): object
     {
         $this->inputs[] = new ($inputType)($attr);
-      
-    //     if ($label != '') {
-    //         $inputLabel = sprintf("<label for='%s'>%s</label>", $inputName, $label);
-    //     }
-    //    $this->inputs[] = $inputLabel . sprintf("<input type='%s' name='%s' placeholder='%s' class='%s'>", 
-    //                     $inputType, 
-    //                     $inputName,
-    //                     $placeholder,
-    //                     $inputCssClasses,
-    //                     );
-
        return $this;
 
     }

@@ -10,7 +10,7 @@ class UserFixture extends AbstractFixture
     {
         parent::__construct($conn);
     }
-    public function addUserTable()
+    public function addUserTable(): void
     {
         $mysql = "CREATE TABLE user
             (
@@ -24,7 +24,7 @@ class UserFixture extends AbstractFixture
           
         $this->modifyDatabase($mysql);
     }
-    public function addNewUser($login, $pass, $role = "ROLE_USER")
+    public function addNewUser($login, $pass, $role = "ROLE_USER"): void
     {
 
         $hashedPass = password_hash($pass, PASSWORD_DEFAULT);

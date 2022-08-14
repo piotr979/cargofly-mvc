@@ -13,7 +13,7 @@ abstract class AbstractInputType
     /**
      * @var $inpupt HTML input element
      */
-    protected $input;
+    protected string $input;
 
     public function __construct()
     {
@@ -22,7 +22,7 @@ abstract class AbstractInputType
     /**
      * @return $input HTML element
      */
-    public function getInput()
+    public function getInput(): string
     {
         return $this->input;
     }

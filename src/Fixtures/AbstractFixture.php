@@ -23,7 +23,7 @@ class AbstractFixture
      * @param array $params consists of two elements key and value for bindValue
      */
 
-    public function modifyDatabase($mysql, $params = [])
+    public function modifyDatabase(string $mysql, array $params = []): void
     {
         $stmt = $this->conn->prepare($mysql);
 

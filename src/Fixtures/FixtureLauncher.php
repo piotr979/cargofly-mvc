@@ -25,7 +25,7 @@ class FixtureLauncher
     /**
      * Add/remove methods to run fixtures.
      */
-    private function runFixtures()
+    private function runFixtures(): void
     {
        $userFixture = new UserFixture($this->conn);
        //$userFixture->addUserTable();
