@@ -15,6 +15,16 @@ enum DatabaseDriver
     case MySQL;
 }
 
+enum FormRules
+{
+    case Required;
+    case Email;
+    case MinLength;
+    case MaxLength;
+    case RuleMatch;
+
+}
+
 return [
     'environment' => Environment::Dev,
     'databaseDriver' => DatabaseDriver::MySQL,

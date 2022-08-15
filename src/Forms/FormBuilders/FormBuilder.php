@@ -34,7 +34,7 @@ class FormBuilder implements FormBuilderInterface
     }
     public function formEnd(string $cssClasses = ''): void
     {
-        $this->form .= sprintf("<button class='%s'>Submit</button></form>", $cssClasses);
+        $this->form .= sprintf("</form>", $cssClasses);
     }
     public function add(string $inputType, array $attr = [])
     {

@@ -8,9 +8,11 @@ use Closure;
 
 class Request
 {
+    const HOME = 10;
     public function getFullPathWithParams($path)
     {
         echo $path;
+        echo self::HOME;
     }
     public function getRoute(array $routes, string $url)
     {
@@ -39,7 +41,6 @@ class Request
             $matches['route'] = 'index';
         }
        
-
         // if route exsists  check if has any params
         if (isset($allRoutes[$matches['route']])) {
 

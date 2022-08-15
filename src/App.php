@@ -15,6 +15,7 @@ use App\Services\Request;
 use App\Models\Database\PDOClient;
 use App\Models\Repositories\UserRepository;
 use App\Models\Entities\UserEntity;
+use App\Services\SessionManager;
 
 class App 
 {
@@ -23,18 +24,26 @@ class App
     private Request $request;
     private PDOClient $db;
     public static App $app;
+    public SessionManager $sessionManager;
     public MainController $mainController;
     public AdminController $adminController;
 
     public function __construct()
     {
-        self::$app = $this;
+       
         $this->router = new Router();
         $this->request = new Request();
         $this->mainController = new MainController();
         $this->adminController = new AdminController();
 
+        $this->sessionManager = new SessionManager();
+        $this->sessionManager->sessionStart();
+
       
+        /**
+         * For easier access in classes
+         */
+        self::$app = $this;
 
     }
     public function run()

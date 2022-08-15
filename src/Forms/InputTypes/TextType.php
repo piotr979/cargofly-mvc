@@ -31,13 +31,23 @@ class TextType extends AbstractInputType implements InputTypeInterface
                                 cssClasses: $attr['labelCssClasses'] ?? '');
         }
         $this->input .= $this->inputStart();
-        $this->input .= sprintf(" type='text'");
+        $this->input .= sprintf(" type='%s'", $this->getHtmlInputType());
 
         $this->input .= sprintf(" name='%s'", $attr['name'] ?? '');
         $this->input .= sprintf(" placeholder='%s'", $attr['placeholder'] ?? '');
         $this->input .= sprintf(" class='%s'", $attr['inputCssClasses'] ?? '');
 
+        if (isset($attr['required'])) {
+            $this->input .= sprintf(" required=required ");
+        }
+       
+
         $this->input .= $this->inputEnd();
         $this->getInput();
+    }
+
+    public function getHtmlInputType(): string
+    {
+        return 'text';
     }
 }

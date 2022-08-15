@@ -5,7 +5,10 @@ declare(strict_types = 1);
 namespace App\Forms;
 
 use App\Forms\FormBuilders\FormBuilder;
+use App\Forms\InputTypes\EmailType;
 use App\Forms\InputTypes\TextType;
+use App\Forms\InputTypes\PasswordType;
+use App\Forms\InputTypes\SubmitType;
 class UserLoginForm 
 {
     private array $elements;
@@ -21,22 +24,31 @@ class UserLoginForm
         ->add(
             TextType::class, 
             [
-            'name' => 'name',
-            'placeholder' => 'Hodler',
-            'label' => 'This is label',
+            'name' => 'login',
+            'placeholder' => 'admin@admin.com',
+            'label' => 'Login',
             'labelCssClasses' => 'd-block',
-            'inputCssClasses' => 'd-block'
+            'inputCssClasses' => 'd-block',
             ]
         )
         ->add(
-            TextType::class, 
+            PasswordType::class, 
             [
-            'name' => 'age',
-            'placeholder' => 'Butek',
-            'labelCssClasses' => 'd-block']
+            'name' => 'password',
+            'label' => 'Password',
+            'labelCssClasses' => 'd-block',
+            'inputCssClasses' => 'd-block mt-2'
+             ]
+        )
+        ->add(
+            SubmitType::class,
+            [
+            'buttonCssClasses' => 'd-block mt-4',
+            'text' => 'submittick'
+            ]
         )
         ->build()
-        ->getForm(actionRoute: 'actionRoute');
+        ->getForm(actionRoute: 'loggingAction');
         ;
         return $elements;
     }
