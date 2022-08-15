@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace App\Forms;
+namespace App\Forms\FormBuilders;
 
-use App\Forms\FormInputInterface;
+use App\Forms\FormBuilders\FormInputInterface;
 use App\Forms\InputTypes\TextType;
 
 /**

@@ -9,6 +9,7 @@ use App\Forms\FormInputBuilder;
 use App\Forms\InputTypes\TextType;
 use App\Services\Router;
 use App\Forms\FormBuilder;
+use App\Forms\UserLoginForm;
 
 class AdminController extends AbstractController
 {
@@ -34,32 +35,9 @@ class AdminController extends AbstractController
 
    public function adminMain()
    {
-    $formBuilder = new FormBuilder('action.php');
-    $formInputBuilder = new FormInputBuilder();
-    $elements = [];
-    $elements[] = $formBuilder
-            ->add(
-                TextType::class, 
-                [
-                'name' => 'name',
-                'placeholder' => 'Hodler',
-                'label' => 'This is label',
-                'labelCssClasses' => 'd-block',
-                'inputCssClasses' => 'd-block'
-                ]
-            )
-            ->add(
-                TextType::class, 
-                [
-                'name' => 'age',
-                'placeholder' => 'Butek',
-                'labelCssClasses' => 'd-block']
-            )
-            ->build()
-            ->getForm(actionRoute: 'actionRoute');
-            ;
+      $form = new UserLoginForm();
 
-    echo $elements[0];
+     echo $this->twig->render('home.html.twig', ['form' => $form->getForm()]);
    }
    public function actionRoute()
    {

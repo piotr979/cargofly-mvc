@@ -2,10 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace App\Forms;
+namespace App\Forms\FormBuilders;
 
-use App\Forms\FormInputBuilder;
-use App\Forms\FormInputInterface;
+use App\Forms\FormBuilders\FormBuilderInterface;
+use App\Forms\FormBuilders\FormInputBuilder;
+use App\Forms\FormBuilders\FormInputInterface;
 
 /**
  * Builds the html form
@@ -17,7 +18,7 @@ use App\Forms\FormInputInterface;
  * When the form is ready use ->build() and ->getForm()
  */
 
-class FormBuilder
+class FormBuilder implements FormBuilderInterface
 {
     private $form;
     private $elements = [];

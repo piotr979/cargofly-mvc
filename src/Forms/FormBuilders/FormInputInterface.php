@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Forms;
+namespace App\Forms\FormBuilders;
 
 use App\Forms\InputTypes\InputTypeInterface;
 use App\Forms\InputTypes\TextType;
