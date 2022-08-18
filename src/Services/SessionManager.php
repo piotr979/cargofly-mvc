@@ -10,11 +10,11 @@ namespace App\Services;
 
 class SessionManager
 {
-    public function sessionStart()
+    public static function sessionStart()
     {
         session_start();
     }
-    public function sessionEnd()
+    public static function sessionEnd()
     {
         session_unset();
         $_SESSION = array();
@@ -27,7 +27,7 @@ class SessionManager
         }
         session_destroy();
     }
-    public function setSessionData(string $sessionKey, $sessionValue)
+    public static function setSessionData(string $sessionKey, $sessionValue)
     {
         $_SESSION[$sessionKey] = $sessionValue;
     }

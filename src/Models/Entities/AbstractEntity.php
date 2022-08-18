@@ -5,12 +5,6 @@ namespace App\Models\Entities;
 abstract class AbstractEntity
 {
     protected ?int $id = null;
-    protected $conn;
-
-    public function __construct($conn)
-    {
-        $this->conn = $conn;
-    }
 
     public function getId()
     {

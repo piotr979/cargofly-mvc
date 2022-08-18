@@ -12,6 +12,8 @@ use App\Forms\FormBuilder;
 use App\Forms\UserLoginForm;
 use FormRules;
 use App\Forms\Validators\FormValidator;
+use App\Helpers\Url;
+use App\Services\Authorisation;
 
 class AdminController extends AbstractController
 {
@@ -21,49 +23,8 @@ class AdminController extends AbstractController
    */
   public function attachRoutes(Router $router): void
   {
-
     // also all methods can be retrieved with ReflectionClass
     // TO BE DONE
-    $router->attachRoute('AdminController', 'adminMain');
-    $router->attachRoute('AdminController', 'multiAdmin', ['name']);
-    $router->attachRoute('AdminController', 'actionRoute');
-    $router->attachRoute('AdminController', 'loggingAction');
-  }
 
-  /**
-   * Launched when url is empty ('/' precisely speaking)
-   * However it can be changed in request class
-   */
-
-  public function adminMain()
-  {
-    $form = new UserLoginForm();
-
-    echo $this->twig->render('home.html.twig', ['form' => $form->getForm()]);
-  }
-  public function actionRoute()
-  {
-    dump($_POST);
-  }
-  public function multiAdmin(string $name)
-  {
-    echo "This is multiAdmin route with " . $name;
-  }
-  public function loggingAction()
-  {
-    $validator = new FormValidator();
-    $validator->validateForm(
-      $_POST,
-      [
-        'login' => [
-          FormRules::Required,
-          FormRules::Email
-        ],
-        'password' => [
-          FormRules::Required,
-          [FormRules::MinLength, '6']
-        ]
-      ]
-    );
   }
 }

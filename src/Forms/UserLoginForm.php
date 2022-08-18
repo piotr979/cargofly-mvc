@@ -27,8 +27,8 @@ class UserLoginForm
             'name' => 'login',
             'placeholder' => 'admin@admin.com',
             'label' => 'Login',
-            'labelCssClasses' => 'd-block',
-            'inputCssClasses' => 'd-block',
+            'labelCssClasses' => 'd-block ',
+            'inputCssClasses' => 'd-block mt-2 class-control input-sm',
             ]
         )
         ->add(
@@ -36,15 +36,15 @@ class UserLoginForm
             [
             'name' => 'password',
             'label' => 'Password',
-            'labelCssClasses' => 'd-block',
+            'labelCssClasses' => 'd-block mt-3',
             'inputCssClasses' => 'd-block mt-2'
              ]
         )
         ->add(
             SubmitType::class,
             [
-            'buttonCssClasses' => 'd-block mt-4',
-            'text' => 'submittick'
+            'buttonCssClasses' => 'd-block mt-4 btn btn-primary',
+            'text' => 'Login'
             ]
         )
         ->build()

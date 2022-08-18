@@ -47,9 +47,10 @@ class FormBuilder implements FormBuilderInterface
      * Method to add html element like div opening/closing tags and other stuff
      * @param string $elements html element
      */
-    public function addHtml(string $element): void
+    public function addHtml(string $element)
     {
         $this->form .= sprintf('%s', $element);
+        return $this;
     }
     public function build()
     {

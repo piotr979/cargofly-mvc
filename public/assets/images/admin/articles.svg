@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="18px" viewBox="0 0 20 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>file / folder</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="24" height="24"></rect>
+    </defs>
+    <g id="💙-coolicons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="File" transform="translate(-210.000000, -107.000000)">
+            <g id="file-/-folder" transform="translate(208.000000, 104.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="file-/-folder-(Background/Mask)"></g>
+                <path d="M12.4139996,5 L10.7069998,3.29299998 C10.5199998,3.10499999 10.265,3 10,3 L4,3 C2.89699996,3 2,3.89699996 2,5 L2,19 C2,20.103 2.89699996,21 4,21 L20,21 C21.103,21 22,20.103 22,19 L22,7 C22,5.89699996 21.103,5 20,5 L12.4139996,5 Z M4,7 L20,7 L20.0020008,19 L4,19 L4,7 Z" fill="#262626" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -5,6 +5,9 @@ declare(strict_types = 1);
 namespace App\Controllers;
 
 use App\Controllers\AbstractController;
+use App\Forms\UserLoginForm;
+use App\Helpers\Url;
+use App\Services\Authorisation;
 use App\Services\Router;
 
 class MainController extends AbstractController
@@ -18,10 +21,12 @@ class MainController extends AbstractController
 
     // also all methods can be retrieved with ReflectionClass
     // TO BE DONE
-    $router->attachRoute('MainController', 'home');
     $router->attachRoute('MainController', 'index');
-    $router->attachRoute('MainController', 'street', ['number']);
-    $router->attachRoute('MainController', 'multiParams', ['name', 'age']);
+    $router->attachRoute('MainController', 'dashboard');
+    $router->attachRoute('MainController', 'orders');
+    $router->attachRoute('MainController', 'fleet');
+    $router->attachRoute('MainController', 'routes');
+    $router->attachRoute('MainController', 'customers');
    }
 
    /**
@@ -30,29 +35,45 @@ class MainController extends AbstractController
     */
    public function index()
    {
-    echo $this->twig->render('home.php', ['name' => 'Fabien']);
+    if (!Authorisation::isUserLogged()) {
+      Url::redirect('login');
+    } else {
+        Url::redirect('dashboard');
+    }
    }
+  
+   
    /** 
     * Route: home
     */
-   public function home()
+   public function dashboard()
    { 
-    echo $this->twig->render('home.html.twig', ['name' => 'Fabien']);
+    echo $this->twig->render('dashboard.html.twig', ['route' => 'dashboard']);
+    
+    // when twig not in use:
     //$myView = $this->viewRenderer->viewBuilder('home.php');
    // echo $myView;
    }
-   
 
-   public function street(int $number)
-   {
-    echo "The street number is " . $number;
+   public function orders()
+   { 
+    echo $this->twig->render('orders.html.twig', ['route' => 'orders']);
    }
-   public function multiParams
-          (
-          string $name,
-          int $age
-          )
-    {
-      echo "The street number is " . $name;
-    }
+
+   public function fleet()
+   { 
+    echo $this->twig->render('fleet.html.twig', ['route' => 'fleet']);
+   }
+
+   public function routes()
+   { 
+    echo $this->twig->render('routes.html.twig', ['route' => 'routes']);
+   }
+
+   public function customers()
+   { 
+    echo $this->twig->render('customers.html.twig', ['route' => 'customers']);
+   }
+
+   
 }

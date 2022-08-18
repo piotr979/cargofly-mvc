@@ -5,7 +5,9 @@ declare(strict_types = 1);
 namespace App;
 
 use App\Controllers\AdminController;
+use App\Controllers\AuthController;
 use App\Controllers\MainController;
+use App\Controllers\SettingsController;
 use App\Fixtures\UserFixture;
 use App\Fixtures\FixtureLauncher;
 use App\Forms\FormInputBuilder;
@@ -16,29 +18,38 @@ use App\Models\Database\PDOClient;
 use App\Models\Repositories\UserRepository;
 use App\Models\Entities\UserEntity;
 use App\Services\SessionManager;
+use App\Models\Database\Database;
+use App\Services\Authorisation;
+use App\Helpers\Url;
 
 class App 
 {
 
-    private Router $router;
+    public Router $router;
     private Request $request;
     private PDOClient $db;
+    public $conn;
+    private UserEntity $user;
     public static App $app;
-    public SessionManager $sessionManager;
     public MainController $mainController;
     public AdminController $adminController;
+    public AuthController $authController;
+    public SettingsController $settingsController;
 
     public function __construct()
     {
-       
+        $this->db = new PDOClient(DB_DRIVER, DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
+        $this->db->connect();
+        $this->conn = $this->db->getConnection();
         $this->router = new Router();
         $this->request = new Request();
         $this->mainController = new MainController();
         $this->adminController = new AdminController();
+        $this->authController = new AuthController();
+        $this->settingsController = new SettingsController();
 
-        $this->sessionManager = new SessionManager();
-        $this->sessionManager->sessionStart();
 
+        $this->user = new UserEntity();
       
         /**
          * For easier access in classes
@@ -52,14 +63,15 @@ class App
         // each controller has attachRoutes method which adds
         // routes to the router;
 
+        SessionManager::sessionStart();
+
         $this->mainController->attachRoutes($this->router);
         $this->adminController->attachRoutes($this->router);
-        $this->db = new PDOClient(DB_DRIVER, DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
-        $this->db->connect();
-       
-        $user = new UserEntity($this->db->getConnection());
-        $userRepo = new UserRepository($this->db->getConnection());
+        $this->authController->attachRoutes($this->router);
+        $this->settingsController->attachRoutes($this->router);
 
+        
+       
         /**
          * Fixtures to run
          */
@@ -72,11 +84,12 @@ class App
     public function resolve($url)
     {
         $routeWithParams = $this->request->makeRouteWithParamsFromUrl($url,
-                $this->router->getRoutes());
+                    $this->router->getRoutes());
+               
         if ($routeWithParams === false) {
             echo "No route found!";
         } else {
-        
+            
         (isset($routeWithParams['params'])) ? $this->router->callRoute(
             $routeWithParams['route'],
             $routeWithParams['params'])

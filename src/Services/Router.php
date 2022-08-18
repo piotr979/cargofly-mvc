@@ -8,6 +8,9 @@ use App\Controllers\MainController;
 use App\Services\Request;
 use Closure;
 use App\App;
+use App\Helpers\Url;
+use App\Services\Authorisation;
+
 /** 
  * This class manages routes. Core class
  */
@@ -74,7 +77,7 @@ class Router
     
     public function callRoute(string $url, array $params = [])
     {
-
+       
         /**
          * Gets $route from routes array (based on $url)
          */
@@ -82,6 +85,13 @@ class Router
         trim($url, '/')
         ];
 
+         /** 
+         * we need to check if user is logged in, otherwise 
+         * user be redirected to login page
+         */
+        if ($url !='login' && !Authorisation::isUserLogged() ) {
+            Url::redirect('login');
+         }
       call_user_func_array($route['callback'], $params);
     }
 

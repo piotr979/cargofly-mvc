@@ -8,21 +8,18 @@ use App\Models\Entities\AbstractEntity;
 
 class UserEntity extends AbstractEntity
 {
-    public function __construct($conn)
-    {
-        parent::__construct($conn);
-    }
-
     /**
      * @var username
      */
 
      private $userName;
+     
      /**
       * @var role
       */
 
     private $role;
+
     public function getuserName()
     {
         return $this->userName;

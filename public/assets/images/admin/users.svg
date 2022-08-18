@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="16px" viewBox="0 0 20 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>user / id_card</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="24" height="24"></rect>
+    </defs>
+    <g id="💙-coolicons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="User" transform="translate(-266.000000, -108.000000)">
+            <g id="user-/-id_card" transform="translate(264.000000, 104.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="user-/-id_card-(Background/Mask)"></g>
+                <path d="M11.7150269,10 C11.7150269,8.84899998 10.8660269,8 9.71502686,8 C8.56402683,8 7.71502686,8.84899998 7.71502686,10 C7.71502686,11.151 8.56302691,12 9.71502686,12 C10.8660269,12 11.7150269,11.151 11.7150269,10 Z M14,9 L14,11 L18,11 L18,9 L14,9 Z M15,13 L15,15 L18,15 L18,13 L15,13 Z M13.4300003,16 L6,16 C6,14.6260004 7.67600012,12.75 9.71500015,12.75 C11.7539997,12.75 13.4300003,14.6260004 13.4300003,16 Z M20,4 L4,4 C2.89699996,4 2,4.84099996 2,5.875 L2,18.125 C2,19.1590004 2.89699996,20 4,20 L20,20 C21.1030006,20 22,19.1590004 22,18.125 L22,5.875 C22,4.84099996 21.1030006,4 20,4 L20,4 Z M20,18 L4,17.9890003 L4,6 L20,6.01100016 L20,18 L20,18 Z" fill="#2E2E2E" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

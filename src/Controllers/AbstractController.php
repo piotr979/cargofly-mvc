@@ -6,15 +6,16 @@ namespace App\Controllers;
 
 use App\Services\Router;
 use App\Views\ViewRenderer;
-
+use App\App;
 abstract class AbstractController {
    
     protected $twig;
-
+   // protected $conn;
     public ViewRenderer $viewRenderer;
 
     function __construct()
     {
+      //  $this->conn = App::$app->conn;
         $this->viewRenderer = new ViewRenderer();
 
         /**

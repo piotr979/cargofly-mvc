@@ -1,4 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+
+:root {
+    --default-color: ##CF0707;
+    --sidebar-menu-title : #2B7083;
+    --sidebar-item-menu : #7199A4;
+    --logout-box-number: #1D4854;
+    --logout-box-subtext: #6B97A3;
+}
 body {
-    background-color: black;
-    color: white;
+    font-family: 'Poppins', sans-serif;
+    background-color: #F5FCFE;
+}
+.fs-7 {
+    font-size: .875rem;
+}
+a {
+    text-decoration: none;
+    color: black;
+}
+.sidebar--title {
+    font-family: 'Poppins';
+    font-weight: 500;
+    font-size: .875rem;
+    color: var(--sidebar-menu-title);
+    letter-spacing: 0;
+}
+.sidebar-menu__item {
+    color: var(--sidebar-item-menu);
+    font-size: .875rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.logo-icon {
+    width: 20%;
+    height: auto;
+}
+.logo-icon-big {
+    width: 4rem;
+    height: auto;
+}
+.selected-item {
+    background-color: white;
+   
+}
+.sidebar--anchor-list {
+    padding-left: 0;
+    margin-left: 0;
+}
+.icon-sidebar__selected {
+}
+.clean-list--image {
+    margin-left: 1rem;
+    padding: 0 1rem;
+}
+.logout__box {
+    background-image: radial-gradient(circle at 6.2% 11%, #E4E4E4 0%, rgba(159,219,228,0.99) 134%);
+    border-radius: 13px;
+    margin: 3rem 1rem 0rem 1rem;
+}
+.logout__box--subtext {
+    color: var(--logout-box-subtext);
+}
+.logout__box--number {
+    color: var(--logout-box-number);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.10);
+}
+.logout__box--button {
+    font-family: 'Poppins';
+    font-weight: 500;
+    font-size: .875rem;
+    color: var(--sidebar-menu-title);
+    letter-spacing: 0;
+    box-shadow: 0px 5px 8px #a9cbd5;
+    transition: .4s all;
+}
+.logout__box--button:hover {
+    box-shadow: 0px 5px 8px #79a3b0;
+    letter-spacing: 1px;
 }
