@@ -21,6 +21,7 @@ class PDOClient extends Database
     public function connect()
     {
             $this->connection = new PDO($this->dsn, $this->db_user, $this->db_password);
+            $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $this;
     }
 }

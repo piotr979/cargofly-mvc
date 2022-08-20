@@ -8,13 +8,13 @@
 *  https://stackoverflow.com/a/46438472/1496972 
 */
 (function() {
-    if (window.matchMedia('(max-width: 850px)').matches) {
+    if (window.matchMedia('(max-width: 768px)').matches) {
         document.getElementById('navigator-check').checked = false;
 }
 }
 )();
 window.addEventListener('resize', function() {
-    if (window.matchMedia('(max-width: 850px)').matches) {
+    if (window.matchMedia('(max-width: 768px)').matches) {
         document.getElementById('navigator-check').checked = false;
     } else {
         document.getElementById('navigator-check').checked = true;

@@ -33,7 +33,7 @@ class Request
         // 5. use it
 
         // at first route existence is checked 
-        preg_match('/\/(?<route>[a-zA-Z]*)/', $url, $matches);
+        preg_match('/\/(?<route>[\-a-zA-Z]*)/', $url, $matches);
         
         // if route is blank it's automatically redirected to index
         // (or any other route you wish)

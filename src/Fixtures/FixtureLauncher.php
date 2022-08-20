@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Fixtures;
 
+use App\Fixtures\AirportFixture;
 /**
  * This class creates fixtures
  */
@@ -19,6 +20,7 @@ class FixtureLauncher
     public function __construct($conn)
     {
         $this->conn = $conn;
+        
         $this->runFixtures();
     }
 
@@ -27,7 +29,8 @@ class FixtureLauncher
      */
     private function runFixtures(): void
     {
-       $userFixture = new UserFixture($this->conn);
+      //  $countryFixture = new AirportFixture($this->conn);
+      // $userFixture = new UserFixture($this->conn);
        //$userFixture->addUserTable();
        //$userFixture->addNewUser('admin@admin.com', '123456', $userFixture, "ROLE_ADMIN");
     }

@@ -37,4 +37,14 @@ class AbstractFixture
             echo "Error with executing mysql";
         };
     }
+    public function runSql(string $sql)
+    {
+        dump($this->conn);
+        $stmt = $this->conn->prepare($sql);
+        
+        if (!$stmt->execute()) {
+            echo "Error with executing mysql";
+        };
+
+    }
 } 

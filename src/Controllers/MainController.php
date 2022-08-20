@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Controllers;
 
 use App\Controllers\AbstractController;
+use App\Forms\PlaneForm;
 use App\Forms\UserLoginForm;
 use App\Helpers\Url;
 use App\Services\Authorisation;
@@ -27,6 +28,7 @@ class MainController extends AbstractController
     $router->attachRoute('MainController', 'fleet');
     $router->attachRoute('MainController', 'routes');
     $router->attachRoute('MainController', 'customers');
+    $router->attachRoute('MainController', 'addPlane');
    }
 
    /**
@@ -73,6 +75,11 @@ class MainController extends AbstractController
    public function customers()
    { 
     echo $this->twig->render('customers.html.twig', ['route' => 'customers']);
+   }
+   public function addPlane()
+   {
+    $form = new PlaneForm();
+    echo $this->twig->render('add-plane.html.twig', ['form' => $form->getForm() ]);
    }
 
    

@@ -21,6 +21,7 @@ use App\Services\SessionManager;
 use App\Models\Database\Database;
 use App\Services\Authorisation;
 use App\Helpers\Url;
+use App\Services\MigrationsManager;
 
 class App 
 {
@@ -65,6 +66,9 @@ class App
 
         SessionManager::sessionStart();
 
+        // run this command below to do migrations
+        //$migrations = new MigrationsManager();exit;
+
         $this->mainController->attachRoutes($this->router);
         $this->adminController->attachRoutes($this->router);
         $this->authController->attachRoutes($this->router);
@@ -76,7 +80,7 @@ class App
          * Fixtures to run
          */
         // Uncomment function below to run fixtures
-        //$fixtureLauncher = new FixtureLauncher($this->db->getConnection());
+        $fixtureLauncher = new FixtureLauncher($this->conn);
         // Uncomment function above to run fixtures
 
        
