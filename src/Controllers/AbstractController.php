@@ -7,16 +7,27 @@ namespace App\Controllers;
 use App\Services\Router;
 use App\Views\ViewRenderer;
 use App\App;
+use App\Services\FlashMessenger;
+
 abstract class AbstractController {
    
     protected $twig;
+    protected $conn;
+    protected FlashMessenger $flashMessenger;
+    
    // protected $conn;
     public ViewRenderer $viewRenderer;
 
     function __construct()
     {
       //  $this->conn = App::$app->conn;
+
         $this->viewRenderer = new ViewRenderer();
+        $this->flashMessenger = new FlashMessenger();
+
+        $this->conn = App::$app->conn;
+        
+    
 
         /**
          * configure Twig

@@ -41,6 +41,20 @@ abstract class AbstractInputType
     {
         return sprintf(">");
     }
+    /**
+     * @return string html code (opening)
+     */
+    public function selectStart(): string 
+    {
+        return sprintf('<select ');
+    }
+    /**
+     * @return string closing html tag
+     */
+    public function selectEnd(): string
+    {
+        return sprintf("</select>");
+    }
 
     /**
      * Adds label to input (optional)

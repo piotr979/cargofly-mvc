@@ -42,6 +42,12 @@ class App
         $this->db = new PDOClient(DB_DRIVER, DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
         $this->db->connect();
         $this->conn = $this->db->getConnection();
+
+          /**
+         * For easier access in classes
+         */
+        self::$app = $this;
+        
         $this->router = new Router();
         $this->request = new Request();
         $this->mainController = new MainController();
@@ -49,13 +55,9 @@ class App
         $this->authController = new AuthController();
         $this->settingsController = new SettingsController();
 
-
         $this->user = new UserEntity();
       
-        /**
-         * For easier access in classes
-         */
-        self::$app = $this;
+      
 
     }
     public function run()
@@ -67,7 +69,14 @@ class App
         SessionManager::sessionStart();
 
         // run this command below to do migrations
-        //$migrations = new MigrationsManager();exit;
+        //$migrations = new MigrationsManager();
+
+        // command below drops all databases
+       // $migrations->dropAllTables();
+
+        // this command migrates the whole DB
+        // $migrations->migrateDatabase();
+
 
         $this->mainController->attachRoutes($this->router);
         $this->adminController->attachRoutes($this->router);
@@ -80,7 +89,7 @@ class App
          * Fixtures to run
          */
         // Uncomment function below to run fixtures
-        $fixtureLauncher = new FixtureLauncher($this->conn);
+       // $fixtureLauncher = new FixtureLauncher($this->conn);
         // Uncomment function above to run fixtures
 
        

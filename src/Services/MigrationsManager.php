@@ -9,41 +9,19 @@ use App\Models\Database\PDOClient;
  */
 class MigrationsManager
 {
-    private string $sql;
-    private $db;
+    private $conn;
 
     public function __construct()
     {
-        $this->setSql();
-        $this->migrate();
+        $this->conn = $this->connect();
+
     }
-    private function setSql()
+
+    public function migrateDatabase()
     {
-        $this->notInUse =
+    
+        $sql = 
         "
-        CREATE TABLE country
-        (
-            id INT NOT NULL AUTO_INCREMENT,
-            code VARCHAR(2) NOT NULL,
-            country VARCHAR(100) NOT NULL,
-            PRIMARY KEY(id)
-        );
-
-        CREATE TABLE city
-        (
-            id INT AUTO_INCREMENT PRIMARY KEY ,
-            code 
-            city VARCHAR(100)NOT NULL,
-            country_id INT,
-            location POINT NOT NULL,
-            FOREIGN KEY (country_id) REFERENCES country(id)
-        );
-        ";
-
-        $this->sql = 
-        "
-         
-
             CREATE TABLE airport 
             (
                 id INT NOT NULL AUTO_INCREMENT ,
@@ -67,17 +45,25 @@ class MigrationsManager
                 FOREIGN KEY (airport_to) REFERENCES airport(id)
             );
 
-            CREATE TABLE plane
+            CREATE TABLE aircraft
             (
                 id INT NOT NULL AUTO_INCREMENT,
-                plane_name VARCHAR(100) NOT NULL,
-                capacity INT NOT NULL,
-                photo JSON NOT NULL,
+                aircraft_name VARCHAR(100) NOT NULL,
                 hours_done INT NOT NULL,
                 in_use BOOLEAN NOT NULL DEFAULT FALSE,
                 airport_base INT NOT NULL,
                 PRIMARY KEY(id),
                 FOREIGN KEY (airport_base) REFERENCES airport(id)
+            );
+
+            CREATE TABLE aeroplane
+            (
+                id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                vendor VARCHAR(40) NOT NULL,
+                photo VARCHAR(200) NOT NULL,
+                model VARCHAR(40) NOT NULL,
+                payload INT NOT NULL,
+                class VARCHAR(40) NOT NULL
             );
 
             CREATE TABLE cargo 
@@ -91,13 +77,13 @@ class MigrationsManager
                 FOREIGN KEY (airport_to) REFERENCES airport(id)
             );
 
-            CREATE TABLE plane_cargos
+            CREATE TABLE aircraft_cargos
             (
                 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                plane_id INT NOT NULL,
+                aircraft_id INT NOT NULL,
                 cargo_id INT NOT NULL,
                 FOREIGN KEY (cargo_id) REFERENCES cargo(id),
-                FOREIGN KEY (plane_id) REFERENCES plane(id)
+                FOREIGN KEY (aircraft_id) REFERENCES aircraft(id)
             );
 
             CREATE TABLE customer
@@ -125,24 +111,50 @@ class MigrationsManager
                 FOREIGN KEY (customer_id) REFERENCES customer(id),
                 FOREIGN KEY (cargo_id) REFERENCES cargo(id) 
             );
-        ";
 
-        $userSql = "CREATE TABLE user
+            CREATE TABLE user
         (
             id INT NOT NULL AUTO_INCREMENT PRIMARY_KEY,
             login VARCHAR(40) NOT NULL,
             password VARCHAR(255) NOT NULL,
             role VARCHAR(50) NOT NULL DEFAULT 'ROLE_USER'
-        );"
-        ;
+        );
+        ";
+
+      $this->executeSql($sql);
     }
-    private function migrate()
+
+    public function dropAllTables()
+    {
+        /**
+         * Script taken from
+         * https://stackoverflow.com/a/12403746/1496972
+         */
+        $deleteTablesSql = "
+        SET FOREIGN_KEY_CHECKS = 0;
+        SET @tables = null;
+        SELECT GROUP_CONCAT('`',  table_schema, '`.`', table_name, '`') INTO @tables
+            FROM information_schema.tables WHERE table_schema = 'cargo_mvc';
+        SET @tables = CONCAT('DROP TABLE ', @tables);
+        PREPARE stmt FROM @tables;
+        EXECUTE stmt;
+        DEAALOCATE PREPARE stmt;
+        SET FOREIGN_KEY_CHECKS = 1;
+        ";
+
+        $this->executeSql($deleteTablesSql);
+    }
+    private function connect()
     {
         $this->db = new PDOClient(DB_DRIVER, DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
         $this->db->connect();
-        $conn = $this->db->getConnection();
-        
-        $stmt = $conn->prepare($this->sql);
+
+        return $this->db->getConnection();
+    }
+    private function executeSql(string $sql)
+    {
+        $this->conn = $this->connect();
+        $stmt = $this->conn->prepare($sql);
         $stmt->execute();
     }
 }

@@ -7,7 +7,7 @@ use PDO;
 
 class AbstractRepository 
 {
-    private $conn;
+    protected $conn;
 
     public function __construct($conn)
     {

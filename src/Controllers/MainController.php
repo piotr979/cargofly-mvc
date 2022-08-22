@@ -4,10 +4,12 @@ declare(strict_types = 1);
 
 namespace App\Controllers;
 
+use App\App;
 use App\Controllers\AbstractController;
 use App\Forms\PlaneForm;
 use App\Forms\UserLoginForm;
 use App\Helpers\Url;
+use App\Models\Repositories\AeroplaneRepository;
 use App\Services\Authorisation;
 use App\Services\Router;
 
@@ -78,6 +80,9 @@ class MainController extends AbstractController
    }
    public function addPlane()
    {
+    $planesRepo = new AeroplaneRepository($this->conn);
+    $planes = $planesRepo->getAllPlaneModels();
+    
     $form = new PlaneForm();
     echo $this->twig->render('add-plane.html.twig', ['form' => $form->getForm() ]);
    }

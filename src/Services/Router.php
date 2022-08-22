@@ -84,14 +84,20 @@ class Router
        $route = $this->routes[
         trim($url, '/')
         ];
-
+        //dump($route);
          /** 
          * we need to check if user is logged in, otherwise 
          * user be redirected to login page
          */
-        if ($url !='login' && !Authorisation::isUserLogged() ) {
+     //   dump($url);
+      //  dump(Authorisation::isUserLogged());
+     
+      if ($url !="loggingAction" ) {
+        if (($url !='login') && !Authorisation::isUserLogged() ) {
+
             Url::redirect('login');
          }
+        }
       call_user_func_array($route['callback'], $params);
     }
 

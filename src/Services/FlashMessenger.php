@@ -12,7 +12,7 @@ class FlashMessenger
     {
 
     }
-    public function add(string $text);
+    public function add(string $text)
     {
        $this->messages[] = $text;
     }

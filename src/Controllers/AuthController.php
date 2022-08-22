@@ -40,7 +40,6 @@ class AuthController extends AbstractController
    public function loggingAction()
   {
     $data = $_POST;
-
     $validator = new FormValidator();
    
     $errors = $validator->validateForm(
@@ -57,13 +56,17 @@ class AuthController extends AbstractController
       ]
     );
     if (empty($errors)) {
-      
+     // dump($data['login']);
       // if validation's error didn't occur try to login
-      $status = Authorisation::login(
+      if (Authorisation::login(
                         login: $data['login'], 
                         password: $data['password'] 
-                        );
+                        )) {
       Url::redirect('dashboard');
+                        } else {
+                          echo 'Wrong credentials';
+                     
+                        }
     } else {
       foreach ($errors as $error) {
         echo $error . '<br>' ;
