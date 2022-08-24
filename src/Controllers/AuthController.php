@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Controllers;
 
+use App\App;
 use App\Controllers\AbstractController;
 use App\Forms\UserLoginForm;
 use App\Helpers\Url;
@@ -23,23 +24,28 @@ class AuthController extends AbstractController
 
     public function login()
    {
+    
+    dump($this->flashMessenger->getMessages());
     $loginForm = new UserLoginForm();
     if (Authorisation::isUserLogged()) {
         Url::redirect('dashboard');
     }
     echo $this->twig->render('login.html.twig', 
               [
-              'form' => $loginForm->getForm()
+              'form' => $loginForm->getForm(),
+              'flashes' => App::$app->flashMessenger->getMessages()
               ]);
    }
    public function logout()
    {
     Authorisation::logOut();
+    $this->flashMessenger->add('You\'ve been successfully logged out.');
     Url::redirect('login');
    }
    public function loggingAction()
   {
     $data = $_POST;
+    $errors = [];
     $validator = new FormValidator();
    
     $errors = $validator->validateForm(
@@ -55,6 +61,7 @@ class AuthController extends AbstractController
         ]
       ]
     );
+   
     if (empty($errors)) {
      // dump($data['login']);
       // if validation's error didn't occur try to login
@@ -64,14 +71,16 @@ class AuthController extends AbstractController
                         )) {
       Url::redirect('dashboard');
                         } else {
-                          echo 'Wrong credentials';
-                     
+                         $this->flashMessenger->add('Wrong credentials');
+
+                         Url::redirect('login');
                         }
     } else {
       foreach ($errors as $error) {
-        echo $error . '<br>' ;
+        $this->flashMessenger->add($error);
+       
+        Url::redirect('login');
       }
     }
-    
   }
 } 

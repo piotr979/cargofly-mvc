@@ -60,10 +60,9 @@ class MigrationsManager
             (
                 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 vendor VARCHAR(40) NOT NULL,
-                photo VARCHAR(200) NOT NULL,
+                photo VARCHAR(200),
                 model VARCHAR(40) NOT NULL,
-                payload INT NOT NULL,
-                class VARCHAR(40) NOT NULL
+                payload INT NOT NULL
             );
 
             CREATE TABLE cargo 

@@ -9,6 +9,7 @@ use App\Controllers\AbstractController;
 use App\Forms\PlaneForm;
 use App\Forms\UserLoginForm;
 use App\Helpers\Url;
+use App\Models\Entities\AeroplaneEntity;
 use App\Models\Repositories\AeroplaneRepository;
 use App\Services\Authorisation;
 use App\Services\Router;
@@ -31,6 +32,7 @@ class MainController extends AbstractController
     $router->attachRoute('MainController', 'routes');
     $router->attachRoute('MainController', 'customers');
     $router->attachRoute('MainController', 'addPlane');
+    $router->attachRoute('MainController', 'addAeroplane');
    }
 
    /**
@@ -85,6 +87,16 @@ class MainController extends AbstractController
     
     $form = new PlaneForm();
     echo $this->twig->render('add-plane.html.twig', ['form' => $form->getForm() ]);
+   }
+
+   
+   public function addAeroplane()
+   {
+    $plane = new AeroplaneEntity();
+    $plane->setVendor('vendor');
+    $plane->setModel('modelik');
+    $plane->setPayload(2312);
+    $this->db->persist(new AeroplaneRepository(), $plane);
    }
 
    

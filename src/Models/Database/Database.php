@@ -4,6 +4,9 @@ declare(strict_types = 1);
 
 namespace App\Models\Database;
 
+use App\Models\Entities\EntityInterface;
+use App\Models\Repositories\RepositoryInterface;
+
 /**
  * This class is a foundation for any other database driver
  */
@@ -31,5 +34,9 @@ abstract class Database
     public function getConnection()
     {
         return $this->connection;
+    }
+    public function persist(RepositoryInterface $repo, $object)
+    {
+        $repo->persist($object);
     }
 }

@@ -21,6 +21,7 @@ use App\Services\SessionManager;
 use App\Models\Database\Database;
 use App\Services\Authorisation;
 use App\Helpers\Url;
+use App\Services\FlashMessenger;
 use App\Services\MigrationsManager;
 
 class App 
@@ -28,10 +29,12 @@ class App
 
     public Router $router;
     private Request $request;
-    private PDOClient $db;
+    public PDOClient $db;
     public $conn;
     private UserEntity $user;
     public static App $app;
+    public FlashMessenger $flashMessenger;
+
     public MainController $mainController;
     public AdminController $adminController;
     public AuthController $authController;
@@ -54,6 +57,7 @@ class App
         $this->adminController = new AdminController();
         $this->authController = new AuthController();
         $this->settingsController = new SettingsController();
+        $this->flashMessenger = new FlashMessenger();
 
         $this->user = new UserEntity();
       

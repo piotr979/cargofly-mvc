@@ -13,8 +13,8 @@ abstract class AbstractController {
    
     protected $twig;
     protected $conn;
+    protected $db;
     protected FlashMessenger $flashMessenger;
-    
    // protected $conn;
     public ViewRenderer $viewRenderer;
 
@@ -24,7 +24,7 @@ abstract class AbstractController {
 
         $this->viewRenderer = new ViewRenderer();
         $this->flashMessenger = new FlashMessenger();
-
+        $this->db = App::$app->db;
         $this->conn = App::$app->conn;
         
     

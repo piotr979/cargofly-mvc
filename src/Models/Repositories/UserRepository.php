@@ -8,8 +8,8 @@ use App\Models\Repositories\AbstractRepository;
 
 class UserRepository extends AbstractRepository
 {
-    public function __construct($conn)
+    public function __construct()
     {
-        parent::__construct($conn);
+        parent::__construct();
     }
 }

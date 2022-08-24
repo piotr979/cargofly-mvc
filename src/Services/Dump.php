@@ -9,7 +9,7 @@ function dump($args)
     {
         echo "<div style='background-color: black; color: white'>";
         echo '<pre>';
-        var_dump($args);
+       print_r($args);
         echo '</pre>';
         echo '</div>';
     } 

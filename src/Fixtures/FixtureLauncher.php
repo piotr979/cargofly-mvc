@@ -31,6 +31,7 @@ class FixtureLauncher
     {
       //  $countryFixture = new AirportFixture($this->conn);
       // $userFixture = new UserFixture($this->conn);
+      //$aeroplaneFixture = new AeroplaneFixture($this->conn);
        //$userFixture->addUserTable();
        //$userFixture->addNewUser('admin@admin.com', '123456', $userFixture, "ROLE_ADMIN");
     }

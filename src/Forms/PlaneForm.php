@@ -12,6 +12,8 @@ use App\Forms\InputTypes\TextType;
 use App\Forms\InputTypes\PasswordType;
 use App\Forms\InputTypes\SelectType;
 use App\Forms\InputTypes\SubmitType;
+use App\Models\Repositories\AeroplaneRepository;
+
 class PlaneForm 
 {
     private array $elements;
@@ -19,10 +21,13 @@ class PlaneForm
     public function __construct()
     {
         $this->formBuilder = new FormBuilder('plane.php');
+       
     }
 
     public function getForm()
     {
+        $planes = $this->getAeroplaneModels();
+
         $options = ['1' => 'one', '2' => 'two', '3' => 'three'];
         $elements = $this->formBuilder
         ->add(
@@ -67,5 +72,11 @@ class PlaneForm
         ->getForm(actionRoute: 'loggingAction');
         ;
         return $elements;
+    }
+    private function getAeroplaneModels()
+    {
+        $planesRepo = new AeroplaneRepository();
+        $planes = $planesRepo->getAllPlaneModels();
+        dump($planes);exit;
     }
 }
