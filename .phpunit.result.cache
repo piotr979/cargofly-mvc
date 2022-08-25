@@ -1,0 +1,1 @@
+{"version":1,"defects":{"App\\Test\\AircraftDataRepoTest::testDataTypes":4,"Test\\Units\\DatabaseConnectionTest::testItCanConnectToDatabaseWithPDO":4},"times":{"App\\Test\\AircraftDataRepoTest::testDataTypes":0.006,"Test\\Units\\DatabaseConnectionTest::testItCanConnectToDatabaseWithPDO":0.001,"Test\\Units\\GetByIdMethodTest::testGetById":0}}

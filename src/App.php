@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App;
 
@@ -8,6 +8,7 @@ use App\Controllers\AdminController;
 use App\Controllers\AuthController;
 use App\Controllers\MainController;
 use App\Controllers\SettingsController;
+use App\Controllers\ActionsController;
 use App\Fixtures\UserFixture;
 use App\Fixtures\FixtureLauncher;
 use App\Forms\FormInputBuilder;
@@ -23,8 +24,9 @@ use App\Services\Authorisation;
 use App\Helpers\Url;
 use App\Services\FlashMessenger;
 use App\Services\MigrationsManager;
+use PDO;
 
-class App 
+class App
 {
 
     public Router $router;
@@ -46,23 +48,20 @@ class App
         $this->db->connect();
         $this->conn = $this->db->getConnection();
 
-          /**
+        /**
          * For easier access in classes
          */
         self::$app = $this;
-        
         $this->router = new Router();
         $this->request = new Request();
         $this->mainController = new MainController();
         $this->adminController = new AdminController();
         $this->authController = new AuthController();
         $this->settingsController = new SettingsController();
+        $this->actionsController = new ActionsController();
         $this->flashMessenger = new FlashMessenger();
 
         $this->user = new UserEntity();
-      
-      
-
     }
     public function run()
     {
@@ -76,7 +75,7 @@ class App
         //$migrations = new MigrationsManager();
 
         // command below drops all databases
-       // $migrations->dropAllTables();
+        // $migrations->dropAllTables();
 
         // this command migrates the whole DB
         // $migrations->migrateDatabase();
@@ -86,36 +85,37 @@ class App
         $this->adminController->attachRoutes($this->router);
         $this->authController->attachRoutes($this->router);
         $this->settingsController->attachRoutes($this->router);
+        $this->actionsController->attachRoutes($this->router);
 
-        
-       
+
+
         /**
          * Fixtures to run
          */
         // Uncomment function below to run fixtures
-       // $fixtureLauncher = new FixtureLauncher($this->conn);
+        //$fixtureLauncher = new FixtureLauncher($this->conn);
         // Uncomment function above to run fixtures
 
-       
-    }  
+
+    }
     public function resolve($url)
     {
-        $routeWithParams = $this->request->makeRouteWithParamsFromUrl($url,
-                    $this->router->getRoutes());
-               
+        $routeWithParams = $this->request->makeRouteWithParamsFromUrl(
+            $url,
+            $this->router->getRoutes()
+        );
         if ($routeWithParams === false) {
             echo "No route found!";
         } else {
-            
-        (isset($routeWithParams['params'])) ? $this->router->callRoute(
-            $routeWithParams['route'],
-            $routeWithParams['params'])
-            :
-            $this->router->callRoute(
-                $routeWithParams['route']
-            );
+            (isset($routeWithParams['params'])) 
+                ? 
+                $this->router->callRoute(
+                    $routeWithParams['route'],
+                    $routeWithParams['params'])
+                :
+                $this->router->callRoute(
+                    $routeWithParams['route']
+                );
         }
     }
-
-    
 }

@@ -34,6 +34,7 @@ class TextType extends AbstractInputType implements InputTypeInterface
         $this->input .= sprintf(" type='%s'", $this->getHtmlInputType());
 
         $this->input .= sprintf(" name='%s'", $attr['name'] ?? '');
+        $this->input .= sprintf(" value='%s'", $attr['value'] ?? '');
         $this->input .= sprintf(" placeholder='%s'", $attr['placeholder'] ?? '');
         $this->input .= sprintf(" class='%s'", $attr['inputCssClasses'] ?? '');
 

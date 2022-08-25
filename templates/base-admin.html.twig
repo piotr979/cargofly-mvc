@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link
-    rel="stylesheet"
+    rel="stylesheet" type="text/css"
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
     />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/navigator.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" type="text/css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/navigator.css">
     
 
 </head>
@@ -21,8 +21,8 @@
 <!-- NAVIGATOR OPEN/CLOSE BUTTON STARTS HERE -->
 		<input type="checkbox" class="navigator-checkbox" id="navigator-check" checked="checked">
 		<label for="navigator-check">
-			<image src="assets/images/hamburger.svg" id="open-sidebar" alt="open sidebar">
-			<image src="assets/images/admin/hide-nav.svg" id="close-sidebar" alt="close sidebar">
+			<image src="/assets/images/hamburger.svg" id="open-sidebar" alt="open sidebar">
+			<image src="/assets/images/admin/hide-nav.svg" id="close-sidebar" alt="close sidebar">
 		</label>
 		<!-- NAVIGATOR OPEN/CLOSE BUTTON ENDS HERE -->
 
@@ -34,7 +34,7 @@
 					 <!-- Logo starts here -->
 					<div class="logo mb-4 px-2">
 						<div class="logo-name d-flex align-items-center">
-                            <img class="logo-icon" src="assets/images/logo.svg" alt="">
+                            <img class="logo-icon" src="/assets/images/logo.svg" alt="">
 							<h4 class="fw-bold mb-0 ms-2"><span class="text-danger">Cargo</span>Fly</h4>
 						</div>
 				    <!-- Logo ends here -->
@@ -42,52 +42,52 @@
 
 					<p class="sidebar--title ps-2">Main menu</p>
 					<ul class="sidebar--anchor-list">
-						 <a href="dashboard"> 
+						 <a href="/dashboard"> 
 						 	{% if route == 'dashboard' %}
 							<li class="selected-item clean-list-item py-1 px-2 mb-2 admin-articles d-flex flex-row align-items-center">
-								<img class="clean-list--image icon-sidebar__selected" src="assets/images/iconly/bold/Home.svg">
+								<img class="clean-list--image icon-sidebar__selected" src="/assets/images/iconly/bold/Home.svg">
 							{% else %}		
 							<li class="clean-list-item py-1 px-2 mb-2 admin-articles d-flex flex-row align-items-center">
-								<img class="clean-list--image icon-sidebar__selected" src="assets/images/iconly/draw/Home.svg">
+								<img class="clean-list--image icon-sidebar__selected" src="/assets/images/iconly/draw/Home.svg">
 							{% endif %}
 							
                                 <p class="sidebar-menu__item mb-0 ms-2">Dashboard</p>
 							</li>
 						   </a>
                         
-                         <a href="orders"> 
+                         <a href="/orders"> 
 						{% if route == 'orders' %}
 							<li class="selected-item clean-list-item py-1 px-2 mb-2 admin-articles d-flex flex-row align-items-center">
-								<img class="clean-list--image icon-sidebar__selected" src="assets/images/iconly/bold/Calendar.svg">
+								<img class="clean-list--image icon-sidebar__selected" src="/assets/images/iconly/bold/Calendar.svg">
 							{% else %}		
 							<li class="clean-list-item py-1 px-2 mb-2 admin-articles d-flex flex-row align-items-center">
-								<img class="clean-list--image icon-sidebar__selected" src="assets/images/iconly/draw/Calendar.svg">
+								<img class="clean-list--image icon-sidebar__selected" src="/assets/images/iconly/draw/Calendar.svg">
 							{% endif %}
 
                                 <p class="sidebar-menu__item mb-0 ms-2">Orders</p>
 							</li>
 						   </a>
 
-                        <a href="fleet"> 
+                        <a href="/fleet"> 
 							
 							{% if route == 'fleet' %}
 							<li class="selected-item clean-list-item py-1 px-2 mb-2 admin-articles d-flex flex-row align-items-center">
-								<img class="clean-list--image icon-sidebar__selected" src="assets/images/iconly/bold/Game.svg">
+								<img class="clean-list--image icon-sidebar__selected" src="/assets/images/iconly/bold/Game.svg">
 							{% else %}		
 							<li class="clean-list-item py-1 px-2 mb-2 admin-articles d-flex flex-row align-items-center">
-								<img class="clean-list--image icon-sidebar__selected" src="assets/images/iconly/draw/Game.svg">
+								<img class="clean-list--image icon-sidebar__selected" src="/assets/images/iconly/draw/Game.svg">
 							{% endif %}
                                 <p class="sidebar-menu__item mb-0 ms-2">Fleet</p>
 							</li>
 						   </a>
 
-                         <a href="routes"> 
+                         <a href="/routes"> 
 							{% if route == 'routes' %}
 							<li class="selected-item clean-list-item py-1 px-2 mb-2 admin-articles d-flex flex-row align-items-center">
-								<img class="clean-list--image icon-sidebar__selected" src="assets/images/iconly/bold/Location.svg">
+								<img class="clean-list--image icon-sidebar__selected" src="/assets/images/iconly/bold/Location.svg">
 							{% else %}		
 							<li class="clean-list-item py-1 px-2 mb-2 admin-articles d-flex flex-row align-items-center">
-								<img class="clean-list--image icon-sidebar__selected" src="assets/images/iconly/draw/Location.svg">
+								<img class="clean-list--image icon-sidebar__selected" src="/assets/images/iconly/draw/Location.svg">
 							{% endif %}
                                 <p class="sidebar-menu__item mb-0 ms-2">Routes</p>
 							</li>
@@ -97,13 +97,13 @@
 
 					<p class="sidebar--title ps-2 mt-4">Settings &amp; Others</p>
 					<ul class="sidebar--anchor-list">
-						 <a href="settings"> 
+						 <a href="/settings"> 
 							{% if route == 'settings' %}
 							<li class="selected-item clean-list-item py-1 px-2 mb-2 admin-articles d-flex flex-row align-items-center">
-								<img class="clean-list--image icon-sidebar__selected" src="assets/images/iconly/bold/Setting.svg">
+								<img class="clean-list--image icon-sidebar__selected" src="/assets/images/iconly/bold/Setting.svg">
 							{% else %}		
 							<li class="clean-list-item py-1 px-2 mb-2 admin-articles d-flex flex-row align-items-center">
-								<img class="clean-list--image icon-sidebar__selected" src="assets/images/iconly/draw/Setting.svg">
+								<img class="clean-list--image icon-sidebar__selected" src="/assets/images/iconly/draw/Setting.svg">
 							{% endif %}
                                 <p class="sidebar-menu__item mb-0 ms-2">Settings</p>
 							</li>
@@ -115,7 +115,7 @@
 						<h2 class="text-center pt-2 logout__box--number">55</h2>
 						<h6 class="px-2 logout__box--subtext text-center">Orders awaiting</h6>
 						<div class="text-center py-2">
-						<a href="logout" class="btn btn-light mb-2 py-0 logout__box--button">Log out</a>
+						<a href="/logout" class="btn btn-light mb-2 py-0 logout__box--button">Log out</a>
 						</div>
 					</div>
 					</div>
@@ -133,7 +133,7 @@
 				<!-- CONTENT STARTS HERE -->
 {% block javascripts %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-	<script src="assets/js/chapter-navigator.js"></script>
+	<script src="/assets/js/chapter-navigator.js"></script>
 {% endblock %}
 </body>
 

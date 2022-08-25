@@ -29,7 +29,7 @@ class FixtureLauncher
      */
     private function runFixtures(): void
     {
-      //  $countryFixture = new AirportFixture($this->conn);
+      //  $airportFixture = new AirportFixture($this->conn);
       // $userFixture = new UserFixture($this->conn);
       //$aeroplaneFixture = new AeroplaneFixture($this->conn);
        //$userFixture->addUserTable();

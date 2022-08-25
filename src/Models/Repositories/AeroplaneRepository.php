@@ -17,9 +17,11 @@ class AeroplaneRepository extends AbstractRepository implements RepositoryInterf
     }
     public function getAllPlaneModels()
     {
+      
         $stmt = $this->conn->prepare('SELECT * FROM aeroplane');
+        $stmt->setFetchMode(PDO::FETCH_CLASS, '\App\Models\Entities\AeroplaneEntity');
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
     public function persist($plane)
     {

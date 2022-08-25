@@ -44,7 +44,6 @@ class AirportFixture extends AbstractFixture
        ( code, airport_name, city, country, location, elevation ) VALUES " . $values;
        
        ;
-       dump($sql);
        $this->runSql($sql);
     }
 }

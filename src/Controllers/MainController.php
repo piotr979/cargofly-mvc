@@ -11,6 +11,7 @@ use App\Forms\UserLoginForm;
 use App\Helpers\Url;
 use App\Models\Entities\AeroplaneEntity;
 use App\Models\Repositories\AeroplaneRepository;
+use App\Models\Repositories\AircraftRepository;
 use App\Services\Authorisation;
 use App\Services\Router;
 
@@ -32,6 +33,8 @@ class MainController extends AbstractController
     $router->attachRoute('MainController', 'routes');
     $router->attachRoute('MainController', 'customers');
     $router->attachRoute('MainController', 'addPlane');
+    $router->attachRoute('MainController', 'karlik', ['age']);
+    $router->attachRoute('MainController', 'editPlane', ['id']);
     $router->attachRoute('MainController', 'addAeroplane');
    }
 
@@ -48,7 +51,10 @@ class MainController extends AbstractController
     }
    }
   
-   
+   public function karlik(string $age)
+  {
+    echo $this->twig->render('dashboard.html.twig');
+  }
    /** 
     * Route: home
     */
@@ -62,13 +68,19 @@ class MainController extends AbstractController
    }
 
    public function orders()
-   { 
+   {  
     echo $this->twig->render('orders.html.twig', ['route' => 'orders']);
    }
 
    public function fleet()
    { 
-    echo $this->twig->render('fleet.html.twig', ['route' => 'fleet']);
+    $fleetRepo = new AircraftRepository();
+    $planes = $fleetRepo->getAllAircrafts(); 
+    echo $this->twig->render( 'fleet.html.twig', 
+                [
+                  'route' => 'fleet',
+                  'planes' => $planes
+                ]);
    }
 
    public function routes()
@@ -88,6 +100,17 @@ class MainController extends AbstractController
     $form = new PlaneForm();
     echo $this->twig->render('add-plane.html.twig', ['form' => $form->getForm() ]);
    }
+
+   public function editPlane(int $id)
+   {
+    $planesRepo = new AeroplaneRepository($this->conn);
+    $plane = $planesRepo->getById($id, 'aircraft');
+    $form = new PlaneForm();
+   
+    echo $this->twig->render('edit-plane.html.twig', ['form' => $form->getForm($plane[0]) ]);
+   }
+   
+
 
    
    public function addAeroplane()

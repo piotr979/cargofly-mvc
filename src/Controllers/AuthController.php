@@ -24,8 +24,6 @@ class AuthController extends AbstractController
 
     public function login()
    {
-    
-    dump($this->flashMessenger->getMessages());
     $loginForm = new UserLoginForm();
     if (Authorisation::isUserLogged()) {
         Url::redirect('dashboard');
@@ -39,7 +37,9 @@ class AuthController extends AbstractController
    public function logout()
    {
     Authorisation::logOut();
+
     $this->flashMessenger->add('You\'ve been successfully logged out.');
+    
     Url::redirect('login');
    }
    public function loggingAction()

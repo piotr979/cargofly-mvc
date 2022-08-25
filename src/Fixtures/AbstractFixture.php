@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Fixtures;
 
+use App\Models\Database\PDOClient;
 /**
  * Some basic stuff for fixtures
  * @param $conn connection to the database return by database client's class
@@ -11,10 +12,12 @@ namespace App\Fixtures;
 class AbstractFixture
 {
     protected $conn;
+    protected $db;
 
     public function __construct($conn)
     {
         $this->conn = $conn;
+        $db = new PDOClient(DB_DRIVER, DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
     }
 
     /**
@@ -39,7 +42,6 @@ class AbstractFixture
     }
     public function runSql(string $sql)
     {
-        dump($this->conn);
         $stmt = $this->conn->prepare($sql);
         
         if (!$stmt->execute()) {

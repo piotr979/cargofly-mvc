@@ -64,7 +64,6 @@ class AeroplaneFixture extends AbstractFixture
                     'payload' => 2
                 ]
             ];
-        $pdoclient = new PDOClient(DB_DRIVER, DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
 
         foreach ($aeroplanes as $aPlane => $data) {
             $plane = $this->makeNewAeroplane(
@@ -74,7 +73,7 @@ class AeroplaneFixture extends AbstractFixture
                 payload: $data['payload']
             );
           
-           $pdoclient->persist(new AeroplaneRepository(), $plane);
+           $this->db->persist(new AeroplaneRepository(), $plane);
         }
       
     }

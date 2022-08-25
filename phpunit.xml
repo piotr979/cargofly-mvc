@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit
+     bootstrap="vendor/autoload.php"
+     colors="true"
+     convertErrorsToExceptions="true"
+     convertWarningsToExceptions="true"
+     convertNoticesToExceptions="true"
+     stopOnFailure="true"
+     >
+
+    <testsuites>
+   
+    <testsuite name="Unit">
+        <directory>Tests/Unit</directory>
+    </testsuite>
+
+ </testsuites>
+
+    <php>
+        <const name="PHPUNIT_RUNNING" value="true" />
+        <const name="DB_DRIVER" value="mysql" />
+        <const name="DB_HOST" value="db" />
+        <const name="DB_ROOT" value="root" />
+        <const name="DB_NAME" value="cargo_mvc" />
+        <const name="DB_USER" value="user" />
+        <const name="DB_PASSWORD" value="123456" />
+    </php>
+</phpunit>

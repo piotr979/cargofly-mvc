@@ -95,6 +95,10 @@ a {
 th {
     font-weight: 400;
 }
+.no-border {
+    border: none;
+    background: none;
+}
 .width-small {
     width: 20rem;
 }

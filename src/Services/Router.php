@@ -77,27 +77,26 @@ class Router
     
     public function callRoute(string $url, array $params = [])
     {
-       
+      
         /**
          * Gets $route from routes array (based on $url)
          */
        $route = $this->routes[
         trim($url, '/')
         ];
-        //dump($route);
          /** 
          * we need to check if user is logged in, otherwise 
          * user be redirected to login page
          */
-     //   dump($url);
-      //  dump(Authorisation::isUserLogged());
      
+      // For some reason double if must be used
+      // two ifs combined were giving me an error
       if ($url !="loggingAction" ) {
         if (($url !='login') && !Authorisation::isUserLogged() ) {
-
-            Url::redirect('login');
+            Url::redirect('/login');
          }
         }
+    
       call_user_func_array($route['callback'], $params);
     }
 

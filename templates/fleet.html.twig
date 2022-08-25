@@ -6,7 +6,6 @@
         
         <div class="col-12">
         <h1 class="mt-4">Fleet</h1>
-        
 				<table class="table">
 
 					<thead>
@@ -16,7 +15,7 @@
 							<th scope="col">Model</th>
 							<th scope="col" class="d-none d-md-table-cell">Capacity</th>
 							<th scope="col" class="d-none d-md-table-cell">In use?</th>
-							<th scope="col" class="d-none d-sm-table-cell">Order</th>
+							<th scope="col" class="d-none d-sm-table-cell">Airport</th>
 							<th scope="col" class="d-none d-sm-table-cell">Actions</th>
 							<th scope="col" class="d-sm-none">Act</th>
 						</tr>
@@ -25,23 +24,29 @@
 					<tbody>
 					
 							{% set count = 1 %}
-						{% for plane in fleet %}
+						{% for plane in planes %}
 						<tr>
 						<th class="d-none d-sm-table-cell" scope="row">{{ count }}</th>
 									{% set count = count + 1 %}
-							<td>{{ product.brand }}</td>
-							<td>{{ product.model }}</td>
-							<td class="d-none d-sm-table-cell">{{ product.price }}</td>
+							<td>{{ plane.aircraft_name }}</td>
+							<td>{{ plane.model }}</td>
+							<td class="d-none d-sm-table-cell">{{ plane.payload }}T</td>
 							<td class="d-none d-sm-table-cell">
-								{{ product.total_qty }}
+							
+								{% if (plane.in_use == 1) %}
+									Yes
+								{% else %}
+									No
+								{% endif %}
 							</td>
-							<td class="d-none d-sm-table-cell">{{ product.category }}</td>
+							<td class="d-none d-sm-table-cell">{{ plane.city }}</td>
 							<td>
-									<a href="" class="btn-icon">
-									<i class="bi bi-pencil-square"></i>
+									<a href="editPlane/{{plane.id}}" class="btn-icon">
+									<img src="assets/images/iconly/draw/Delete.svg" />
 								</a>
-								<button class="btn-trash" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ product.id }}">
-								<i class="bi bi-trash"></i>
+
+								<button class="no-border" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ plane.id }}">
+								<img src="assets/images/iconly/draw/Edit.svg" />
 								</button>
 								
 

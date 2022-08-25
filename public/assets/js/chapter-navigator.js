@@ -1,6 +1,3 @@
-
-
-
 /* check if screen resizes, than check/uncheck input
 *  if screen size < 80em sidebar is hidden
 *  if bigger (desktop) than show sidebar

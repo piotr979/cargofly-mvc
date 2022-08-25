@@ -20,15 +20,15 @@ class AbstractRepository
     public function getById(int $id, string $tableName)
     {
         
-        $stmt = $this->conn->prepare('SELECT * FROM ' . $tableName);
-       // $stmt->bindValue(':stick', 'usero', PDO::PARAM_STR);
+        $stmt = $this->conn->prepare('SELECT * FROM ' . $tableName . ' WHERE id = :id');
+       $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        dump($user);exit;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function getAll(string $tableName)
     {
         $stmt = $this->conn->prepare('SELECT * FROM ' . $tableName);
         $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

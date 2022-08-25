@@ -52,8 +52,10 @@ class MigrationsManager
                 hours_done INT NOT NULL,
                 in_use BOOLEAN NOT NULL DEFAULT FALSE,
                 airport_base INT NOT NULL,
+                aeroplane INT NOT NULL
                 PRIMARY KEY(id),
-                FOREIGN KEY (airport_base) REFERENCES airport(id)
+                FOREIGN KEY (airport_base) REFERENCES airport(id),
+                FOREIGN KEY (aeroplane) REFERENCES aeroplane(id)
             );
 
             CREATE TABLE aeroplane
