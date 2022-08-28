@@ -11,5 +11,4 @@ interface RepositoryInterface
     public function getAll(string $tableName);
     public function getById(int $id, string $tableName);
     public function persist($entity);
-
 }

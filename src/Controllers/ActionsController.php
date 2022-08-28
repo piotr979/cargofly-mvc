@@ -29,6 +29,7 @@ class ActionsController extends AbstractController
     // also all methods can be retrieved with ReflectionClass
     // TO BE DONE
     $router->attachRoute('ActionsController', 'aircraftAction');
+    $router->attachRoute('ActionsController', 'removeAction', ['id', 'entity']);
    
    }
 
@@ -56,8 +57,21 @@ class ActionsController extends AbstractController
     $aircraft->setAeroplane((int)$aeroplane);
 
    $this->db->persist(new AircraftRepository(), $aircraft);
-    Url::redirect('fleet');
+   $this->flashMessenger->add('Operation done.');
+    Url::redirect('/fleet/1');
    }
 
+   public function removeAction(int $id, string $entity)
+   {
+    $repositoryName = "\App\Models\Repositories\\" . ucfirst($entity) . "Repository";
+    $repo = new $repositoryName();
+
+    if ($repo->remove($id)) {
+        $this->flashMessenger->add('Item removed successfully');
+        Url::redirect('/fleet/1');
+    } else {
+      $this->flashMessenger->add('Ups! Something wrong!');
+    };
+   }
    
 }

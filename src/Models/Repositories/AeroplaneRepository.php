@@ -4,6 +4,7 @@ declare(strict_types = 1 );
 
 namespace App\Models\Repositories;
 
+use App\Helpers\Url;
 use App\Models\Entities\AeroplaneEntity;
 use App\Models\Entities\EntityInterface;
 use App\Models\Repositories\AbstractRepository;
@@ -39,6 +40,19 @@ class AeroplaneRepository extends AbstractRepository implements RepositoryInterf
          
         $stmt->execute();
 
+    }
+    public function remove($id)
+    {
+        $mysql = "DELETE FROM aeroplane WHERE id = :id";
+        $stmt = $this->conn->prepare($mysql);
+        $stmt->bindValue( ":id", $id, PDO::PARAM_INT);
+        
+        if ($stmt->execute()) {
+            $this->flashMessenger->add('Item removed.');
+            Url::redirect('/dashboard');
+        } else {
+            $this->flasMessenger->add('Something wrong. Operation terminated.');
+        };
     }
 
 }

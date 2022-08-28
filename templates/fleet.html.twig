@@ -5,7 +5,14 @@
     <div class="row">
         
         <div class="col-12">
-        <h1 class="mt-4">Fleet</h1>
+
+		  {% for flash in flashes %}
+                <div class="alert alert-danger" role="alert"> 
+                    {{ flash }}
+                </div>
+            {% endfor %}
+
+        <h1 class="mt-4">Fleet </h1>
 				<table class="table">
 
 					<thead>
@@ -22,9 +29,42 @@
 					</thead>
 
 					<tbody>
-					
-							{% set count = 1 %}
+							{% if page > 1 %}
+
+							 {# one must be substracted from page (2 or 3...) 
+							 	multiplied by 10. Also 1 must be added to
+								start each page from number 11,21,22 not 20,30 #}
+
+								{% set count = (((page - 1 ) * 10) + 1) %}
+								
+							{% else %}
+								{% set count = 1 %}
+							{% endif %}
 						{% for plane in planes %}
+
+
+						 <!-- DELETE MODAL STARTS HERE -->
+        <div class="modal fade" id="deleteModal-{{ plane.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Deleting article</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                Are you sure?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                <a href="/removeAction/{{ plane.id }}/aircraft" type="button" class="btn btn-primary">Yes,
+                  delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- DELETE MODALS ENDS HERE -->
+
+
 						<tr>
 						<th class="d-none d-sm-table-cell" scope="row">{{ count }}</th>
 									{% set count = count + 1 %}
@@ -41,12 +81,12 @@
 							</td>
 							<td class="d-none d-sm-table-cell">{{ plane.city }}</td>
 							<td>
-									<a href="editPlane/{{plane.id}}" class="btn-icon">
-									<img src="assets/images/iconly/draw/Delete.svg" />
+								<a href="/editPlane/{{plane.id}}" class="btn-icon">
+									<img src="/assets/images/iconly/draw/Edit.svg" />
 								</a>
 
 								<button class="no-border" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ plane.id }}">
-								<img src="assets/images/iconly/draw/Edit.svg" />
+								<img src="/assets/images/iconly/draw/Delete.svg" />
 								</button>
 								
 
@@ -56,13 +96,35 @@
 					</tbody>
 	</table>
 		{# #### PAGINATION CONTROLS STARTS HERE ### #}
-				{% if products is not null %}
-					<div class="d-flex justify-content-center mt-0 my-3 mt-md-5">
-					
-					</div>
-				{% endif %}
+			<nav aria-label="Page navigation example">
+		
+  <ul class="pagination">
+
+	{# if it's first page "Previous" is not needed  #}
+	{% if page != 1 %}
+    <li class="page-item"><a class="page-link" href="/fleet/{{ page - 1 }}">Previous</a></li>
+	{% endif %}
+	
+	
+
+	{% for idx in 1..pagesCount  %}
+    <li class="page-item
+		{% if idx == page %}
+			active
+		{% endif %}
+	"><a class="page-link" href="/fleet/{{ idx }}">{{ idx }}</a></li>
+  
+   {% endfor %}
+
+	
+	{% if page != pagesCount %}
+    <li class="page-item"><a class="page-link" href="/fleet/{{ page + 1 }}">Next</a></li>
+	{% endif %}
+
+  </ul>
+</nav>
 				{# #####  PAGINATION CONTROLS ENDS HERE ##### #}
-	<a href="addPlane" class="btn btn-primary">Add plane</a>
+	<a href="/addPlane" class="btn btn-primary">Add plane</a>
 
         </div>
     </div>

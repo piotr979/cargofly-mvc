@@ -29,7 +29,7 @@ class MainController extends AbstractController
     $router->attachRoute('MainController', 'index');
     $router->attachRoute('MainController', 'dashboard');
     $router->attachRoute('MainController', 'orders');
-    $router->attachRoute('MainController', 'fleet');
+    $router->attachRoute('MainController', 'fleet', ['page']);
     $router->attachRoute('MainController', 'routes');
     $router->attachRoute('MainController', 'customers');
     $router->attachRoute('MainController', 'addPlane');
@@ -72,14 +72,20 @@ class MainController extends AbstractController
     echo $this->twig->render('orders.html.twig', ['route' => 'orders']);
    }
 
-   public function fleet()
+   public function fleet(int $page = 1)
    { 
     $fleetRepo = new AircraftRepository();
-    $planes = $fleetRepo->getAllAircrafts(); 
+    $planes = $fleetRepo->getAllAircraftsPaginated($page); 
+
+    // return amount of pages 
+    $pages = $fleetRepo->countPages(limit: 10, table: 'aircraft');
     echo $this->twig->render( 'fleet.html.twig', 
                 [
                   'route' => 'fleet',
-                  'planes' => $planes
+                  'planes' => $planes,
+                  'flashes' => App::$app->flashMessenger->getMessages(),
+                  'pagesCount' => $pages,
+                  'page' => $page
                 ]);
    }
 
@@ -98,7 +104,7 @@ class MainController extends AbstractController
     $planes = $planesRepo->getAllPlaneModels();
     
     $form = new PlaneForm();
-    echo $this->twig->render('add-plane.html.twig', ['form' => $form->getForm() ]);
+      echo $this->twig->render('add-plane.html.twig', ['form' => $form->getForm() ]);
    }
 
    public function editPlane(int $id)
@@ -109,10 +115,7 @@ class MainController extends AbstractController
    
     echo $this->twig->render('edit-plane.html.twig', ['form' => $form->getForm($plane[0]) ]);
    }
-   
 
-
-   
    public function addAeroplane()
    {
     $plane = new AeroplaneEntity();
@@ -121,6 +124,4 @@ class MainController extends AbstractController
     $plane->setPayload(2312);
     $this->db->persist(new AeroplaneRepository(), $plane);
    }
-
-   
 }

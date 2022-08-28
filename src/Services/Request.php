@@ -53,6 +53,7 @@ class Request
             $pregParams = '';
           
             $routeIntercepted['route'] = $routeName;
+            
             if (count($params) > 0) {
 
                   // now iterate over our $params and based on this
@@ -61,13 +62,15 @@ class Request
 
                 foreach($params as $key => $param) {
                     if ($key != array_key_last($params)) {
-                   
+                
                      $pregParams .= "(?<{$param}>[a-zA-Z0-9]+)\/";
                  } else {
                      $pregParams .= "(?<{$param}>[a-zA-Z0-9]+)";
+                    
                  }
             
               }
+             
             preg_match(
                  '/\/(?<route>[a-zA-Z0-9]*)\/' . $pregParams . '/', 
                      $url, 

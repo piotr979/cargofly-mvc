@@ -42,13 +42,13 @@ class Authorisation
         }
        return false;
     } 
+    
     public static function logOut()
     {
        SessionManager::sessionEnd();
        SessionManager::sessionStart();
-       
-
     }
+
     public static function isUserLogged(): bool
     {
         return (

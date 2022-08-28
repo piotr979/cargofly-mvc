@@ -4,10 +4,12 @@ declare(strict_types = 1 );
 
 namespace App\Models\Repositories;
 
+use App\Helpers\Url;
 use App\Models\Entities\AeroplaneEntity;
 use App\Models\Entities\EntityInterface;
 use App\Models\Repositories\AbstractRepository;
 use PDO;
+use ReflectionClass;
 
 class AircraftRepository extends AbstractRepository implements RepositoryInterface
 {
@@ -29,6 +31,25 @@ class AircraftRepository extends AbstractRepository implements RepositoryInterfa
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getAllAircraftsPaginated($page = 1)
+    {
+        $offset = ($page - 1 ) * 10;
+        $mysql = "SELECT 
+            aircraft.id, aircraft_name, hours_done, in_use, airport_base,
+            vendor, model, payload, city
+             FROM aircraft
+            LEFT JOIN aeroplane
+            ON  aircraft.aeroplane = aeroplane.id
+            LEFT JOIN airport
+            ON aircraft.airport_base = airport.id
+            LIMIT 10 OFFSET :offset";
+
+            $stmt = $this->conn->prepare($mysql);
+          $stmt->bindValue(":offset",$offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     /** 
      * Saves to database
@@ -71,5 +92,13 @@ class AircraftRepository extends AbstractRepository implements RepositoryInterfa
         }
 
     }
+    public function remove($id)
+    {
+        if ($this->removeById($id, $this->getEntityNameFromRepoName())) {
+            return true;
+        } else {
+            return false;
+        };
 
+    }
 }

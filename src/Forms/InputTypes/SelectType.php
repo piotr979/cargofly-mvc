@@ -11,6 +11,7 @@ use App\Forms\InputTypes\AbstractInputType;
  * Text type input
  * Available attributes:
  * min, max, label, labelCssClasses, inputCssClasses
+ * Also is 
  * 
  */
 class SelectType extends AbstractInputType implements InputTypeInterface
@@ -33,17 +34,17 @@ class SelectType extends AbstractInputType implements InputTypeInterface
         $this->input .= $this->selectStart();
         $this->input .= sprintf(' class="form-select %s"', $attr['selectCssClasses'] ?? '');
         $this->input .= sprintf(' name="%s"', $attr['name'] ?? '');
-
         $this->input .= '>';
         foreach( $attr['options'] as $value => $option) {
             
+                $this->input .= sprintf('<option');
                 if ($attr['selectedValue'] === $value ) {
     
-                    $this->input .= sprintf('<option selected value="%s">%s</option>', $value, $option);
+                    $this->input .= sprintf(' selected value="%s">%s', $value, $option);
                 } else {
-                    $this->input .= sprintf('<option value="%s">%s</option>', $value, $option);
+                    $this->input .= sprintf(' value="%s">%s', $value, $option);
                 }
-          
+                $this->input .= sprintf("</option>");
                
         }
         $this->input .= $this->selectEnd();
