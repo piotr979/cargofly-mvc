@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
 
 :root {
-    --default-color: ##CF0707;
+    --default-color: #CF0707;
     --sidebar-menu-title : #2B7083;
     --sidebar-item-menu : #7199A4;
     --logout-box-number: #1D4854;
@@ -102,8 +102,78 @@ th {
 .width-small {
     width: 20rem;
 }
+.width-xsmall {
+    width: 100%;
+}
+.width-xxsmall {
+    width: 80%;
+}
+
+#search-form--responsive {
+    display: none;
+}
+#search-button {
+    display: block;
+}
+.search-form--responsive {
+    position: absolute;
+    background-color: white;
+    z-index: 999999;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    min-height: 1200px;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    display: block;
+    transform: translateX(-100%);
+    transition: all .4s;
+}
+.search-open {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+    transform: translateX(0);
+}
+#search-form--close {
+    display: block;
+    background: none;
+    border: none;
+}
 @media screen and (min-width: 768px) {
+    
+    #search-form--close {
+        display: none;
+    }
+    .width-xsmall {
+        width: 15rem;
+    }
+    .width-xxsmall {
+        width: 10rem;
+    }
     .ms-sidebar {
         margin-left: 15rem;
     }
+    .search-form--responsive {
+        display: block;
+    }
+    #search-button {
+        display: none;
+    }
+    .search-form--responsive {
+        opacity: 1;
+        pointer-events: auto;
+        visibility: visible;
+        transform: translateX(0);
+        position: static;
+        display: block;
+        height: auto;
+        min-height: auto;
+        background-color: inherit;
+
+    }
+  
 }

@@ -20,37 +20,58 @@ class AircraftRepository extends AbstractRepository implements RepositoryInterfa
     public function getAllAircrafts()
     {
       
-        $stmt = $this->conn->prepare('SELECT 
+        $stmt = $this->conn->prepare("SELECT 
             aircraft.id, aircraft_name, hours_done, in_use, airport_base,
             vendor, model, payload, city
              FROM aircraft
+            
             LEFT JOIN aeroplane
             ON  aircraft.aeroplane = aeroplane.id
             LEFT JOIN airport
-            ON aircraft.airport_base = airport.id');
+            ON aircraft.airport_base = airport.id");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function getAllAircraftsPaginated($page = 1)
+    public function getAllPaginated(int $page, string $sortBy, string $sortOrder = 'asc', string $searchString = '', string $searchColumn = '')
     {
+        // TODO: CHeck if serach string is given
+        $searchStr = "'%" . $searchString . "%'";
+      
         $offset = ($page - 1 ) * 10;
-        $mysql = "SELECT 
+        $sql = "SELECT 
             aircraft.id, aircraft_name, hours_done, in_use, airport_base,
             vendor, model, payload, city
              FROM aircraft
-            LEFT JOIN aeroplane
+             LEFT JOIN aeroplane
             ON  aircraft.aeroplane = aeroplane.id
             LEFT JOIN airport
-            ON aircraft.airport_base = airport.id
-            LIMIT 10 OFFSET :offset";
+            ON aircraft.airport_base = airport.id";
+            if ($searchColumn != '') {
+                $sql .=  " WHERE " . $searchColumn . " LIKE " . $searchStr;
+             }
 
-            $stmt = $this->conn->prepare($mysql);
-          $stmt->bindValue(":offset",$offset, PDO::PARAM_INT);
+            $sql .= " ORDER BY " . $sortBy;
+            $sortOrder == 'asc' ? $sql .= ' ASC' : $sql .= ' DESC';
+            $sql .= " LIMIT 10 OFFSET :offset";
+          $stmt = $this->conn->prepare($sql);
+          $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+         
         $stmt->execute();
+       // dump($stmt->fetchAll(PDO::FETCH_ASSOC));
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function searchString(string $search, string $column)
+    {
+        $searchStr = "'%" . $column . "%'";
+        $sql = "
+            SELECT * FROM aircraft WHERE " . $column . " LIKE " . $searchStr;
+        
+        $stmt = $this->conn->prepare($sql);
+    
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
+    }
     /** 
      * Saves to database
      * If id is different than 0 means it's editing existing entry

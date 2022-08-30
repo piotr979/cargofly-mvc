@@ -64,6 +64,7 @@ class MigrationsManager
                 vendor VARCHAR(40) NOT NULL,
                 photo VARCHAR(200),
                 model VARCHAR(40) NOT NULL,
+                distance INT NOT NULL,
                 payload INT NOT NULL
             );
 

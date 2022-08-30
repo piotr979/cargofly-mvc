@@ -68,6 +68,8 @@ class Router
         $callback = Closure::fromCallable([new $routeController, $routeName]);
         $this->routes[$routing]['callback'] = $callback;
         $this->routes[$routing]['params'] = $params;
+        $this->routes[$routing]['reqParams'] = 3;
+        $this->routes[$routing]['optionalParams'] = 5;
     }
 
     /**

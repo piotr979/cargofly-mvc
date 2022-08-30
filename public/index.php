@@ -36,9 +36,15 @@ $app->run();
  */
 $url = $_SERVER['REQUEST_URI'];
 
+
+/**
+ * for now all request are maintained by POST router
+ */
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    
     $app->resolve($url);
 }
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+
     $app->resolve($url);
 }

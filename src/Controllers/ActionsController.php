@@ -30,7 +30,7 @@ class ActionsController extends AbstractController
     // TO BE DONE
     $router->attachRoute('ActionsController', 'aircraftAction');
     $router->attachRoute('ActionsController', 'removeAction', ['id', 'entity']);
-   
+    $router->attachRoute('ActionsController', 'searchFleetAction');
    }
 
 
@@ -58,7 +58,7 @@ class ActionsController extends AbstractController
 
    $this->db->persist(new AircraftRepository(), $aircraft);
    $this->flashMessenger->add('Operation done.');
-    Url::redirect('/fleet/1');
+    Url::redirect('/fleet/1/aircraft_name/asc');
    }
 
    public function removeAction(int $id, string $entity)
@@ -68,10 +68,29 @@ class ActionsController extends AbstractController
 
     if ($repo->remove($id)) {
         $this->flashMessenger->add('Item removed successfully');
-        Url::redirect('/fleet/1');
+        Url::redirect('/fleet/1/aircraft_name/asc');
     } else {
       $this->flashMessenger->add('Ups! Something wrong!');
     };
+   }
+   public function searchFleetAction()
+   {
+    $searchString = '';
+    $column = '';
+    if (isset($_POST['searchString'])) {
+      $searchString = $_POST['searchString'];
+    }
+    if (isset($_POST['column'])) {
+      $column = $_POST['column'];
+    }
+    $repo = new AircraftRepository();
+    $results = $repo->searchString(
+            search: $searchString,
+            column: $column
+    );
+
+   // Url::redirect('/fleet/1/aircraft_name/asc/');
+
    }
    
 }

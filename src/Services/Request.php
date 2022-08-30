@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Services;
 
 use Closure;
+use ReflectionClass;
 
 class Request
 {
@@ -26,6 +27,11 @@ class Request
     }
     public function makeRouteWithParamsFromUrl(string $url, array $allRoutes)
     {
+
+        // mam route ktory podaje ze mam 5 params
+        // ale mam tylko 3
+        // sprawdz czy moga byc 3 z reflectionClass
+        // 
         // 1. Check if route name exist
         // 2. if it does, get how many parameters are required
         // 3. build the preg_match pattern
@@ -40,8 +46,9 @@ class Request
         if ($matches['route'] === '') {
             $matches['route'] = 'index';
         }
-       
-        // if route exsists  check if has any params
+        
+      
+        // if route exists  check if has any params
         if (isset($allRoutes[$matches['route']])) {
 
             // if route is blank redirect to index or another page
@@ -51,40 +58,58 @@ class Request
             $matchedRoute = $allRoutes[$routeName];
             $params = $matchedRoute['params'];
             $pregParams = '';
+
+
+            // params
           
+
+
             $routeIntercepted['route'] = $routeName;
-            
             if (count($params) > 0) {
 
                   // now iterate over our $params and based on this
                   // build the preg that will mach our url 
                   // in another words our $url must mach $params
 
-                foreach($params as $key => $param) {
-                    if ($key != array_key_last($params)) {
+                // $ref = new \ReflectionMethod('App\Controllers\MainController', 'fleet');
+                // $requiredParams = $ref->getNumberOfRequiredParameters();
+                // $requiredAndOptionalParams = $ref->getNumberOfParameters();
+
+                // params amount
+              
                 
-                     $pregParams .= "(?<{$param}>[a-zA-Z0-9]+)\/";
-                 } else {
-                     $pregParams .= "(?<{$param}>[a-zA-Z0-9]+)";
+                $requiredParams = $allRoutes[$routeName]['reqParams'];
+                $optionalParams = $allRoutes[$routeName]['optionalParams'];
+                
+                for ($i = 0; $i <= ($requiredParams); $i++) {
                     
-                 }
-            
-              }
+                      $pregParams .= "(?P<{$params[$i]}>[a-zA-Z0-9_]+)\/";
+                }
+                $last = end($params);
              
+                $pregParams .= "(?P<{$last}>[a-zA-Z0-9_]+)";
+
+// now its time to compare our built route with
+              // existing 
+    
             preg_match(
-                 '/\/(?<route>[a-zA-Z0-9]*)\/' . $pregParams . '/', 
+                 '/\/(?<route>[a-zA-Z0-9_-]*)\/' . $pregParams . '/', 
                      $url, 
                      $matchedUrlWithParams
                  );
- 
+
+                 dump($matchedUrlWithParams);
+               //  dump($params);
                  // iterate $params once again, but this time
                  // new array with key and value that matches route and 
                  // function with parameters associated with it
                  foreach($params as $param) {
                     if ( !(isset($matchedUrlWithParams[$param]))) {
+                       // dump($matchedUrlWithParams[$param]);
                         return false;
                     }
                      $paramsForRouteOnly[$param] = $matchedUrlWithParams[$param];
+                   //  dump($paramsForRouteOnly[$param]);
                  }
                 
                  // now it's time to combine route name with params

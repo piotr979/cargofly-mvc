@@ -32,9 +32,34 @@ class AbstractRepository
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function countPages(int $limit, string $table): int
+    public function getAllBy(string $sortBy, string $sortOrder, string $table)
     {
-        $sql = "SELECT COUNT(id) AS count FROM " . $table;
+        $sql = 'SELECT * FROM :table ORDER BY :sortBy ' . $sortOrder === 'asc' ? 'ASC' : 'DESC';
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':table', $table);
+        $stmt->bindValue(':sortBy', $sortBy);
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function countPages(int $limit, 
+                                string $table, 
+                                string $searchString = '',
+                                string $searchColumn = ''): int
+    {
+        $searchStr = "'%" . $searchString . "%'";
+        $sql = "SELECT COUNT(aircraft.id) AS count FROM " . $table . 
+        " LEFT JOIN aeroplane
+        ON  aircraft.aeroplane = aeroplane.id
+        LEFT JOIN airport
+        ON aircraft.airport_base = airport.id"
+        ;
+        if ($searchColumn != '') {
+            $sql .=' WHERE ' . $searchColumn . ' LIKE ' . $searchStr;
+        }
+
+   
         $stmt = $this->conn->prepare($sql);
        //  $stmt->bindValue(":name", "aircraft", PDO::PARAM_STR);
 
@@ -46,7 +71,6 @@ class AbstractRepository
         // round it up and cast to int
         return (int)ceil($entries / $limit);
     }
-
     protected function removeById($id, string $entity): bool
     {
         $mysql = "DELETE FROM aircraft WHERE id = :id";

@@ -14,15 +14,17 @@ use App\Forms\InputTypes\AbstractInputType;
  * Also is 
  * 
  */
-class SelectType extends AbstractInputType implements InputTypeInterface
+class SelectImageType extends AbstractInputType implements InputTypeInterface
 {
 
     /**
-     * Builds text type html element as string
+     * Builds select input, but instead of simple text contains images
+     * Based on jquery plugin Image Picker
+     * 
      * @param array $attr Attributes like placeholder, label, etc.
      */
     public function __construct(array $attr = [])
-    {
+    {  
         parent::__construct();
 
         if (isset($attr['label'])) {
@@ -32,20 +34,22 @@ class SelectType extends AbstractInputType implements InputTypeInterface
                                 cssClasses: $attr['labelCssClasses'] ?? '');
         }
         $this->input .= $this->selectStart();
-        $this->input .= sprintf(' class="form-select %s"', $attr['selectCssClasses'] ?? '');
+        $this->input .= sprintf(' class="form-select image-picker %s"', $attr['selectCssClasses'] ?? '');
         $this->input .= sprintf(' name="%s"', $attr['name'] ?? '');
         $this->input .= '>';
         foreach( $attr['options'] as $value => $option) {
-            
+                
                 $this->input .= sprintf('<option');
-           
-                if ( isset($attr['selectedValue']) && $attr['selectedValue'] === $value ) {
+                if (isset($option[key($option)])) {
+                $this->input .= sprintf(' data-img-src="%s"', '/assets/images/planes/' . $option[key($option)]);
+            }
+                if ($attr['selectedValue'] === $value ) {
     
-                    $this->input .= sprintf(' selected value="%s">%s', $value, $option);
+                    $this->input .= sprintf(' selected value="%s">%s', $value,key($option));
                 } else {
-                    $this->input .= sprintf(' value="%s">%s', $value, $option);
+                    $this->input .= sprintf(' value="%s">%s', $value, key($option));
                 }
-            
+               
                 $this->input .= sprintf("</option>");
                
         }

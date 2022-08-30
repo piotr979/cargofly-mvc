@@ -33,7 +33,7 @@ ul.thumbnails.image_picker_selector {
         -webkit-user-drag: none; }
     /* line 48, source/sass/image-picker.scss */
     ul.thumbnails.image_picker_selector li .thumbnail.selected {
-      background: #08C; }
+      background: #7ca9ad; }
   .image_picker_image {
     width: 15rem;
     height: auto;

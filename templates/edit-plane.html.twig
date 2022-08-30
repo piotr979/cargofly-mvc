@@ -13,3 +13,12 @@
 </div>
 
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+<script>
+$("select.image-picker").imagepicker({
+    'show_label': true
+}
+)
+</script>
+{% endblock %}

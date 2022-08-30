@@ -5,12 +5,9 @@ declare(strict_types = 1);
 namespace App\Forms;
 
 use App\Forms\FormBuilders\FormBuilder;
-use App\Forms\InputTypes\EmailType;
-use App\Forms\InputTypes\FileType;
 use App\Forms\InputTypes\HiddenType;
-use App\Forms\InputTypes\NumberType;
 use App\Forms\InputTypes\TextType;
-use App\Forms\InputTypes\PasswordType;
+use App\Forms\InputTypes\SelectImageType;
 use App\Forms\InputTypes\SelectType;
 use App\Forms\InputTypes\SubmitType;
 use App\Models\Repositories\AeroplaneRepository;
@@ -37,7 +34,7 @@ class PlaneForm
         $selectPlanes = [];
         foreach ($aeroplanes as $plane) {
             $selectPlanes[$plane->getId()] = 
-                            $plane->getVendor() . ' ' . $plane->getModel() 
+                            [$plane->getVendor() . ' ' . $plane->getModel() => $plane->getPhoto()]
                         ;
         }
 
@@ -52,7 +49,7 @@ class PlaneForm
            $airportBaseId = $exisitingData['airport_base'];
            $aeroplaneId = $exisitingData['aeroplane'];
         } else {
-            dump("no data");
+           
         }
         $elements = $this->formBuilder
         ->add(
@@ -67,7 +64,7 @@ class PlaneForm
             ]
         )
         ->add(
-            SelectType::class,
+            SelectImageType::class,
             [
                 'name' => 'aeroplaneId',
                 'options' => $selectPlanes,

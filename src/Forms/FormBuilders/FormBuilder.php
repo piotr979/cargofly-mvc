@@ -28,13 +28,13 @@ class FormBuilder implements FormBuilderInterface
     {
         $this->formInputBuilder = new FormInputBuilder();
     }
-    public function formStart(string $actionRoute): void
+    public function formStart(string $actionRoute, string $method, string $cssClasses = ''): void
     {
-        $this->form .= sprintf("<form action='%s' method='POST'>", $actionRoute);
+        $this->form .= sprintf("<form class='%s' action='%s' method='%s'>", $cssClasses, $actionRoute, $method);
     }
-    public function formEnd(string $cssClasses = ''): void
+    public function formEnd(): void
     {
-        $this->form .= sprintf("</form>", $cssClasses);
+        $this->form .= sprintf("</form>");
     }
     public function add(string $inputType, array $attr = [])
     {
@@ -57,9 +57,9 @@ class FormBuilder implements FormBuilderInterface
         $this->elements['html'] =  $this->formInputBuilder->build();
         return $this;
     }
-    public function getForm(string $actionRoute)
+    public function getForm(string $actionRoute, string $method = "POST", string $cssClasses = '')
     {
-        $this->form .= $this->formStart(actionRoute: $actionRoute);
+        $this->form .= $this->formStart(actionRoute: $actionRoute, method: $method, cssClasses: $cssClasses);
         foreach ($this->elements['html'] as $html)
         {
             /** 
