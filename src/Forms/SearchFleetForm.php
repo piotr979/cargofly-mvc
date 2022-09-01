@@ -17,12 +17,20 @@ class SearchFleetForm
 {
     private array $elements;
     private FormBuilder $formBuilder;
+    private string $searchString;
+    private int $searchColumn;
     public function __construct()
     {
         $this->formBuilder = new FormBuilder('plane.php');
        
     } 
 
+    public function setData(array $existingData = [])
+    {
+           
+            $this->searchString = $existingData['searchString'];
+            $this->searchColumn = (int)$existingData['searchColumn'];
+    }
     public function getForm(string $exisitingData = "")
     {
        
@@ -33,7 +41,7 @@ class SearchFleetForm
             'name' => 'searchString',
             'placeholder' => 'Search fleet',
             'required' => 'required',
-            'value' => '',
+            'value' => $this->searchString ?? '',
             'labelCssClasses' => 'd-block ',
             'inputCssClasses' => 'd-block form-control width-xsmall',
             ]
@@ -47,7 +55,8 @@ class SearchFleetForm
                     'aircraft_name' => 'Name',
                     'model' => 'Model',
                     'payload' => 'Capacity',
-                    'city' => 'Airport']
+                    'city' => 'Airport'],
+                'selectedValue' => $this->searchColumn ?? 1
             ]
         )
         ->add(
@@ -57,8 +66,8 @@ class SearchFleetForm
             ]
         )
         ->build()
-        ->getForm(actionRoute: '/fleet/1/aircraft_name/asc', 
-                method: "POST", 
+        ->getForm(actionRoute: '/fleet/1/aircraft_name/asc/', 
+                method: "GET", 
                 cssClasses: 'd-flex flex-column flex-md-row align-items-center align-items-md-start my-2');
         ;
         return $elements;

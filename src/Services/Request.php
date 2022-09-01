@@ -80,15 +80,17 @@ class Request
                 
                 $requiredParams = $allRoutes[$routeName]['reqParams'];
                 $optionalParams = $allRoutes[$routeName]['optionalParams'];
-                
-                for ($i = 0; $i <= ($requiredParams); $i++) {
-                    
-                      $pregParams .= "(?P<{$params[$i]}>[a-zA-Z0-9_]+)\/";
-                }
-                $last = end($params);
-             
-                $pregParams .= "(?P<{$last}>[a-zA-Z0-9_]+)";
 
+             
+                foreach($params as $key => $param) {
+                    if ($key != array_key_last($params)) {
+                     $pregParams .= "(?<{$param}>[a-zA-Z0-9_-]+)\/";
+                 } else {
+                     $pregParams .= "(?<{$param}>[a-zA-Z0-9_-]+)";
+                 }
+
+              }
+            
 // now its time to compare our built route with
               // existing 
     
@@ -96,20 +98,17 @@ class Request
                  '/\/(?<route>[a-zA-Z0-9_-]*)\/' . $pregParams . '/', 
                      $url, 
                      $matchedUrlWithParams
-                 );
+            );
 
-                 dump($matchedUrlWithParams);
-               //  dump($params);
+              
                  // iterate $params once again, but this time
                  // new array with key and value that matches route and 
                  // function with parameters associated with it
                  foreach($params as $param) {
                     if ( !(isset($matchedUrlWithParams[$param]))) {
-                       // dump($matchedUrlWithParams[$param]);
                         return false;
                     }
                      $paramsForRouteOnly[$param] = $matchedUrlWithParams[$param];
-                   //  dump($paramsForRouteOnly[$param]);
                  }
                 
                  // now it's time to combine route name with params
@@ -124,5 +123,37 @@ class Request
         } else {
             return false;
         }
+    }
+    private function checkForRoute(int $paramsAmount, string $url, $params)
+    {
+        $pregParams = '';
+        for ( $i=1; $i<= $paramsAmount-1; $i++) {
+            $pregParams .= "(?<{$params[$i-1]}>[a-zA-Z0-9_-]+)\/";
+        }
+    
+        $pregParams .= "(?<{$params[$paramsAmount-1]}>[a-zA-Z0-9_-]+)";
+     
+
+        $pregString = '/\/(?<route>[a-zA-Z0-9_-]+)\/' . $pregParams . '/';
+   
+        if (preg_match(
+                $pregString, 
+                $url, 
+                $matchedUrlWithParams
+            )) {
+            } else {
+            };
+        
+        foreach($params as $param) {
+                if ( !(isset($matchedUrlWithParams[$param]))) {
+                    return false;
+                
+                 $paramsForRouteOnly[$param] = $matchedUrlWithParams[$param];
+             }
+            
+             // now it's time to combine route name with params
+             // and return them
+             $routeIntercepted['params'] = $paramsForRouteOnly;
+            }
     }
 }

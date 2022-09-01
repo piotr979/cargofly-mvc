@@ -6,5 +6,8 @@ namespace App\Forms\Validators;
 
 class UserLoginFormValidator
 {
-    
+    public function validateIt()
+    {
+        
+    }
 }

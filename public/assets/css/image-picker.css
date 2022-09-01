@@ -5,7 +5,10 @@ ul.thumbnails.image_picker_selector {
   list-style-position: outside;
   list-style-type: none;
   padding: 0px;
-  margin: 0px; }
+  margin: 0px; 
+  display: flex;
+  flex-wrap: wrap;
+}
   /* line 15, source/sass/image-picker.scss */
   ul.thumbnails.image_picker_selector ul {
     overflow: auto;
@@ -34,7 +37,21 @@ ul.thumbnails.image_picker_selector {
     /* line 48, source/sass/image-picker.scss */
     ul.thumbnails.image_picker_selector li .thumbnail.selected {
       background: #7ca9ad; }
+  .image_picker_selector li {
+    width:40%;
+  }
   .image_picker_image {
-    width: 15rem;
+    width: 100%;
     height: auto;
+  }
+
+  @media screen and (min-width: 768px) {
+    .image_picker_selector li {
+      width: 25%;
+    }
+  }
+  @media screen and (min-width: 992px) {
+    .image_picker_selector li {
+      width: 20%;
+    }
   }

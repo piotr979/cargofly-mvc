@@ -43,6 +43,12 @@ class AbstractRepository
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Counts pages. The problem was to get proper amount of entries
+     * as when search form was submitted it had to be taken into account
+     * otherwise it always returned full table with all entries
+     */
     public function countPages(int $limit, 
                                 string $table, 
                                 string $searchString = '',
@@ -90,5 +96,18 @@ class AbstractRepository
         $entity = trim(str_replace('Repository','',$reflect->getShortName()));
         return $entity;
     }
+    public function checkIfExists(string $entry, string $column, string $table)
+    {
+        $sql = "SELECT :column FROM " . $table . " WHERE " . $column . " = :entry";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':column', $column, PDO::PARAM_STR);
+        $stmt->bindValue(':entry', $entry, PDO::PARAM_STR);
+        $stmt->execute();
 
+         if (!empty($stmt->fetchAll())) {
+            return true;
+         } else {
+            return false;
+         }
+    }
 }

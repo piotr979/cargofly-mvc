@@ -97,8 +97,7 @@ label #close-sidebar {
 .navigator-text--container {
   max-width: 1440px;
   margin: 0 auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+ 
   display: grid;
   grid-template-columns: 0rem 1fr;
 }
@@ -111,6 +110,8 @@ label #close-sidebar {
 @media screen and (min-width: 768px) {
   .navigator-text--container {
     grid-template-columns: 13rem 1fr;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 @media screen and (min-width: 80em) {

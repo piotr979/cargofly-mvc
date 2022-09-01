@@ -22,7 +22,7 @@ enum FormRules
     case MinLength;
     case MaxLength;
     case RuleMatch;
-
+    case InvalidCharacters;
 }
 
 return [

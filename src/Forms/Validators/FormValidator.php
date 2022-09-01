@@ -24,7 +24,6 @@ class FormValidator
      */
     public function validateForm(array $data, array $rules)
     {
-        
         $dataKeys = array_keys($data);
         $rulesKeys = array_keys($rules);
        // dump($rules);
@@ -82,6 +81,11 @@ class FormValidator
                             $this->errors[] = 'Wrong email format';
                         }
                       
+                    } else if ($rule === FormRules::InvalidCharacters) {
+                        if (preg_match('/[^a-zA-Z0-9]/', $data[$key])) {
+                         
+                            $this->errors[] = 'Your form contains invalid characters.';
+                        }
                     }
                 }
             }
@@ -95,5 +99,9 @@ class FormValidator
     {
         $sanitizedData = htmlspecialchars($text);
         return $sanitizedData;
+    }
+    public function removeUnwantedChars(string $text)
+    {
+        return preg_replace('/[^a-zA-Z0-9-_]/','', $text);
     }
 }

@@ -20,15 +20,12 @@ abstract class AbstractController {
 
     function __construct()
     {
-      //  $this->conn = App::$app->conn;
-
+        
         $this->viewRenderer = new ViewRenderer();
         $this->flashMessenger = new FlashMessenger();
         $this->db = App::$app->db;
         $this->conn = App::$app->conn;
         
-    
-
         /**
          * configure Twig
          */

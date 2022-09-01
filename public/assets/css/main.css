@@ -103,22 +103,18 @@ th {
     width: 20rem;
 }
 .width-xsmall {
-    width: 100%;
+    width: 90%;
 }
 .width-xxsmall {
     width: 80%;
 }
 
-#search-form--responsive {
-    display: none;
-}
 #search-button {
     display: block;
 }
 .search-form--responsive {
     position: absolute;
     background-color: white;
-    z-index: 999999;
     top:0;
     left: 0;
     right: 0;
@@ -173,7 +169,5 @@ th {
         height: auto;
         min-height: auto;
         background-color: inherit;
-
     }
-  
 }

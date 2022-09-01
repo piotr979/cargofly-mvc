@@ -17,19 +17,34 @@ class PlaneForm
 {
     private array $elements;
     private FormBuilder $formBuilder;
+    private int $id;
+    private string $aircraftName;
+    private int $airportBaseId;
+    private int $aeropolaneId;
+
     public function __construct()
     {
         $this->formBuilder = new FormBuilder('plane.php');
-       
     } 
-
-    public function getForm(array $exisitingData = [])
+    public function setData(array $existingData = [])
+    {
+        if (!empty($existingData)) {
+            if (isset($existingData['id'])) {
+                $this->id = $existingData['id'];
+            }
+           
+            $this->aircraftName = $existingData['aircraft_name'];
+            $this->airportBaseId = (int)$existingData['airport_base'];
+            $this->aeroplaneId = $existingData['aeroplane'];
+        }
+     
+    }
+    public function getForm()
     {
         /**
          * Get array of aeroplanes from DB first.
          * We need them for select inputs.
          */
-
         $aeroplanes = $this->getAeroplaneModels();
         $selectPlanes = [];
         foreach ($aeroplanes as $plane) {
@@ -43,14 +58,6 @@ class PlaneForm
          */
         $airports = $this->getAirports();
 
-        if (count($exisitingData) > 0) {
-           $planeId = $exisitingData['id'];
-           $aircraftName = $exisitingData['aircraft_name'];
-           $airportBaseId = $exisitingData['airport_base'];
-           $aeroplaneId = $exisitingData['aeroplane'];
-        } else {
-           
-        }
         $elements = $this->formBuilder
         ->add(
             TextType::class, 
@@ -58,9 +65,9 @@ class PlaneForm
             'name' => 'name',
             'label' => 'Plane\'s name',
             'required' => 'required',
-            'value' => $aircraftName ?? '',
+            'value' => $this->aircraftName ?? '',
             'labelCssClasses' => 'd-block ',
-            'inputCssClasses' => 'd-block mt-2 class-control input-sm',
+            'inputCssClasses' => 'd-block mt-2 class-control width-xsmall',
             ]
         )
         ->add(
@@ -71,7 +78,7 @@ class PlaneForm
                 'label' => 'Select vendor and model',
                 'labelCssClasses' => 'mt-4',
                 'selectCssClasses' => 'width-small mt-2',
-                'selectedValue' => $aeroplaneId ?? ''
+                'selectedValue' => $this->aeroplaneId ?? ''
             ]
         )
         ->add(
@@ -81,15 +88,15 @@ class PlaneForm
                 'options' => $airports,
                 'label' => 'Select base airport',
                 'labelCssClasses' => 'mt-4',
-                'selectCssClasses' => 'width-small mt-2',
-                'selectedValue' => $airportBaseId ?? ''
+                'selectCssClasses' => 'width-xsmall mt-2',
+                'selectedValue' => $this->airportBaseId ?? 1
             ]
         )
         ->add(
             HiddenType::class,
             [
                 'param' => 'id',
-                'data' => $planeId ?? ''
+                'data' => $this->id ?? ''
             ]
         )
         ->add(
@@ -100,7 +107,7 @@ class PlaneForm
             ]
         )
         ->build()
-        ->getForm(actionRoute: '/aircraftAction');
+        ->getForm(actionRoute: '/addPlane');
         ;
         return $elements;
     }

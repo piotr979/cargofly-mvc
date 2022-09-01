@@ -9,13 +9,21 @@ use App\Controllers\AbstractController;
 use App\Forms\PlaneForm;
 use App\Forms\SearchFleetForm;
 use App\Forms\UserLoginForm;
+use App\Forms\Validators\FormValidator;
 use App\Helpers\Url;
 use App\Models\Entities\AeroplaneEntity;
+use App\Models\Entities\AircraftEntity;
 use App\Models\Repositories\AeroplaneRepository;
 use App\Models\Repositories\AircraftRepository;
 use App\Services\Authorisation;
+use App\Services\FlashMessenger;
 use App\Services\Router;
+use FormRules;
 
+/**
+ * all pages are stored here. There are accessible for
+ * everyone.
+ */
 class MainController extends AbstractController
 {
 
@@ -30,12 +38,11 @@ class MainController extends AbstractController
     $router->attachRoute('MainController', 'index');
     $router->attachRoute('MainController', 'dashboard');
     $router->attachRoute('MainController', 'orders');
-    $router->attachRoute('MainController', 'fleet', ['page', 'sortBy', 'sortOrder', 'searchString', 'searchColumn']);
+    $router->attachRoute('MainController', 'fleet', ['page', 'sortBy', 'sortOrder']);
 
     $router->attachRoute('MainController', 'routes');
     $router->attachRoute('MainController', 'customers');
     $router->attachRoute('MainController', 'addPlane');
-    $router->attachRoute('MainController', 'karlik', ['age']);
     $router->attachRoute('MainController', 'editPlane', ['id']);
     $router->attachRoute('MainController', 'addAeroplane');
   }
@@ -53,12 +60,8 @@ class MainController extends AbstractController
     }
   }
 
-  public function karlik(string $age)
-  {
-    echo $this->twig->render('dashboard.html.twig');
-  }
   /** 
-   * Route: home
+   * Home page
    */
   public function dashboard()
   {
@@ -69,42 +72,56 @@ class MainController extends AbstractController
     // echo $myView;
   }
 
+  /**
+   * Displays all orders
+   */
   public function orders()
   {
     echo $this->twig->render('orders.html.twig', ['route' => 'orders']);
   }
 
-  public function fleet(int $page, string $sortBy, string $sortOrder, string $searchString='', string $searchColumn = '')
+  /** 
+   * This page displays all planes available
+   * @param int $page Current page 
+   * @param string $sortBy column to be sorted by
+   * @param string $sortOrder ascending/descending etc.
+   */
+  public function fleet(int $page, 
+                        string $sortBy, 
+                        string $sortOrder
+                      ) 
   {
-
     $searchString = '';
-    $column = '';
-    if (isset($_POST['searchString'])) {
-      $searchString = $_POST['searchString'];
-    }
-    if (isset($_POST['column'])) {
-      $column = $_POST['column'];
-    }
-
-
+    $searchColumn = '';
     $fleetRepo = new AircraftRepository();
+    $searchForm = new SearchFleetForm();
 
-    if ($searchString != '') {
+    // if search form was already submitted
+    if (isset($_GET['searchString']) && isset($_GET['column'])) {
+      $searchString = $_GET['searchString'];
+      $searchColumn = $_GET['column'];
+
       $planes = $fleetRepo->getAllPaginated(
         page: $page,
         sortBy: $sortBy,
         sortOrder: $sortOrder,
         searchString: $searchString,
-        searchColumn: $column
+        searchColumn: $searchColumn
       );
       $pages = $fleetRepo->countPages(
         limit: 10,
         table: 'aircraft',
         searchString: $searchString,
-        searchColumn: $column
+        searchColumn: $searchColumn
+      );
+      // prepares Data for search Form (if entered already)
+      $searchForm->setData(
+        [
+          'searchString' => $searchString,
+          'searchColumn' => $searchColumn
+        ]
       );
     } else {
-
       $planes = $fleetRepo->getAllPaginated(
         page: $page,
         sortBy: $sortBy,
@@ -116,9 +133,10 @@ class MainController extends AbstractController
         table: 'aircraft',
       );
     }
+    
     // return amount of pages 
 
-    $searchForm = new SearchFleetForm();
+  
   //  dump($planes);
     echo $this->twig->render(
       'fleet.html.twig',
@@ -130,7 +148,9 @@ class MainController extends AbstractController
         'page' => $page,
         'sortBy' => $sortBy,
         'sortOrder' => $sortOrder,
-        'searchForm' => $searchForm->getForm()
+        'searchForm' => $searchForm->getForm(),
+        'searchString' => $searchString,
+        'searchColumn' => $searchColumn
       ]
     );
   }
@@ -146,11 +166,80 @@ class MainController extends AbstractController
   }
   public function addPlane()
   {
+    $form = new PlaneForm();
+    
+    if (!empty($_POST)) {
+      $data = $_POST;
+      // form alread filled
+      // processing here
+      $aeroplane = $data['aeroplaneId'];
+      $base = $data['airportId'];
+      $validator = new FormValidator();
+      $aircraftName = $validator->sanitizeData($data['name']);
+      $errors = $validator->validateForm(
+                $data,
+                [
+                  'name' => [
+                    FormRules::InvalidCharacters,
+                    [FormRules::MinLength, '4']
+                  ]
+                ]
+                );
+        // check if name exists in the database
+        $aircraftRepo = new AircraftRepository();
+        if ($aircraftRepo->checkIfExists(
+                            entry: $aircraftName , 
+                            column: 'aircraft_name',
+                            table: 'aircraft')) {
+                              $errors[] = 'Name already exists.';
+                            };
+        if ($errors) {
+          forEach($errors as $error) {
+            $this->flashMessenger->add($error);
+            // we have errors 
+            // go back to form and fix it by user
+            $form->setData(
+              [
+               'aircraft_name' => $aircraftName,
+                'airport_base' => $base,
+                'aeroplane' => $aeroplane
+              ]
+              );
+          }  
+        } else {
+          $aircraft = new AircraftEntity();
+          // if id is set means we are editing existing entry
+          if (isset($data['id'])) {
+           $aircraft->setId((int)$data['id']);
+          }
+         $aircraft->setAircraftName($aircraftName);
+         $aircraft->setHoursDone(0);
+         $aircraft->isInUse(0);
+         $aircraft->setAirportBase((int)$base);
+         $aircraft->setAeroplane((int)$aeroplane);
+     
+        $this->db->persist(new AircraftRepository(), $aircraft);
+   
+        $this->flashMessenger->add('Operation done.');
+         Url::redirect('/fleet/1/aircraft_name/asc/noString/noColumn');
+        } // form processing ends here
+      }
     $planesRepo = new AeroplaneRepository($this->conn);
     $planes = $planesRepo->getAllPlaneModels();
-
-    $form = new PlaneForm();
-    echo $this->twig->render('add-plane.html.twig', ['form' => $form->getForm()]);
+    
+        // if (!empty($aeroplane)) {
+        //     $form = new PlaneForm(
+        //         ['name' => $aircraftName,
+        //         'aeroplaneId' => $aeroplane,
+        //         'base' => $base ]);
+        // } else {
+      
+        // }
+        $formReady = $form->getForm();
+    echo $this->twig->render('add-plane.html.twig', 
+                          ['form' => $formReady,
+                          'flashes' => App::$app->flashMessenger->getMessages()
+                        ]);
   }
 
   public function editPlane(int $id)
@@ -158,8 +247,9 @@ class MainController extends AbstractController
     $planesRepo = new AeroplaneRepository($this->conn);
     $plane = $planesRepo->getById($id, 'aircraft');
     $form = new PlaneForm();
-
-    echo $this->twig->render('edit-plane.html.twig', ['form' => $form->getForm($plane[0])]);
+    $form->setData($plane[0]);
+    echo $this->twig->render('edit-plane.html.twig', 
+    ['form' => $form->getForm()]);
   }
 
   public function addAeroplane()

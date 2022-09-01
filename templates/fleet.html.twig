@@ -5,16 +5,13 @@
 		<div class="row">
 
 			<div class="col-12">
-
 				{% for flash in flashes %}
 					<div class="alert alert-danger" role="alert">
-
 						{{ flash }}
-
 					</div>
 				{% endfor %}
 				<div class="row">
-				<div class="col-6"><h1 class="mt-4">Customers</h1>
+				<div class="col-6"><h1 class="mt-4">Fleet</h1>
 				</div>
 				 <div class="col-6 mt-4 d-flex justify-content-end">
 
@@ -147,7 +144,10 @@
 					</tbody>
 				</table>
 				{# #### PAGINATION CONTROLS STARTS HERE ### #}
-				<nav aria-label="Page navigation example">
+				{% if planes| length == 0 %} 
+					<p>No results found. Try different search. </p>
+				{% else %}
+				<nav aria-label="Page navigation">
 
 					<ul
 						class="pagination">
@@ -155,7 +155,11 @@
 						{# if it's first page "Previous" is not needed  #}
 						{% if page != 1 %}
 							<li class="page-item">
-								<a class="page-link" href="/fleet/{{ page - 1 }}/{{ sortBy }}/{{ sortOrder }}">Previous</a>
+								<a class="page-link" href="/fleet/{{ page - 1 }}/{{ sortBy }}/{{ sortOrder }}
+								{% if searchString != '' %}
+											/?searchString={{ searchString }}&amp;column={{ searchColumn }}
+								{% endif %}
+								">Previous</a>
 							</li>
 						{% endif %}
 
@@ -166,7 +170,11 @@
 													active
 										{% endif %}
 											">
-								<a class="page-link" href="/fleet/{{ idx }}/{{ sortBy }}/{{ sortOrder }}">{{ idx }}</a>
+								<a class="page-link" href="/fleet/{{ idx }}/{{ sortBy }}/{{ sortOrder }}
+								{% if searchString != '' %}
+											/?searchString={{ searchString }}&amp;column={{ searchColumn }}
+								{% endif %}
+								">{{ idx }}</a>
 							</li>
 
 						{% endfor %}
@@ -174,12 +182,17 @@
 
 						{% if page != pagesCount %}
 							<li class="page-item">
-								<a class="page-link" href="/fleet/{{ page + 1 }}/{{ sortBy }}/{{ sortOrder }}">Next</a>
+									<a class="page-link" href="/fleet/{{ page + 1 }}/{{ sortBy }}/{{ sortOrder }}
+										{% if searchString != '' %}
+											/?searchString={{ searchString }}&amp;column={{ searchColumn }}
+										{% endif %}
+									">Next</a>
 							</li>
 						{% endif %}
 
 					</ul>
 				</nav>
+				{% endif %}
 				{# #####  PAGINATION CONTROLS ENDS HERE ##### #}
 				<a href="/addPlane" class="btn btn-primary">Add plane</a>
 

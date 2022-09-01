@@ -63,7 +63,6 @@ class AuthController extends AbstractController
     );
    
     if (empty($errors)) {
-     // dump($data['login']);
       // if validation's error didn't occur try to login
       if (Authorisation::login(
                         login: $data['login'], 

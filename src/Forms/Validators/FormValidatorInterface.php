@@ -8,4 +8,5 @@ interface FormValidatorInterface
 {
     public function validateEmail();
     public function sanitizeText();
+    public function removeUnwantedChars(string $text);
 }
