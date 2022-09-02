@@ -53,14 +53,14 @@
 										  'cellName': 'Model' }) }}
 
 							</th>
-							<th scope="col" class="d-none d-lg-table-cell">
+							<th scope="col" class="d-none d-xl-table-cell">
 
 								{{ include('components/sort-table.html.twig', 
 										{ 'entry': 'payload',
 										  'cellName': 'Capacity' }) }}
 
 							</th>
-							<th scope="col" class="d-none d-md-table-cell">
+							<th scope="col" class="d-none d-lg-table-cell">
 
 								{{ include('components/sort-table.html.twig', 
 										{ 'entry': 'in_use',
@@ -118,8 +118,8 @@
 								{% set count = count + 1 %}
 								<td>{{ plane.aircraft_name }}</td>
 								<td>{{ plane.model }}</td>
-								<td class="d-none d-lg-table-cell">{{ plane.payload }}T</td>
-								<td class="d-none d-sm-table-cell">
+								<td class="d-none d-xl-table-cell">{{ plane.payload }}T</td>
+								<td class="d-none d-lg-table-cell">
 
 									{% if (plane.in_use == 1) %}
 										Yes

@@ -21,7 +21,7 @@ class SearchFleetForm
     private int $searchColumn;
     public function __construct()
     {
-        $this->formBuilder = new FormBuilder('plane.php');
+        $this->formBuilder = new FormBuilder();
        
     } 
 

@@ -15,7 +15,7 @@ class UserLoginForm
     private FormBuilder $formBuilder;
     public function __construct()
     {
-        $this->formBuilder = new FormBuilder('logginAction');
+        $this->formBuilder = new FormBuilder();
     }
 
     public function getForm()

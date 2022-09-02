@@ -3,9 +3,8 @@
 {% block body %}
 <div class="container">
     <div class="row">
-        
         <div class="col-12">
-        <h2 class="mt-4">Edit plane</h2>
+        <h2 class="mt-4">Edit customer</h2>
             {{ form | raw }}
         </div>
     </div>
@@ -14,10 +13,4 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-<script>
-$("select.image-picker").imagepicker({
-    'show_label': true
-    }
-)
-</script>
 {% endblock %}

@@ -6,7 +6,6 @@ namespace App\Models\Repositories;
 
 use App\Helpers\Url;
 use App\Models\Repositories\AbstractRepository;
-use App\Services\FlashMessenger;
 use PDO;
 
 class AirportRepository extends AbstractRepository implements RepositoryInterface

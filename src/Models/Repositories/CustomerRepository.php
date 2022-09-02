@@ -7,46 +7,32 @@ namespace App\Models\Repositories;
 use App\Models\Repositories\AbstractRepository;
 use PDO;
 
-class AircraftRepository extends AbstractRepository implements RepositoryInterface
+class CustomerRepository extends AbstractRepository implements RepositoryInterface
 {
     public function __construct()
     {
         parent::__construct();
     }
-    public function getAllAircrafts()
-    {
-      
-        $stmt = $this->conn->prepare("SELECT 
-            aircraft.id, aircraft_name, hours_done, in_use, airport_base,
-            vendor, model, payload, city
-            FROM aircraft 
-            LEFT JOIN aeroplane
-            ON  aircraft.aeroplane = aeroplane.id
-            LEFT JOIN airport
-            ON aircraft.airport_base = airport.id");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    public function getAllPaginated(int $page, string $sortBy, string $sortOrder = 'asc', string $searchString = '', string $searchColumn = '')
+    
+    public function getAllCustomersPaginated(int $page, string $sortBy, string $sortOrder = 'asc', string $searchString = '', string $searchColumn = '')
     {
         // TODO: CHeck if serach string is given
         $searchStr = "'%" . $searchString . "%'";
       
         $offset = ($page - 1 ) * 10;
         $sql = "SELECT 
-            aircraft.id, aircraft_name, hours_done, in_use, airport_base,
-            vendor, model, payload, city
-             FROM aircraft
-             LEFT JOIN aeroplane
-            ON  aircraft.aeroplane = aeroplane.id
-            LEFT JOIN airport
-            ON aircraft.airport_base = airport.id";
+            *
+             FROM customer
+             LEFT JOIN customer_cargos
+            ON customer.cargos = customer_cargos.id
+            ";
             if ($searchColumn != '') {
                 $sql .=  " WHERE " . $searchColumn . " LIKE " . $searchStr;
              }
             $sql .= " ORDER BY " . $sortBy;
             $sortOrder == 'asc' ? $sql .= ' ASC' : $sql .= ' DESC';
             $sql .= " LIMIT 10 OFFSET :offset";
+            dump($sql);
           $stmt = $this->conn->prepare($sql);
           $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
          

@@ -9,22 +9,17 @@ use App\Controllers\AuthController;
 use App\Controllers\MainController;
 use App\Controllers\SettingsController;
 use App\Controllers\ActionsController;
-use App\Fixtures\UserFixture;
-use App\Fixtures\FixtureLauncher;
-use App\Forms\FormInputBuilder;
-use App\Forms\InputTypes\TextType;
+use App\Controllers\OrderController;
+use App\Controllers\CustomerController;
+use App\Controllers\FleetController;
+use App\Controllers\NotFoundController;
 use App\Services\Router;
 use App\Services\Request;
 use App\Models\Database\PDOClient;
-use App\Models\Repositories\UserRepository;
 use App\Models\Entities\UserEntity;
 use App\Services\SessionManager;
-use App\Models\Database\Database;
-use App\Services\Authorisation;
-use App\Helpers\Url;
 use App\Services\FlashMessenger;
-use App\Services\MigrationsManager;
-use PDO;
+use Environment;
 
 class App
 {
@@ -33,21 +28,24 @@ class App
     private Request $request;
     public PDOClient $db;
     public $conn;
-    private UserEntity $user;
+    private array $config;
     public static App $app;
     public FlashMessenger $flashMessenger;
 
     public MainController $mainController;
     public AdminController $adminController;
     public AuthController $authController;
+    public CustomerController $customerController;
+    public OrderController $orderController;
+    public FleetController $fleetController;
     public SettingsController $settingsController;
 
-    public function __construct()
+    public function __construct(array $config)
     {
         $this->db = new PDOClient(DB_DRIVER, DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
         $this->db->connect();
         $this->conn = $this->db->getConnection();
-
+        $this->config = $config;
         /**
          * For easier access in classes
          */
@@ -55,11 +53,17 @@ class App
         $this->router = new Router();
         $this->request = new Request();
         $this->mainController = new MainController();
+        $this->fleetController = new FleetController();
         $this->adminController = new AdminController();
         $this->authController = new AuthController();
+        $this->customerController = new CustomerController();
+        $this->orderController = new OrderController();
         $this->settingsController = new SettingsController();
         $this->actionsController = new ActionsController();
+        $this->notFoundController = new NotFoundController();
+
         $this->flashMessenger = new FlashMessenger();
+        
 
         $this->user = new UserEntity();
     }
@@ -84,8 +88,12 @@ class App
         $this->mainController->attachRoutes($this->router);
         $this->adminController->attachRoutes($this->router);
         $this->authController->attachRoutes($this->router);
+        $this->customerController->attachRoutes($this->router);
+        $this->orderController->attachRoutes($this->router);
+        $this->fleetController->attachRoutes($this->router);
         $this->settingsController->attachRoutes($this->router);
         $this->actionsController->attachRoutes($this->router);
+        $this->notFoundController->attachRoutes($this->router);
 
 
 
@@ -105,7 +113,7 @@ class App
             $this->router->getRoutes()
         );
         if ($routeWithParams === false) {
-            echo "No route found!";
+            $this->router->callRoute('pageNotFound', []);
         } else {
             (isset($routeWithParams['params'])) 
                 ? 
@@ -117,5 +125,12 @@ class App
                     $routeWithParams['route']
                 );
         }
+    }
+    public function isDebugMode(): bool
+    {
+     if ($this->config['environment'] === Environment::Dev) {  
+      return true;
+    }
+      return false;
     }
 }

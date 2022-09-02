@@ -18,7 +18,7 @@ require_once __DIR__ . '/../config/others.php';
 /**
  * Finally some app definitions
  */
- require_once __DIR__ . '/../config/app.php';
+$config = require_once __DIR__ . '/../config/app.php';
 
 /**
  * PSR-4 autoload
@@ -27,7 +27,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\App;
 
-$app = new App();
+$app = new App($config);
+
 $app->run();
 
 /**
@@ -35,7 +36,6 @@ $app->run();
  * it will be used for further processing of the route
  */
 $url = $_SERVER['REQUEST_URI'];
-
 
 /**
  * for now all request are maintained by POST router
@@ -48,3 +48,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $app->resolve($url);
 }
+ 

@@ -1,0 +1,32 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        
+        <div class="col-12">
+            {% for flash in flashes %}
+					<div class="alert alert-danger" role="alert">
+						{{ flash }}
+					</div>
+			{% endfor %}
+        <h2 class="mt-4">Add new customer</h2>
+        {{ form | raw }}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        const fileInput = document.querySelector('.logo-uploader');
+        const imagePreview = document.getElementById('image-preview');
+        console.log(imagePreview);
+        fileInput.addEventListener('change', () => {
+            console.log(fileInput.files);
+            imagePreview.src = window.URL.createObjectURL(fileInput.files[0])
+        })
+    </script>
+{% endblock %}

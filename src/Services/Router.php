@@ -41,6 +41,7 @@ class Router
         )
     {
         $this->setRoute($controller, $routeName, $params);
+        
     }
 
     /** 

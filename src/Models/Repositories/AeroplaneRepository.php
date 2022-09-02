@@ -5,8 +5,6 @@ declare(strict_types = 1 );
 namespace App\Models\Repositories;
 
 use App\Helpers\Url;
-use App\Models\Entities\AeroplaneEntity;
-use App\Models\Entities\EntityInterface;
 use App\Models\Repositories\AbstractRepository;
 use PDO;
 

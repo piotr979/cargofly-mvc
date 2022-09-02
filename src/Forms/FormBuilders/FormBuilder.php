@@ -24,7 +24,7 @@ class FormBuilder implements FormBuilderInterface
     private $elements = [];
     private FormInputBuilder $formInputBuilder;
 
-    public function __construct($action)
+    public function __construct()
     {
         $this->formInputBuilder = new FormInputBuilder();
     }
@@ -43,15 +43,6 @@ class FormBuilder implements FormBuilderInterface
        
     }
 
-    /**
-     * Method to add html element like div opening/closing tags and other stuff
-     * @param string $elements html element
-     */
-    public function addHtml(string $element)
-    {
-        $this->form .= sprintf('%s', $element);
-        return $this;
-    }
     public function build()
     {
         $this->elements['html'] =  $this->formInputBuilder->build();
@@ -69,7 +60,6 @@ class FormBuilder implements FormBuilderInterface
         }
        
         $this->form .= $this->formEnd();
-
         return $this->form;
     }
 }

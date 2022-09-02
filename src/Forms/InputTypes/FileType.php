@@ -39,8 +39,6 @@ class FileType extends AbstractInputType implements InputTypeInterface
         if (isset($attr['required'])) {
             $this->input .= sprintf(" required=required ");
         }
-       
-
         $this->input .= $this->inputEnd();
         $this->getInput();
     }
