@@ -96,12 +96,11 @@ class MigrationsManager
                 owner_lname VARCHAR(100) NOT NULL,
                 street1 VARCHAR(100) NOT NULL,
                 street2 VARCHAR(100),
-                city VARCHAR(100),
-                zip_code VARCHAR(100),
-                country VARCHAR(100),
-                vat VARCHAR(100),
-                logo JSON,
-                cargos INT,
+                city VARCHAR(100) NOT NULL,
+                zip_code VARCHAR(100) NOT NULL,
+                country VARCHAR(100) NOT NULL,
+                vat VARCHAR(100) NOT NULL,
+                logo VARCHAR(255),
                 PRIMARY KEY(id)
             );
 

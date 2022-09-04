@@ -8,7 +8,7 @@ use App\Models\Database\Database;
 use PDO;
 use App\Exceptions\ConnectionException;
 
-class PDOClient extends Database
+class PDOClient extends Database implements DatabaseClientInterface
 {
     private string $dsn;
 
@@ -18,10 +18,16 @@ class PDOClient extends Database
         $this->dsn = "{$driver}:host={$this->host};dbname={$this->db_name};
                     ";
     }
-    public function connect()
+    public function connect(): object
     {
             $this->connection = new PDO($this->dsn, $this->db_user, $this->db_password);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $this;
+    }
+    public function runQuery(string $query, array $params = []): array
+    {
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

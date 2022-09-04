@@ -11,7 +11,7 @@ class AircraftRepository extends AbstractRepository implements RepositoryInterfa
 {
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct('aircraft');
     }
     public function getAllAircrafts()
     {
@@ -26,6 +26,21 @@ class AircraftRepository extends AbstractRepository implements RepositoryInterfa
             ON aircraft.airport_base = airport.id");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getAllPaginated2(int $page, string $sortBy, string $sortOrder = 'asc', string $searchString = '', string $searchColumn = '')
+    {
+        $query = $this->qb
+                ->select('aircraft.id, aircraft_name, hours_done, in_use, airport_base,
+                vendor, model, payload, city')
+                ->from('aircraft')
+                ->leftJoin('aeroplane', 'aircraft.aeroplane', 'aeroplane.id')
+                ->leftJoin('airport', 'aircraft.airport_base','airport.id')
+                ->whereLike($searchColumn, $searchString)
+                ->orderBy($sortBy, $sortOrder)
+                ->getQuery()
+                ;
+        dump($query);
+       return $this->db->runQuery($query);
     }
     public function getAllPaginated(int $page, string $sortBy, string $sortOrder = 'asc', string $searchString = '', string $searchColumn = '')
     {
@@ -64,6 +79,34 @@ class AircraftRepository extends AbstractRepository implements RepositoryInterfa
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    }
+    /**
+     * Counts pages. The problem was to get proper amount of entries
+     * as when search form was submitted it had to be taken into account
+     * otherwise it always returned full table with all entries
+     */
+    public function countPages(int $limit, 
+                                string $searchString = '',
+                                string $searchColumn = ''): int
+    {
+        $searchStr = "'%" . $searchString . "%'";
+        $sql = "SELECT COUNT(aircraft.id) AS count FROM aircraft 
+         LEFT JOIN aeroplane
+        ON  aircraft.aeroplane = aeroplane.id
+        LEFT JOIN airport
+        ON aircraft.airport_base = airport.id"
+        ;
+        if ($searchColumn != '') {
+            $sql .=' WHERE ' . $searchColumn . ' LIKE ' . $searchStr;
+        }
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $entries = $stmt->fetch()['count'];
+
+        // now divide entries by given limit per page,
+        // round it up and cast to int
+        return (int)ceil($entries / $limit);
     }
     /** 
      * Saves to database

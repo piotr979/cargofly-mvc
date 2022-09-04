@@ -48,9 +48,17 @@ class FleetController extends AbstractController
   {
     $searchString = '';
     $searchColumn = '';
+  
     $fleetRepo = new AircraftRepository();
+    dump($fleetRepo->getById2(2));
     $searchForm = new SearchFleetForm();
-
+    $pl = $fleetRepo->getAllPaginated2(
+            page: $page, 
+            sortBy: $sortBy,
+            sortOrder: $sortOrder
+    );
+    dump($pl);exit;
+    
     // if search form was already submitted
     if (isset($_GET['searchString']) && isset($_GET['column'])) {
       $searchString = $_GET['searchString'];
@@ -65,7 +73,6 @@ class FleetController extends AbstractController
       );
       $pages = $fleetRepo->countPages(
         limit: 10,
-        table: 'aircraft',
         searchString: $searchString,
         searchColumn: $searchColumn
       );
@@ -84,8 +91,7 @@ class FleetController extends AbstractController
       );
 
       $pages = $fleetRepo->countPages(
-        limit: 10,
-        table: 'aircraft',
+        limit: 10
       );
     }
     
@@ -173,7 +179,7 @@ class FleetController extends AbstractController
     $planesRepo = new AeroplaneRepository($this->conn);
     $planes = $planesRepo->getAllPlaneModels();
     
-        $formReady = $form->getForm();
+    $formReady = $form->getForm();
     echo $this->twig->render('add-plane.html.twig', 
                           ['form' => $formReady,
                           'flashes' => App::$app->flashMessenger->getMessages()
@@ -182,7 +188,7 @@ class FleetController extends AbstractController
   public function editPlane(int $id)
   {
     $planesRepo = new AeroplaneRepository($this->conn);
-    $plane = $planesRepo->getById($id, 'aircraft');
+    $plane = $planesRepo->getById(id: $id, tableName: 'aircraft', entityName: 'FleetEntity');
     $form = new PlaneForm();
     $form->setData($plane[0]);
     echo $this->twig->render('edit-plane.html.twig', 

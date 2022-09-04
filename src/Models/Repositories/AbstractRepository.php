@@ -5,33 +5,54 @@ declare(strict_types = 1 );
 namespace App\Models\Repositories;
 
 use App\App;
-use App\Helpers\Url;
+
 use PDO;
-use Reflection;
+use App\Models\Database\QueryBuilder;
 use ReflectionClass;
 
 class AbstractRepository 
 {
-    protected $conn;
+    protected object $db;
+    protected QueryBuilder $qb;
+    protected string $entityName;
 
-    public function __construct()
+    public function __construct(string $entityName)
     {
-        $this->conn = App::$app->conn;
+        $this->qb = new QueryBuilder($entityName);
+        $this->entityName = $entityName;
+        dump($this->qb);
+        $this->db = App::$app->db;
     }
-    public function getById(int $id, string $tableName)
+    public function getAll()
+    {   
+        $query = $this->qb->select('*')
+                 ->from($this->entityName)
+                 ->getQuery();      
+
+        return $this->db->runQuery($query);
+    }
+    public function getById2(int $id)
     {
-        
+        $query = $this->qb
+                        ->select('*')
+                        ->from($this->entityName)
+                        ->where('id', (string)$id)
+                        ->getQuery();
+        return $this->db->runQuery($query);
+    }
+    public function getById(int $id, string $tableName, string $entityName)
+    {
         $stmt = $this->conn->prepare('SELECT * FROM ' . $tableName . ' WHERE id = :id');
-       $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchObject('\App\Models\Entities\\' . $entityName);
     }
-    public function getAll(string $tableName)
-    {
-        $stmt = $this->conn->prepare('SELECT * FROM ' . $tableName);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    // public function getAll(string $tableName)
+    // {
+    //     $stmt = $this->conn->prepare('SELECT * FROM ' . $tableName);
+    //     $stmt->execute();
+    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // }
     public function getAllBy(string $sortBy, string $sortOrder, string $table)
     {
         $sql = 'SELECT * FROM :table ORDER BY :sortBy ' . $sortOrder === 'asc' ? 'ASC' : 'DESC';
@@ -44,39 +65,6 @@ class AbstractRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Counts pages. The problem was to get proper amount of entries
-     * as when search form was submitted it had to be taken into account
-     * otherwise it always returned full table with all entries
-     */
-    public function countPages(int $limit, 
-                                string $table, 
-                                string $searchString = '',
-                                string $searchColumn = ''): int
-    {
-        $searchStr = "'%" . $searchString . "%'";
-        $sql = "SELECT COUNT(aircraft.id) AS count FROM " . $table . 
-        " LEFT JOIN aeroplane
-        ON  aircraft.aeroplane = aeroplane.id
-        LEFT JOIN airport
-        ON aircraft.airport_base = airport.id"
-        ;
-        if ($searchColumn != '') {
-            $sql .=' WHERE ' . $searchColumn . ' LIKE ' . $searchStr;
-        }
-
-   
-        $stmt = $this->conn->prepare($sql);
-       //  $stmt->bindValue(":name", "aircraft", PDO::PARAM_STR);
-
-        $stmt->execute();
-
-        $entries = $stmt->fetch()['count'];
-
-        // now divide entries by given limit per page,
-        // round it up and cast to int
-        return (int)ceil($entries / $limit);
-    }
     protected function removeById($id, string $entity): bool
     {
         $mysql = "DELETE FROM aircraft WHERE id = :id";

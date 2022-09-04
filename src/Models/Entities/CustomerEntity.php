@@ -17,7 +17,7 @@ class CustomerEntity extends AbstractEntity implements EntityInterface
      * @var $customer_name
      * Company name
      */
-    private string $customer_name;
+    private ?string $customer_name;
 
     /**
      * @var $owner_fname
@@ -45,7 +45,7 @@ class CustomerEntity extends AbstractEntity implements EntityInterface
      * Street address 2 (not mandatory)
      */
 
-    private string $street2;
+    private string $street2 = '';
 
      /**
      * @var $city
@@ -80,7 +80,7 @@ class CustomerEntity extends AbstractEntity implements EntityInterface
      * Logo
      */
 
-    private string $logo;
+    private string $logo = '';
 
     public function __construct()
     {
@@ -88,7 +88,7 @@ class CustomerEntity extends AbstractEntity implements EntityInterface
     /**
      * Getters and setters
      */
-    public function getCustomerName(): string
+    public function getCustomerName(): ?string
     {
         return $this->customer_name;
     }
@@ -154,18 +154,18 @@ class CustomerEntity extends AbstractEntity implements EntityInterface
 
     public function getCountry(): string
     {
-        return $this->getCountry;
+        return $this->country;
     }
     public function setCountry(string $country)
     {
         $this->country = $country;
     }
 
-    public function getVat(): string
+    public function getVat(): int
     {
-        return $this->getVat;
+        return $this->vat;
     }
-    public function setVat(string $vat)
+    public function setVat(int $vat)
     {
         $this->vat = $vat;
     }

@@ -124,36 +124,4 @@ class Request
             return false;
         }
     }
-    private function checkForRoute(int $paramsAmount, string $url, $params)
-    {
-        $pregParams = '';
-        for ( $i=1; $i<= $paramsAmount-1; $i++) {
-            $pregParams .= "(?<{$params[$i-1]}>[a-zA-Z0-9_-]+)\/";
-        }
-    
-        $pregParams .= "(?<{$params[$paramsAmount-1]}>[a-zA-Z0-9_-]+)";
-     
-
-        $pregString = '/\/(?<route>[a-zA-Z0-9_-]+)\/' . $pregParams . '/';
-   
-        if (preg_match(
-                $pregString, 
-                $url, 
-                $matchedUrlWithParams
-            )) {
-            } else {
-            };
-        
-        foreach($params as $param) {
-                if ( !(isset($matchedUrlWithParams[$param]))) {
-                    return false;
-                
-                 $paramsForRouteOnly[$param] = $matchedUrlWithParams[$param];
-             }
-            
-             // now it's time to combine route name with params
-             // and return them
-             $routeIntercepted['params'] = $paramsForRouteOnly;
-            }
-    }
 }

@@ -37,8 +37,20 @@ class AeroplaneRepository extends AbstractRepository implements RepositoryInterf
         $stmt->bindValue( ":payload", $plane->getPayload());
          
         $stmt->execute();
-
     }
+    /**
+     * Counts pages. The problem was to get proper amount of entries
+     * as when search form was submitted it had to be taken into account
+     * otherwise it always returned full table with all entries
+     */
+    public function countPages(int $limit, 
+                                string $searchString = '',
+                                string $searchColumn = ''): int
+    {
+        // not required implementation for now
+        return 0;
+    }
+
     public function remove($id)
     {
         $mysql = "DELETE FROM aeroplane WHERE id = :id";

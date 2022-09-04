@@ -36,6 +36,7 @@ class NumberType extends AbstractInputType implements InputTypeInterface
         $this->input .= sprintf(" name='%s'", $attr['name'] ?? '');
         $this->input .= sprintf(' min="%s"', $attr['min'] ?? '');
         $this->input .= sprintf(' max="%s"', $attr['max'] ?? '');
+        $this->input .= sprintf(' value="%s"', $attr['value'] ?? '');
         $this->input .= sprintf(" class='%s'", $attr['inputCssClasses'] ?? '');
 
         if (isset($attr['required'])) {

@@ -13,6 +13,7 @@ use App\Forms\InputTypes\TextType;
 use App\Forms\InputTypes\SelectImageType;
 use App\Forms\InputTypes\SelectType;
 use App\Forms\InputTypes\SubmitType;
+use App\Models\Entities\CustomerEntity;
 use App\Models\Repositories\AeroplaneRepository;
 use App\Models\Repositories\AirportRepository;
 
@@ -20,24 +21,30 @@ class CustomerForm
 {
     private FormBuilder $formBuilder;
     private int $id;
-
+    private $data = [];
     public function __construct()
     {
         $this->formBuilder = new FormBuilder();
     } 
-    public function setData(array $existingData = [])
+    public function setData(CustomerEntity $customer)
     {
-        if (!empty($existingData)) {
-            if (isset($existingData['id'])) {
-                $this->id = $existingData['id'];
-            }
-           
-            // $this->aircraftName = $existingData['aircraft_name'];
-            // $this->airportBaseId = (int)$existingData['airport_base'];
-            // $this->aeroplaneId = $existingData['aeroplane'];
+      $getters = [];
+      $this->customer = $customer;
+      $class = get_class($customer);
+
+      if ($class) {
+            $getters = array_filter(get_class_methods($customer), function($method) {
+                return 'get' === substr($method, 0, 3);
+            });
         }
-     
-    }
+
+        // remmove getId method
+        array_pop($getters);
+        foreach ($getters as $getter)
+        {
+            $this->data[] = $customer->$getter();
+        }
+        }
     public function getForm()
     {
         /**
@@ -72,7 +79,7 @@ class CustomerForm
             'name' => 'customer_name',
             'label' => 'Company\'s name &#42;',
             'required' => 'required',
-            //'value' => $this->customerName ?? '',
+            'value' =>  $this->data[0] ?? '',
             'labelCssClasses' => 'd-block',
             'inputCssClasses' => 'd-block mt-1 class-control width-xsmall',
             ]
@@ -83,7 +90,7 @@ class CustomerForm
             'name' => 'owner_fname',
             'label' => 'Owner\'s first name &#42;',
             'required' => 'required',
-            'value' => $this->owner_fname ?? '',
+            'value' => $this->data[1] ?? '',
             'labelCssClasses' => 'd-block mt-3',
             'inputCssClasses' => 'd-block mt-1 class-control width-xsmall',
             ]
@@ -94,7 +101,7 @@ class CustomerForm
             'name' => 'owner_lname',
             'label' => 'Owner\'s last name &#42;',
             'required' => 'required',
-            'value' => $this->owner_lname ?? '',
+            'value' => $this->data[2] ?? '',
             'labelCssClasses' => 'd-block mt-3',
             'inputCssClasses' => 'd-block mt-1 class-control width-xsmall',
             ]
@@ -105,7 +112,7 @@ class CustomerForm
             'name' => 'street1',
             'label' => 'Street address 1 &#42;',
             'required' => 'required',
-            'value' => $this->street1 ?? '',
+            'value' => $this->data[3] ?? '',
             'labelCssClasses' => 'd-block mt-3',
             'inputCssClasses' => 'd-block mt-1 class-control width-xsmall',
             ]
@@ -115,7 +122,7 @@ class CustomerForm
             [
             'name' => 'street2',
             'label' => 'Street address 2',
-            'value' => $this->street2 ?? '',
+            'value' => $this->data[4] ?? '',
             'labelCssClasses' => 'd-block mt-3',
             'inputCssClasses' => 'd-block mt-1 class-control width-xsmall',
             ]
@@ -134,7 +141,7 @@ class CustomerForm
             'name' => 'city',
             'label' => 'City &#42;',
             'required' => 'required',
-            'value' => $this->city ?? '',
+            'value' => $this->data[5] ?? '',
             'labelCssClasses' => 'd-block mt-3 mt-lg-0',
             'inputCssClasses' => 'd-block mt-1 class-control width-xsmall',
             ]
@@ -145,7 +152,7 @@ class CustomerForm
             'name' => 'zip_code',
             'label' => 'Zip code &#42;',
             'required' => 'required',
-            'value' => $this->zip_code ?? '',
+            'value' =>  $this->data[6] ?? '',
             'labelCssClasses' => 'd-block mt-3',
             'inputCssClasses' => 'd-block mt-1 class-control width-xsmall',
             ]
@@ -156,7 +163,7 @@ class CustomerForm
             'name' => 'country',
             'label' => 'Country &#42;',
             'required' => 'required',
-            'value' => $this->country ?? '',
+            'value' => $this->data[7] ?? '',
             'labelCssClasses' => 'd-block mt-3',
             'inputCssClasses' => 'd-block mt-1 class-control width-xsmall',
             ]
@@ -166,7 +173,7 @@ class CustomerForm
             [
             'name' => 'vat',
             'label' => 'Vat number &#42;',
-            'value' => $this->vat_number ?? '',
+            'value' => $this->data[8] ?? '',
             'labelCssClasses' => 'd-block mt-3',
             'inputCssClasses' => 'd-block mt-1 class-control width-xsmall',
             ]
@@ -180,7 +187,7 @@ class CustomerForm
             [
             'name' => 'logo',
             'label' => 'Company logo',
-            'value' => $this->logo ?? '',
+            'value' => $this->data[9] ?? '',
             'labelCssClasses' => 'd-block mt-3',
             'inputCssClasses' => 'logo-uploader d-block ms-3 ms-lg-2 mt-1 class-control',
             ]
