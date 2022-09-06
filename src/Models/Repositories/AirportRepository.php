@@ -12,7 +12,7 @@ class AirportRepository extends AbstractRepository implements RepositoryInterfac
 {
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct('airport');
     }
     public function getAllAirports()
     {

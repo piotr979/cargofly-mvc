@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Dump is global command to print formmatted strings out
+ * Dump is a lobal command to print formmatted strings out
  */
 include_once __DIR__ . '/../src/Services/Dump.php';
 

@@ -10,8 +10,11 @@ use App\Forms\InputTypes\TextType;
 use App\Forms\InputTypes\SelectImageType;
 use App\Forms\InputTypes\SelectType;
 use App\Forms\InputTypes\SubmitType;
+use App\Models\Entities\AircraftEntity;
+use App\Models\Entities\EntityInterface;
 use App\Models\Repositories\AeroplaneRepository;
 use App\Models\Repositories\AirportRepository;
+use PDO;
 
 class PlaneForm 
 {
@@ -26,17 +29,14 @@ class PlaneForm
     {
         $this->formBuilder = new FormBuilder();
     } 
-    public function setData(array $existingData = [])
+    public function setData(AircraftEntity $plane)
     {
-        if (!empty($existingData)) {
-            if (isset($existingData['id'])) {
-                $this->id = $existingData['id'];
-            }
-           
-            $this->aircraftName = $existingData['aircraft_name'];
-            $this->airportBaseId = (int)$existingData['airport_base'];
-            $this->aeroplaneId = $existingData['aeroplane'];
+        if ( $plane->getId() != null) {
+                $this->id = $plane->getId();
         }
+            $this->aircraftName = $plane->getAircraftName();
+            $this->airportBaseId = $plane->getAirportBase();
+            $this->aeroplaneId = $plane->getAeroplane();
      
     }
     public function getForm()
@@ -107,7 +107,7 @@ class PlaneForm
             ]
         )
         ->build()
-        ->getForm(actionRoute: '/addPlane');
+        ->getForm(actionRoute: '/processPlane/' . ($this->id ?? 0) );
         ;
         return $elements;
     }
@@ -118,13 +118,14 @@ class PlaneForm
     private function getAeroplaneModels(): array
     {
         $planesRepo = new AeroplaneRepository();
-        $planes = $planesRepo->getAllPlaneModels();
+        $planes = $planesRepo->getAll(PDO::FETCH_CLASS);
+       // dump($planes);
         return $planes;
     }
     private function getAirports(): array
     {
         $airportsRepo = new AirportRepository();
-        $airports = $airportsRepo->getAllAirports();
+        $airports = $airportsRepo->getAll(PDO::FETCH_CLASS);
         $airportsLocations = [];
 
         // if airport's city name is not found use airport name

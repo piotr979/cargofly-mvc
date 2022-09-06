@@ -13,7 +13,7 @@ use App\Helpers\Url;
 use App\Models\Entities\CustomerEntity;
 use App\Models\Repositories\CustomerRepository;
 use App\Services\Router;
-
+use FormRules;
 
 /**
  * all pages are stored here. There are accessible for
@@ -30,8 +30,7 @@ class CustomerController extends AbstractController
     // also all methods can be retrieved with ReflectionClass
     // TO BE DONE
     $router->attachRoute('CustomerController', 'customers', ['page', 'sortBy', 'sortOrder']);
-    $router->attachRoute('CustomerController', 'addCustomer');
-    $router->attachRoute('CustomerController', 'editCustomer', ['id']);
+    $router->attachRoute('CustomerController', 'processCustomer', ['id']);
   
   }
 
@@ -42,9 +41,6 @@ class CustomerController extends AbstractController
     $customerRepo = new CustomerRepository();
     $customerRepo->getAll();
    
-    $dataz = $customerRepo->getById2(1);
-    dump($dataz);
-    $customerRepo->persist2(['name', 'address', 'tet'], ['John','Swift','PHP']);
     $searchForm = new SearchFleetForm();
 
     // if search form was already submitted
@@ -83,7 +79,6 @@ class CustomerController extends AbstractController
       );
     }
     // return amount of pages 
-
     echo $this->twig->render(
       'customers.html.twig',
       [
@@ -100,52 +95,74 @@ class CustomerController extends AbstractController
       ]
     );
   }
-  public function addCustomer()
+  /**
+   * This function is responsible for editing and adding new plane
+   * If $id is different than zero means old entry is being edited.
+   * @param int $id Id of the entry
+   */
+  public function processCustomer(int $id)
   {
-
-    $form = new CustomerForm();
     
+    $form = new CustomerForm();
+    $aircraftRepo = new CustomerRepository();
+  //  dump($id);
     if (!empty($_POST)) {
       $data = $_POST;
-
+      // form alread filled
+      // processing here
       $validator = new FormValidator();
-      foreach($data as $key => $value) {
-        $data[$key] = $validator->sanitizeData($value);
-      }
-
+      $errors = $validator->isValid(values: $data, ommit: ['id', 'logo', 'street2']);
       $customer = new CustomerEntity();
+    
       $customer->setCustomerName($data['customer_name']);
       $customer->setOwnerFName($data['owner_fname']);
       $customer->setOwnerLName($data['owner_lname']);
       $customer->setStreet1($data['street1']);
       $customer->setStreet2($data['street2'] ?? '');
-    
       $customer->setCity($data['city']);
       $customer->setZipCode($data['zip_code']);
       $customer->setCountry($data['country']);
       $customer->setVat((int)$data['vat']);
       $customer->setLogo($data['logo'] ?? '');
+      $customer->setId($id);
+      // check if names exists in the database
+      if ($id === 0 && ($aircraftRepo->checkIfExists($customer->getCustomerName(), 'customer_name'))) {
+        $errors[] = 'Name already exists.';
+      }
+      $findInDB = $aircraftRepo->getWhere('id', 'customer_name', $customer->getCustomerName());
+      if (isset($findInDB['id']) && ($findInDB['id'] != $id)) {
+        $errors[] = 'Name already exists in the database.';
 
-      $repo = new CustomerRepository();
-      $repo->persister($customer);
-     // $this->db->persist(new CustomerRepository, $customer);
-      $this->flashMessenger->add('Operation done.');
-          Url::redirect('/customers/1/customer_name/asc');
+      }
+      
+        if ($errors) {
+          forEach($errors as $error) {
+            $this->flashMessenger->add($error);
+            // we have errors 
+            // go back to form and fix it by user
+          } 
+         dump($customer);
+          $form->setData($customer); 
+        } else {
+          // if id is set means we are editing existing entry
+          // add some extra data to the object
+          if (isset($data['id'])) {
+           $customer->setId((int)$data['id']);
+          }
+      
+          $this->db->persist(new CustomerRepository(), $customer);
+        $this->flashMessenger->add('Operation done.');
+         Url::redirect('/customers/1/customer_name/asc');
+         return;
+        } // form processing ends here
     }
-
-    echo $this->twig->render('add-customer.html.twig', [
-                      'form' => $form->getForm()
-    ]);
-  }
-  public function editCustomer(int $id)
-  {
-    $customerRepo = new CustomerRepository();
-    $customer = $customerRepo->getById(id: $id, tableName: 'customer', entityName: 'CustomerEntity');
-    $form = new CustomerForm();
-    $form->setData($customer);
-   
-    echo $this->twig->render('edit-customer.html.twig', [
-                      'form' => $form->getForm()
-                    ]);
+    if ($id != 0) {
+      $aircraft = $aircraftRepo->getById($id);
+      $form->setData($aircraft);
+    }
+    echo $this->twig->render('add-plane.html.twig', 
+                          ['form' => $form->getForm(),
+                          'flashes' => $this->flashMessenger->getMessages()
+                        ]);
   }
 }

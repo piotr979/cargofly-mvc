@@ -30,6 +30,7 @@ class CustomerForm
     {
       $getters = [];
       $this->customer = $customer;
+      
       $class = get_class($customer);
 
       if ($class) {
@@ -37,14 +38,15 @@ class CustomerForm
                 return 'get' === substr($method, 0, 3);
             });
         }
-
         // remmove getId method
         array_pop($getters);
         foreach ($getters as $getter)
         {
             $this->data[] = $customer->$getter();
         }
+        $this->id = $customer->getId();
         }
+      
     public function getForm()
     {
         /**
@@ -215,36 +217,8 @@ class CustomerForm
             ]
         )
         ->build()
-        ->getForm(actionRoute: '/addCustomer');
+        ->getForm(actionRoute: '/processCustomer/' . ($this->id ?? 0 ));
         ;
         return $elements;
-    }
-
-    /**
-     * This function fetches all available plane models from database
-     */
-    private function getAeroplaneModels(): array
-    {
-        $planesRepo = new AeroplaneRepository();
-        $planes = $planesRepo->getAllPlaneModels();
-        return $planes;
-    }
-    private function getAirports(): array
-    {
-        $airportsRepo = new AirportRepository();
-        $airports = $airportsRepo->getAllAirports();
-        $airportsLocations = [];
-
-        // if airport's city name is not found use airport name
-        // and IF airports name is not found use airport code
-        foreach ($airports as $airport) {
-            $airportLocations[$airport->getId()] = 
-                ($airport->getCity() === "" ? 
-                        ($airport->getAirportName() === "" ? $airport->getCode() :
-                                $airport->getAirportName() ) : $airport->getCity()) .
-                 "&#47;" . $airport->getCountry();
-        }
-        asort($airportLocations);
-        return $airportLocations;
     }
 }

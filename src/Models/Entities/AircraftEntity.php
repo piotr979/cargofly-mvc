@@ -91,7 +91,7 @@ class AircraftEntity extends AbstractEntity implements EntityInterface
      /**
       * Get the value of in_use
       */
-     public function isInUse(): int
+     public function getInUse(): int
      {
           return $this->in_use;
      }

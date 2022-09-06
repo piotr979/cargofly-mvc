@@ -18,7 +18,7 @@ abstract class AbstractController {
    // protected $conn;
     public ViewRenderer $viewRenderer;
 
-    function __construct()
+    public function __construct()
     {
         
         $this->viewRenderer = new ViewRenderer();

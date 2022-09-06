@@ -7,5 +7,5 @@ namespace App\Models\Database;
 interface DatabaseClientInterface 
 {
     public function connect(): object;
-    public function runQuery(string $query, array $params = []): array;
+    public function runQuery(string $query, bool $single, string $classAssoc): mixed;
 }

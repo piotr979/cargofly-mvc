@@ -82,7 +82,7 @@ class FormValidator
                         }
                       
                     } else if ($rule === FormRules::InvalidCharacters) {
-                        if (preg_match('/[^a-zA-Z0-9]/', $data[$key])) {
+                        if (preg_match('/[^a-zA-Z0-9_ -]/', $data[$key])) {
                          
                             $this->errors[] = 'Your form contains invalid characters.';
                         }
@@ -103,5 +103,35 @@ class FormValidator
     public function removeUnwantedChars(string $text)
     {
         return preg_replace('/[^a-zA-Z0-9-_]/','', $text);
+    }
+    /**
+     * This is general check for array of submitted data
+     * @param array $data Data to be validated
+     */
+    public function sanitizeAllData(array $data)
+    {
+        $sanitized = [];
+        foreach($data as $key => $item) {
+            is_string($item) ?   
+                    $sanitized[$key] = $this->sanitizeData($item) :
+                    $sanitizied[$key] = $item
+                    ;
+        }
+        dump($sanitized);exit;
+    }
+    public function isValid(array $values, array $ommit): mixed
+    {
+        $ommit = array_flip($ommit);
+        $data = array_diff_key($values, $ommit);
+        $itemsWithRules = [];
+        foreach($data as $key => $item) {
+                if ($key === 'id') {
+                    continue;
+                }
+            $itemsWithRules[$key] = 
+            [ FormRules::InvalidCharacters, [FormRules::MinLength, '4']];
+             
+        }
+        return $this->validateForm($data, $itemsWithRules);
     }
 }

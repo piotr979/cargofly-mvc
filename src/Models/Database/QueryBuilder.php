@@ -16,12 +16,10 @@ class QueryBuilder
     }
     public function select(string|array $args): object
     {
-        dump($this);
         $this->query .= "SELECT ";
         $this->query .= $this->prepareArgs($args);
         return $this;
     }
-
     /**
      * Insert into array. Entity taken from property $entity
      * passed as param to constructor
@@ -31,7 +29,7 @@ class QueryBuilder
         $this->query = "INSERT INTO " . $this->entity;
         $this->query .= " ( " . $this->prepareArgs($args) . " )";
         $this->query .= " VALUE ";
-        $this->query .= $this->prepareArgs($values, quotes: true);
+        $this->query .= " ( " . $this->prepareArgs($values, quotes: true) . " )";
         return $this;
     }
 
@@ -42,7 +40,7 @@ class QueryBuilder
     }
     public function where(string $param, string $equals)
     {
-        $this->query .= " WHERE " . $param . " = " . $equals;
+        $this->query .= " WHERE " . $param . " = " . "'" . $equals . "'";
         return $this;
     }
     public function whereLike(string $param, string $like)
@@ -64,9 +62,26 @@ class QueryBuilder
         $this->query .= " LIMIT " . $limit . " OFFSET " . $offset;
         return $this;
     }
+    public function remove(int $id, string $entityName)
+    {
+        $this->query .= "DELETE FROM " .$entityName . " WHERE id = " . $id;
+        return $this; 
+    }
     public function leftJoin(string $entityName, string $on, string $equals)
     {
         $this->query .= " LEFT JOIN " . $entityName . " ON " . $on . " = " . $equals ; 
+        return $this;
+    }
+    public function update(string $tableName, array $args, array $values, int $id)
+    {
+        $this->query .= "UPDATE " . $tableName . " SET ";
+        for($i=0; $i<count($args); $i++) {
+
+            $this->query .= $args[$i] . " = '" . $values[$i] . "',";
+        }
+        $this->query = substr_replace($this->query, " ", -1);
+        $this->query .= " WHERE id = " . $id;
+      //  dump($this->query);exit;
         return $this;
     }
     public function getQuery(): string
