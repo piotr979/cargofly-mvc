@@ -53,7 +53,6 @@ class AbstractRepository
     {
         $values = [];
         $class = get_class($object);
-       
         if ($class) {
             $getters = array_filter(get_class_methods($class), function ($method) {
                 return 'get' === substr($method, 0, 3);
@@ -129,5 +128,16 @@ class AbstractRepository
                 return false;
 
             }
+    }
+
+    public function searchString(string $search, string $column)
+    {
+        $searchStr = "'%" . $column . "%'";
+        $sql = "
+            SELECT * FROM " . $this->entityName . " WHERE " . $column . " LIKE " . $searchStr;
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

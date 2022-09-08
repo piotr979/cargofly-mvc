@@ -3,9 +3,15 @@
 {% block body %}
 <div class="container">
     <div class="row">
+        
         <div class="col-12">
-        <h2 class="mt-4">Edit customer</h2>
-            {{ form | raw }}
+            {% for flash in flashes %}
+					<div class="alert alert-danger" role="alert">
+						{{ flash }}
+					</div>
+			{% endfor %}
+        <h2 class="mt-4">Edit order</h2>
+        {{ form | raw }}
         </div>
     </div>
 </div>
@@ -13,4 +19,5 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+
 {% endblock %}

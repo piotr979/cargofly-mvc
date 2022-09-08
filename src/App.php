@@ -9,6 +9,7 @@ use App\Controllers\AuthController;
 use App\Controllers\MainController;
 use App\Controllers\SettingsController;
 use App\Controllers\ActionsController;
+use App\Controllers\CargoController;
 use App\Controllers\OrderController;
 use App\Controllers\CustomerController;
 use App\Controllers\FleetController;
@@ -36,7 +37,7 @@ class App
     public AdminController $adminController;
     public AuthController $authController;
     public CustomerController $customerController;
-    public OrderController $orderController;
+    public CargoController $cargoController;
     public FleetController $fleetController;
     public SettingsController $settingsController;
 
@@ -57,7 +58,7 @@ class App
         $this->adminController = new AdminController();
         $this->authController = new AuthController();
         $this->customerController = new CustomerController();
-        $this->orderController = new OrderController();
+        $this->cargoController = new CargoController();
         $this->settingsController = new SettingsController();
         $this->actionsController = new ActionsController();
         $this->notFoundController = new NotFoundController();
@@ -89,7 +90,7 @@ class App
         $this->adminController->attachRoutes($this->router);
         $this->authController->attachRoutes($this->router);
         $this->customerController->attachRoutes($this->router);
-        $this->orderController->attachRoutes($this->router);
+        $this->cargoController->attachRoutes($this->router);
         $this->fleetController->attachRoutes($this->router);
         $this->settingsController->attachRoutes($this->router);
         $this->actionsController->attachRoutes($this->router);

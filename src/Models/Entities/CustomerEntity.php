@@ -178,5 +178,9 @@ class CustomerEntity extends AbstractEntity implements EntityInterface
     {
         $this->logo = $logo;
     }
+    public function __toString()
+    {
+        return $this->customer_name;
+    }
 
 }

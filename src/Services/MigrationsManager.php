@@ -74,7 +74,10 @@ class MigrationsManager
                 value FLOAT NOT NULL,
                 airport_from INT NOT NULL,
                 airport_to INT NOT NULL,
-                time_taken TIME NOT NULL,
+                status INT NOT NULL,
+                weight INT NO NULL,
+                size INT NOT NULL,
+                time_taken INT,
                 FOREIGN KEY (airport_from) REFERENCES airport(id),
                 FOREIGN KEY (airport_to) REFERENCES airport(id)
             );

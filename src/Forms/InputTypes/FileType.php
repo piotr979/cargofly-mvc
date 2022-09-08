@@ -32,6 +32,7 @@ class FileType extends AbstractInputType implements InputTypeInterface
         }
         $this->input .= $this->inputStart();
         $this->input .= sprintf(' type="file"', $this->getHtmlInputType());
+        $this->input .= sprintf(' data-url="%s"', $attr['data-url'] ?? '');
 
         $this->input .= sprintf(" name='%s'", $attr['name'] ?? '');
         $this->input .= sprintf(" class='form-control %s'", $attr['inputCssClasses'] ?? '');

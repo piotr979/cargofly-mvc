@@ -22,6 +22,8 @@ class CustomerForm
     private FormBuilder $formBuilder;
     private int $id;
     private $data = [];
+    private $image = '';
+
     public function __construct()
     {
         $this->formBuilder = new FormBuilder();
@@ -45,6 +47,8 @@ class CustomerForm
             $this->data[] = $customer->$getter();
         }
         $this->id = $customer->getId();
+       $this->image = $this->data[9];
+
         }
       
     public function getForm()
@@ -187,10 +191,10 @@ class CustomerForm
         ->add(
             FileType::class, 
             [
-            'name' => 'logo',
+            'name' => 'file',
             'label' => 'Company logo',
-            'value' => $this->data[9] ?? '',
-            'labelCssClasses' => 'd-block mt-3',
+            'data-url' => $this->image ?? '',
+            'labelCssClasses' => 'd-block mt-3 mb-2',
             'inputCssClasses' => 'logo-uploader d-block ms-3 ms-lg-2 mt-1 class-control',
             ]
         )
@@ -207,13 +211,24 @@ class CustomerForm
         )
         ->add(
             HtmlType::class,
-            ['<img id="image-preview" class="mt-4" />']
+            ['<p class="mt-3">Uploaded logo (if any)</p>']
+        )
+        ->add(
+            HiddenType::class,
+            [
+                'param' => 'logo',
+                'data' => $this->data[9]
+            ]
+        )
+        ->add(
+            HtmlType::class,
+            ['<img id="image-preview" src="' . '/uploads/' . $this->image . '" />' ]
         )
         ->add(
             SubmitType::class,
             [
-            'buttonCssClasses' => 'd-block mt-4 btn btn-primary',
-            'text' => 'Add'
+            'buttonCssClasses' => 'd-block mt-2 btn btn-primary',
+            'text' => 'Save'
             ]
         )
         ->build()

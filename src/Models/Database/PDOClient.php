@@ -54,5 +54,6 @@ class PDOClient extends Database implements DatabaseClientInterface
     {
             $stmt = $this->connection->prepare($query);
             $stmt->execute();
+            return $this->connection->lastInsertId();
     }
 }

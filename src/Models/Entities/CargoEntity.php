@@ -5,19 +5,27 @@ declare(strict_types=1);
 namespace App\Models\Entities;
 
 use DateTime;
-use phpDocumentor\Reflection\Location;
+use DeliveryStatus;
 
 /**
  * Due to the fact order word is restricted
  */
 
-class AirportEntity extends AbstractEntity implements EntityInterface
+class CargoEntity extends AbstractEntity implements EntityInterface
 {
     /**
-     * @var $value
-     * Value of the order
+     * @var customer_id
+     * Id of the airport cargo dispatched
      */
-     private float $value;
+
+    private int $customer_id;
+
+     /**
+     * @var value
+     * Order's value
+     */
+
+    private int $value;
 
     /**
      * @var airport_from
@@ -33,25 +41,40 @@ class AirportEntity extends AbstractEntity implements EntityInterface
 
     private int $airport_to;
 
-    /**
-     * @var time_taken
-     * Time taken to deliver
+     /**
+     * @var status
+     * Status of the delivery 
+     * 0 = not picked up, 
+     * 1 = on delivery, 
+     * 2 = delivered
      */
 
-    private DateTime $time_taken;
+    private int $status;
 
-   
+    /**
+     * @var time_taken
+     * Time taken to deliver (in hours)
+     */
+
+    private int $time_taken = -1;
+
+    /**
+     * @var weight
+     * Weight in tonnes
+     */
+
+    private int $weight;
+
+    /**
+     * @var size
+     * Total size (w*d*h)
+     */
+
+    private int $size;
+
     /**
      * Getters and setters
      */
-    public function getValue(): string
-    {
-        return $this->value;
-    }
-    public function setValue(int $value)
-    {
-        $this->value = $value;
-    }
 
     public function getAirportFrom(): int
     {
@@ -71,13 +94,57 @@ class AirportEntity extends AbstractEntity implements EntityInterface
         $this->airport_to = $id;
     }
 
-    public function getTimeTaken(): DateTime
+    public function getCustomer(): int
+    {
+        return $this->customer_id;
+    }
+    public function setCustomer(int $customer_id)
+    {
+        $this->customer_id = $customer_id;
+    }
+
+    public function getTimeTaken(): int
     {
         return $this->time_taken;
     }
-    public function setTimeTaken(DateTime $time_taken)
+    public function setTimeTaken(int $time_taken)
     {
         $this->time_taken = $time_taken;
+    }
+
+    public function getWeight(): int
+    {
+        return $this->weight;
+    }
+    public function setWeight(int $weight)
+    {
+        $this->weight = $weight;
+    }
+    public function getSize(): int
+    {
+        return $this->size;
+    }
+    public function setSize(int $size)
+    {
+        $this->size = $size;
+    }
+
+    public function getValue(): int
+    {
+        return $this->value;
+    }
+    public function setValue(int $value)
+    {
+        $this->value = $value;
+    }
+    
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+    public function setStatus(int $status)
+    {
+        $this->status = $status;
     }
 
 }

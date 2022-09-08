@@ -30,16 +30,6 @@ class AircraftRepository extends AbstractRepository implements RepositoryInterfa
                 ;
        return $this->db->runQuery($query);
     }
-    public function searchString(string $search, string $column)
-    {
-        $searchStr = "'%" . $column . "%'";
-        $sql = "
-            SELECT * FROM aircraft WHERE " . $column . " LIKE " . $searchStr;
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
   /** 
      * Calls persistTo from parent class
      * @param $customer Any class compatible with EntityInterface

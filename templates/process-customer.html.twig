@@ -10,7 +10,7 @@
 						{{ flash }}
 					</div>
 			{% endfor %}
-        <h2 class="mt-4">Add new customer</h2>
+        <h2 class="mt-4">Edit customer</h2>
         {{ form | raw }}
         </div>
     </div>
@@ -23,7 +23,6 @@
     <script>
         const fileInput = document.querySelector('.logo-uploader');
         const imagePreview = document.getElementById('image-preview');
-        console.log(imagePreview);
         fileInput.addEventListener('change', () => {
             console.log(fileInput.files);
             imagePreview.src = window.URL.createObjectURL(fileInput.files[0])

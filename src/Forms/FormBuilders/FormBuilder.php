@@ -30,7 +30,7 @@ class FormBuilder implements FormBuilderInterface
     }
     public function formStart(string $actionRoute, string $method, string $cssClasses = ''): void
     {
-        $this->form .= sprintf("<form class='%s' action='%s' method='%s'>", $cssClasses, $actionRoute, $method);
+        $this->form .= sprintf("<form class='%s' action='%s' method='%s' enctype='multipart/form-data'>", $cssClasses, $actionRoute, $method);
     }
     public function formEnd(): void
     {

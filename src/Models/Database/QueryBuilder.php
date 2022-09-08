@@ -24,9 +24,9 @@ class QueryBuilder
      * Insert into array. Entity taken from property $entity
      * passed as param to constructor
      */
-    public function insert(string|array $args, string|array $values)
+    public function insert(string|array $args, string|array $values, string $entity = '')
     {
-        $this->query = "INSERT INTO " . $this->entity;
+        $this->query = "INSERT INTO " . $entity = '' ? $this->entity : $entity;
         $this->query .= " ( " . $this->prepareArgs($args) . " )";
         $this->query .= " VALUE ";
         $this->query .= " ( " . $this->prepareArgs($values, quotes: true) . " )";

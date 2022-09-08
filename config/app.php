@@ -24,6 +24,12 @@ enum FormRules
     case RuleMatch;
     case InvalidCharacters;
 }
+enum DeliveryStatus: int
+{
+    case awaiting = 0;
+    case onDelivery = 1;
+    case Delivered = 2;
+}
 
 return [
     'environment' => Environment::Dev,

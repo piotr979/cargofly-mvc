@@ -6,20 +6,21 @@ namespace App\Controllers;
 
 use App\App;
 use App\Controllers\AbstractController;
-use App\Forms\CustomerForm;
+use App\Forms\CargoForm;
 use App\Forms\SearchColumnForm;
 use App\Forms\Validators\FormValidator;
 use App\Helpers\Url;
-use App\Models\Entities\CustomerEntity;
-use App\Models\Repositories\CustomerRepository;
+use App\Models\Entities\CargoEntity;
+use App\Models\Repositories\CargoRepository;
 use App\Services\FileHandler;
 use App\Services\Router;
+use DateTime;
 
 /**
  * all pages are stored here. There are accessible for
  * everyone.
  */
-class CustomerController extends AbstractController
+class CargoController extends AbstractController
 {
   /**
    * Required function attaches all routes of the controller
@@ -28,31 +29,31 @@ class CustomerController extends AbstractController
   {
 
     // also all methods can be retrieved with ReflectionClass
-    // TO BE DONE
-    $router->attachRoute('CustomerController', 'customers', ['page', 'sortBy', 'sortOrder']);
-    $router->attachRoute('CustomerController', 'processCustomer', ['id']);
+  // TO BE DONE
+    $router->attachRoute('CargoController', 'orders', ['page', 'sortBy', 'sortOrder']);
+    $router->attachRoute('CargoController', 'processOrder', ['id']);
   
   }
 
-  public function customers(int $page, string $sortBy, string $sortOrder)
+  public function orders(int $page, string $sortBy, string $sortOrder)
   {
     $searchString = '';
     $searchColumn = '';
-    $customerRepo = new CustomerRepository();
+    $cargoRepo = new CargoRepository();
    
-    $searchForm = new SearchColumnForm(action: '/customers/1/customer_name/asc/', entity: 'customer');
+    $searchForm = new SearchColumnForm(action: '/orders/1/id/asc/', entity: 'cargo');
     // if search form was already submitted
     if (isset($_GET['searchString']) && isset($_GET['column'])) {
       $searchString = $_GET['searchString'];
       $searchColumn = $_GET['column'];
-      $customers = $customerRepo->getAllPaginated(
+      $customers = $cargoRepo->getAllPaginated(
         page: $page,
         sortBy: $sortBy,
         sortOrder: $sortOrder,
         searchString: $searchString,
         searchColumn: $searchColumn
       );
-      $pages = $customerRepo->countPages(
+      $pages = $cargoRepo->countPages(
         limit: 10,
         searchString: $searchString,
         searchColumn: $searchColumn
@@ -65,22 +66,22 @@ class CustomerController extends AbstractController
         ]
       );
     } else {
-      $customers = $customerRepo->getAllPaginated(
+      $cargos = $cargoRepo->getAllPaginated(
         page: $page,
         sortBy: $sortBy,
         sortOrder: $sortOrder
       );
 
-      $pages = $customerRepo->countPages(
+      $pages = $cargoRepo->countPages(
         limit: 10
       );
     }
     // return amount of pages 
     echo $this->twig->render(
-      'customers.html.twig',
+      'cargos.html.twig',
       [
-        'route' => 'customers',
-        'customers' => $customers,
+        'route' => 'cargos',
+        'cargos' => $cargos,
         'flashes' => App::$app->flashMessenger->getMessages(),
         'pagesCount' => $pages,
         'page' => $page,
@@ -97,15 +98,15 @@ class CustomerController extends AbstractController
    * If $id is different than zero means old entry is being edited.
    * @param int $id Id of the entry
    */
-  public function processCustomer(int $id)
+  public function processOrder(int $id)
   {
    
-    $form = new CustomerForm();
-    $customerRepo = new CustomerRepository();
+    $form = new CargoForm();
+    $cargoRepo = new CargoRepository();
 
     if (!empty($_POST)) {
 
-      $customer = new CustomerEntity();
+      $cargo = new CargoEntity();
       dump($_POST);
       $data = $_POST;
      
@@ -113,29 +114,28 @@ class CustomerController extends AbstractController
       // processing here
 
       $validator = new FormValidator();
-      $errors = $validator->isValid(values: $data, ommit: ['id', 'logo', 'street2']);
+      $errors = [];
       
     
       // TODO: this section must be optimised
-      $customer->setCustomerName($data['customer_name']);
-      $customer->setOwnerFName($data['owner_fname']);
-      $customer->setOwnerLName($data['owner_lname']);
-      $customer->setStreet1($data['street1']);
-      $customer->setStreet2($data['street2'] ?? '');
-      $customer->setCity($data['city']);
-      $customer->setZipCode($data['zip_code']);
-      $customer->setCountry($data['country']);
-      $customer->setVat((int)$data['vat']);
-      $customer->setId($id);
-      // check if names exists in the database
-      if ($id === 0 && ($customerRepo->checkIfExists($customer->getCustomerName(), 'customer_name'))) {
-        $errors[] = 'Name already exists.';
-      }
-      $findInDB = $customerRepo->getWhere('id', 'customer_name', $customer->getCustomerName());
-      if (isset($findInDB['id']) && ($findInDB['id'] != $id)) {
-        $errors[] = 'Name already exists in the database.';
+   
+      $cargo->setAirportFrom((int)$data['airport_from']);
+      $cargo->setAirportTo((int)$data['airport_to']);
+      $cargo->setCustomer((int)$data['customer_id']);
+      $cargo->setWeight((int)$data['weight']);
+      $cargo->setSize((int)$data['size']);
+      $cargo->setValue((int)$data['value']);
+      $cargo->setStatus(0);
 
-      }
+      // check if names exists in the database
+      // if ($id === 0 && ($cargoRepo->checkIfExists($customer->getCustomerName(), 'customer_name'))) {
+      //   $errors[] = 'Name already exists.';
+      // }
+      // $findInDB = $customerRepo->getWhere('id', 'customer_name', $customer->getCustomerName());
+      // if (isset($findInDB['id']) && ($findInDB['id'] != $id)) {
+      //   $errors[] = 'Name already exists in the database.';
+
+      // }
       
         if ($errors) {
           forEach($errors as $error) {
@@ -143,35 +143,26 @@ class CustomerController extends AbstractController
             // we have errors 
             // go back to form and fix it by user
           } 
-         dump($customer);
-          $form->setData($customer); 
+         dump($cargo);
+          $form->setData($cargo); 
         } else {
           // if id is set means we are editing existing entry
           // add some extra data to the object
-          if (!empty($_FILES)) {
-            dump($_FILES);
-            $fileHandler = new FileHandler();
-            $fileName = $fileHandler->uploadFile($_FILES);
-            if ($fileName) {
-              $customer->setLogo($fileName);
-            }
-          } 
           if (isset($data['id'])) {
-           dump('isetSet');exit;
-           $customer->setId((int)$data['id']);
+           $cargo->setId((int)$data['id']);
           }
       
-          $this->db->persist(new CustomerRepository(), $customer);
+          $cargoRepo->persistOrder($cargo);
         $this->flashMessenger->add('Operation done.');
          Url::redirect('/customers/1/customer_name/asc');
          return;
         } // form processing ends here
     }
     if ($id != 0) {
-      $customer = $customerRepo->getById($id);
-      $form->setData($customer);
+      $customer = $cargoRepo->getById($id);
+      $form->setData($cargo);
     }
-    echo $this->twig->render('process-customer.html.twig', 
+    echo $this->twig->render('process-cargo.html.twig', 
                           ['form' => $form->getForm(),
                           'flashes' => $this->flashMessenger->getMessages()
                         ]);

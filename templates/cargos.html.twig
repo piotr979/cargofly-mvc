@@ -1,0 +1,184 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block body %}
+	<div class="container">
+		<div class="row">
+
+			<div class="col-12">
+				{% for flash in flashes %}
+					<div class="alert alert-danger" role="alert">
+						{{ flash }}
+					</div>
+				{% endfor %}
+				<div class="row">
+				<div class="col-6"><h1 class="mt-4">Orders</h1>
+				</div>
+				 <div class="col-6 mt-4 d-flex justify-content-end">
+
+						<button id="search-button" class="btn btn-primary">Search</button>
+					</div>
+				</div>
+				<div class="row">
+					
+					<div class="search-form--responsive">
+						<div class="col-12 d-flex justify-content-end mt-2">
+								<button id="search-form--close">
+									<h1>X</h1>
+								</button>
+						</div>
+						
+						{{ searchForm | raw }}
+					</div>
+				</div>
+				<table class="table table-striped">
+
+					<thead>
+						<tr>
+							<th scope="col" class="d-none d-sm-table-cell">No.</th>
+							<th
+								scope="col">
+
+								{# sorting by name. Depending on sortBy and sortOrder params #}
+
+								{{ include('components/sort-table.html.twig', 
+										{ 'entry': 'airport_from',
+										  'cellName': 'From' }) }}
+
+							</th>
+
+							<th scope="col">
+
+								{{ include('components/sort-table.html.twig', 
+										{ 'entry': 'airport_to',
+										  'cellName': 'To' }) }}
+
+							</th>
+							<th scope="col" class="d-none d-lg-table-cell">
+
+								{{ include('components/sort-table.html.twig', 
+										{ 'entry': 'status',
+										  'cellName': 'Status' }) }}
+
+							</th>
+							<th scope="col" class="d-none d-sm-table-cell">
+
+								{{ include('components/sort-table.html.twig', 
+										{ 'entry': 'time_taken',
+										  'cellName': 'Time taken' }) }}
+
+							</th>
+							<th scope="col" class="d-none d-sm-table-cell">Actions</th>
+							<th scope="col" class="d-sm-none">Act</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						
+						{% for cargo in cargos %}
+
+							<!-- DELETE MODAL STARTS HERE -->
+							<div class="modal fade" id="deleteModal-{{ cargo.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="exampleModalLabel">Deleting order</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											Are you sure?
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+											<a href="/removeAction/{{ cargo.id }}/aircraft" type="button" class="btn btn-primary">Yes,
+																								                  delete</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- DELETE MODALS ENDS HERE -->
+
+
+							<tr>
+								<th class="d-none d-sm-table-cell" scope="row">{{ cargo.id }}</th>
+								<td>{{ cargo.airport_from }}</td>
+								<td>{{ cargo.airport_to }}</td>
+								<td class="d-none d-lg-table-cell">{{ cargo.status }}T</td>
+								<td class="d-none d-sm-table-cell">{{ cargo.time_taken }}</td>
+								<td>
+									<a href="/processOrder/{{cargo.id}}" class="btn-icon">
+										<img src="/assets/images/iconly/draw/Edit.svg"/>
+									</a>
+
+									<button class="no-border" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ cargo.id }}">
+										<img src="/assets/images/iconly/draw/Delete.svg"/>
+									</button>
+
+
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				{# #### PAGINATION CONTROLS STARTS HERE ### #}
+				{% if cargos | length == 0 %} 
+					<p>No results found. Try different search. </p>
+				{% else %}
+				<nav aria-label="Page navigation">
+
+					<ul
+						class="pagination">
+
+						{# if it's first page "Previous" is not needed  #}
+						{% if page != 1 %}
+							<li class="page-item">
+								<a class="page-link" href="/orders/{{ page - 1 }}/{{ sortBy }}/{{ sortOrder }}
+								{% if searchString != '' %}
+											/?searchString={{ searchString }}&amp;column={{ searchColumn }}
+								{% endif %}
+								">Previous</a>
+							</li>
+						{% endif %}
+
+
+						{% for idx in 1..pagesCount  %}
+							<li class="page-item
+									{% if idx == page %}
+													active
+										{% endif %}
+											">
+								<a class="page-link" href="/orders/{{ idx }}/{{ sortBy }}/{{ sortOrder }}
+								{% if searchString != '' %}
+											/?searchString={{ searchString }}&amp;column={{ searchColumn }}
+								{% endif %}
+								">{{ idx }}</a>
+							</li>
+
+						{% endfor %}
+
+
+						{% if page != pagesCount %}
+							<li class="page-item">
+									<a class="page-link" href="/orders/{{ page + 1 }}/{{ sortBy }}/{{ sortOrder }}
+										{% if searchString != '' %}
+											/?searchString={{ searchString }}&amp;column={{ searchColumn }}
+										{% endif %}
+									">Next</a>
+							</li>
+						{% endif %}
+
+					</ul>
+				</nav>
+				{% endif %}
+				{# #####  PAGINATION CONTROLS ENDS HERE ##### #}
+				<a href="/processOrder/0/" class="btn btn-primary">Add order</a>
+
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="/assets/js/search-form.js"></script>
+
+{% endblock %}
