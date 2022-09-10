@@ -9,15 +9,12 @@ use App\Forms\InputTypes\HiddenType;
 use App\Forms\InputTypes\NumberType;
 use App\Forms\InputTypes\SelectType;
 use App\Forms\InputTypes\SubmitType;
-use App\Forms\InputTypes\TextType;
 use App\Models\Entities\CargoEntity;
-use App\Models\Repositories\AirportRepository;
-use App\Models\Repositories\CustomerRepository;
 use DateTime;
-use DeliveryStatus;
+use App\Forms\AbstractForm;
 use PDO;
 
-class CargoForm 
+class CargoForm extends AbstractForm
 {
 
     private FormBuilder $formBuilder;
@@ -25,8 +22,8 @@ class CargoForm
     private int $airportFrom;
     private int $airportTo;
     private int $status;
-    private DateTime $timeTaken;
-
+    private int $timeTaken;
+    private int $value;
 
     public function __construct()
     {
@@ -37,54 +34,46 @@ class CargoForm
         if ( $cargo->getId() != null) {
                 $this->id = $cargo->getId();
         }
-           $this->airportFrom = $cargo->getAirportFrom();
-           $this->airportTo = $cargo->getAirportTo();
+           $this->airportFrom = $cargo->getCityFrom();
+           $this->airportTo = $cargo->getCityTo();
            $this->status = $cargo->getStatus();
            $this->timeTaken = $cargo->getTimeTaken();
            $this->weight = $cargo->getWeight();
            $this->size = $cargo->getSize();
-     
+           $this->value = $cargo->getValue();
     }
     public function getForm()
     {
-        /**
-         * Get array of aeroplanes from DB first.
-         * We need them for select inputs.
-         */
-        // $aeroplanes = $this->getAeroplaneModels();
-        // $selectPlanes = [];
-        // foreach ($aeroplanes as $plane) {
-        //     $selectPlanes[$plane->getId()] = 
-        //                     [$plane->getVendor() . ' ' . $plane->getModel() => $plane->getPhoto()]
-        //                 ;
-        // }
+       
 
         /** mySql Point to Array conversion
          * https://stackoverflow.com/a/42322503/1496972
          */
         $airports = $this->getAirports();
-        $customers = $this->getCustomers();
+       
+        $customers = $this->getAllCustomersNames();
         $elements = $this->formBuilder
+
         ->add(
             SelectType::class,
             [
-                'name' => 'airport_from',
+                'name' => 'city_from',
                 'options' => $airports,
                 'label' => 'Select origin',
                 'labelCssClasses' => 'mt-4',
                 'selectCssClasses' => 'width-xsmall mt-2',
-                'selectedValue' => $this->airportFromId ?? 1
+                'selectedValue' => $this->airportFrom ?? 1
             ]
         )
         ->add(
             SelectType::class,
             [
-                'name' => 'airport_to',
+                'name' => 'city_to',
                 'options' => $airports,
                 'label' => 'Select destination',
                 'labelCssClasses' => 'mt-4',
                 'selectCssClasses' => 'width-xsmall mt-2',
-                'selectedValue' => $this->airportToId ?? 1
+                'selectedValue' => $this->airportTo ?? 1
             ]
         )
         ->add(
@@ -146,33 +135,5 @@ class CargoForm
         ->getForm(actionRoute: '/processOrder/' . ($this->id ?? 0) );
         ;
         return $elements;
-    }
-
-    /**
-     * This function fetches all available plane models from database
-     */
-    private function getCustomers(): array
-    {
-        $customerRepo = new CustomerRepository();
-        $customers = $customerRepo->getAll(PDO::FETCH_CLASS);
-        return $customers;
-    }
-    private function getAirports(): array
-    {
-        $airportsRepo = new AirportRepository();
-        $airports = $airportsRepo->getAll(PDO::FETCH_CLASS);
-        $airportsLocations = [];
-
-        // if airport's city name is not found use airport name
-        // and IF airports name is not found use airport code
-        foreach ($airports as $airport) {
-            $airportLocations[$airport->getId()] = 
-                ($airport->getCity() === "" ? 
-                        ($airport->getAirportName() === "" ? $airport->getCode() :
-                                $airport->getAirportName() ) : $airport->getCity()) .
-                 "&#47;" . $airport->getCountry();
-        }
-        asort($airportLocations);
-        return $airportLocations;
     }
 }

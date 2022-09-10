@@ -32,14 +32,14 @@ class CargoEntity extends AbstractEntity implements EntityInterface
      * Id of the airport cargo dispatched
      */
 
-    private int $airport_from;
+    private int $city_from;
 
     /**
      * @var airport_to
      * Destination
      */
 
-    private int $airport_to;
+    private int $city_to;
 
      /**
      * @var status
@@ -76,22 +76,22 @@ class CargoEntity extends AbstractEntity implements EntityInterface
      * Getters and setters
      */
 
-    public function getAirportFrom(): int
+    public function getCityFrom(): int
     {
-        return $this->airport_from;
+        return $this->city_from;
     }
-    public function setAirportFrom(int $id)
+    public function setCityFrom(int $id)
     {
-        $this->airport_from = $id;
+        $this->city_from = $id;
     }
 
-    public function getAirportTo(): int
+    public function getCityTo(): int
     {
-        return $this->airport_to;
+        return $this->city_to;
     }
-    public function setAirportTo(int $id)
+    public function setCityTo(int $id)
     {
-        $this->airport_to = $id;
+        $this->city_to = $id;
     }
 
     public function getCustomer(): int

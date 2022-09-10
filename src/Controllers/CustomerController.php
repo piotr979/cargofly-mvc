@@ -106,7 +106,6 @@ class CustomerController extends AbstractController
     if (!empty($_POST)) {
 
       $customer = new CustomerEntity();
-      dump($_POST);
       $data = $_POST;
      
       // form alread filled
@@ -143,13 +142,11 @@ class CustomerController extends AbstractController
             // we have errors 
             // go back to form and fix it by user
           } 
-         dump($customer);
           $form->setData($customer); 
         } else {
           // if id is set means we are editing existing entry
           // add some extra data to the object
           if (!empty($_FILES)) {
-            dump($_FILES);
             $fileHandler = new FileHandler();
             $fileName = $fileHandler->uploadFile($_FILES);
             if ($fileName) {
@@ -157,7 +154,7 @@ class CustomerController extends AbstractController
             }
           } 
           if (isset($data['id'])) {
-           dump('isetSet');exit;
+      
            $customer->setId((int)$data['id']);
           }
       

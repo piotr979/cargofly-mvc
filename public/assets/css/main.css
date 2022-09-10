@@ -153,8 +153,22 @@ th {
 .logo-uploader {
     width: 84%;
 }
+.table-cargo-details tbody tr th  {
+    max-width:2rem;
+}
+.table-cargo-details tbody tr td  {
+    max-width:3rem;
+}
+.table-cargo-details {
+    font-size: .87rem;
+}
+#map-origin, #map-destination { height: 180px;
+
+    width: 100%; }
 @media screen and (min-width: 768px) {
-    
+    .table-cargo-details {
+        font-size: 1rem;
+    }
     .image-not-found { 
         width: 50%;
     }
@@ -194,4 +208,5 @@ th {
     .logo-uploader {
         width: 16rem;
     }
+ 
 }

@@ -10,39 +10,42 @@ use App\Models\Repositories\AbstractRepository;
 
 class CargoRepository extends AbstractRepository implements RepositoryInterface
 {
-
+    private $columns = ['value', 'city_from', 'city_to', 'weight', 'size'];
     public function __construct()
     {
         parent::__construct('cargo');
     }
     public function getAllPaginated(int $page, string $sortBy, string $sortOrder = 'asc', string $searchString = '', string $searchColumn = '')
     {
-       // SELECT cargo.id, cargo.value, cargo.airport_from, cargo.airport_to, 
-       // cargo.weight, cargo.size, cargo.time_taken, customer.customer_name 
-       // FROM cargo 
-       // INNER JOIN customer_cargos ON cargo.id = customer_cargos.cargo_id
-       //  INNER JOIN customer ON customer.id = customer_cargos.customer_id; 
+        // SELECT cargo.id, cargo.value, cargo.airport_from, cargo.airport_to, 
+        // cargo.weight, cargo.size, cargo.time_taken, customer.customer_name 
+        // FROM cargo 
+        // INNER JOIN customer_cargos ON cargo.id = customer_cargos.cargo_id
+        //  INNER JOIN customer ON customer.id = customer_cargos.customer_id; 
         $offset = ($page - 1) * 10;
         $query = $this->qb
-            ->select('cargo.id, 
+            ->select('
+                    cargo.id, 
                     cargo.value, 
-                    cargo.airport_from, 
-                    cargo.airport_to,
                     cargo.weight,
                     cargo.size,
                     cargo.time_taken,
+                    cargo.status,
                     customer_cargos.customer_id,
-                    customer_cargos.cargo_id,
-                    customer.customer_name
+                    customer.customer_name,
+                    air_from.city AS city_from,
+                    air_to.city AS city_to
                     ')
             ->from($this->entityName)
-            ->leftJoin('customer_cargos','customer_cargos.cargo_id', 'cargo.id')
-            ->leftJoin('customer','customer.id', 'customer_cargos.customer_id')
+            ->leftJoin('customer_cargos', 'customer_cargos.cargo_id', 'cargo.id')
+            ->leftJoin('customer', 'customer.id', 'customer_cargos.customer_id')
+            ->leftJoin('airport AS air_from ', 'cargo.city_from', 'air_from.id')
+            ->leftJoin('airport AS air_to ', 'cargo.city_to', 'air_to.id')
+
             ->whereLike($searchColumn, $searchString)
             ->orderBy($sortBy, $sortOrder)
             ->limitWithOffset(limit: 10, offset: $offset)
             ->getQuery();
-            dump($this->db->runQuery($query));
         return $this->db->runQuery($query);
     }
 
@@ -54,40 +57,52 @@ class CargoRepository extends AbstractRepository implements RepositoryInterface
     {
         parent::persistTo(
             columns: [
-              "value",
-              "airport_from",
-              "airport_to",
-              "status",
-              "weight",
-              "size",
-              "time_taken"
-            ], 
-           object: $cargo);
+                "value",
+                "city_from",
+                "city_to",
+                "weight",
+                "size"
+            ],
+            object: $cargo
+        );
     }
     public function persistOrder(CargoEntity $cargo)
     {
-        $query = $this->qb
-                    ->insert('value, airport_from, airport_to, status, weight, size, time_taken',
+        $values = [
+            $cargo->getValue(),
+            $cargo->getCityFrom(),
+            $cargo->getCityTo(),
+            $cargo->getWeight(),
+            $cargo->getSize()
+        ];
+        if ($cargo->getId() == 0) {
+            $query = $this->qb
+                ->insert($this->columns, $values, 'cargo')
+                ->getQuery();
+            dump($query);
+            $lastId = $this->db->pushQuery($query);
+            $queryJoin = $this->qb
+                ->insert(
+                    'customer_id, cargo_id',
                     [
-                        $cargo->getValue(),
-                        $cargo->getAirportFrom(),
-                        $cargo->getAirportTo(),
-                        $cargo->getStatus(),
-                        $cargo->getWeight(),
-                        $cargo->getSize(),
-                        $cargo->getTimeTaken()
-                    ], 'cargo')
-                    ->getQuery();
-        $lastId = $this->db->pushQuery($query);
-        $queryJoin = $this->qb
-                        ->insert('customer_id, cargo_id',
-                        [
-                            $cargo->getCustomer(),
-                            $lastId
-                        ],
-                        'customer_cargos')
-                        ->getQuery();           
-        $this->db->pushQuery($queryJoin);
+                        $cargo->getCustomer(),
+                        $lastId
+                    ],
+                    'customer_cargos'
+                )
+                ->getQuery();
+            $this->db->pushQuery($queryJoin);
+        } else {
+            $query = $this->qb
+                ->update(
+                    tableName: 'cargo',
+                    args: $this->columns,
+                    values: $values,
+                    id: $cargo->getId()
+                )
+                ->getQuery();
+            $this->db->pushQuery($query);
+        }
     }
     public function remove($id)
     {
@@ -96,6 +111,32 @@ class CargoRepository extends AbstractRepository implements RepositoryInterface
         } else {
             return false;
         };
+    }
+    public function getSingleCargoById($id)
+    {
+        $query = $this->qb
+            ->select('
+        cargo.id, 
+        cargo.value, 
+        cargo.weight,
+        cargo.size,
+        cargo.time_taken,
+        cargo.status,
+        customer_cargos.customer_id,
+        customer.customer_name,
+        air_from.city AS city_from,
+        air_from.location AS location_origin,
+        air_to.city AS city_to,
+        air_to.location AS location_destination
+        ')
+            ->from($this->entityName)
+            ->leftJoin('customer_cargos', 'customer_cargos.cargo_id', 'cargo.id')
+            ->leftJoin('customer', 'customer.id', 'customer_cargos.customer_id')
+            ->leftJoin('airport AS air_from ', 'cargo.city_from', 'air_from.id')
+            ->leftJoin('airport AS air_to ', 'cargo.city_to', 'air_to.id')
+            ->where("cargo.id", (string)$id)
+            ->getQuery();
+        return $this->db->runQuery($query, single: true);
     }
     /**
      * Counts pages. The problem was to get proper amount of entries
@@ -109,12 +150,21 @@ class CargoRepository extends AbstractRepository implements RepositoryInterface
         string $searchColumn = ''
     ): int {
         $query = $this->qb
-            ->select("COUNT(customer.id) AS count")
-            ->from('customer')
+            ->select("COUNT(cargo.id) AS count")
+            ->from("cargo")
             ->whereLike($searchColumn, $searchString)
             ->getQuery();
         $result = $this->db->runQuery($query);
         $count = $result[0]['count'];
         return (int)ceil($count / $limit);
+    }
+    public function getAwaitingOrdersNumber()
+    {
+        $query = $this->qb
+            ->select("COUNT(cargo.id) AS count")
+            ->from("cargo")
+            ->whereLike('status', "0")
+            ->getQuery();
+        return $this->db->runQuery($query)[0]['count'];
     }
 }

@@ -12,7 +12,7 @@ use App\Forms\Validators\FormValidator;
 use App\Helpers\Url;
 use App\Models\Entities\CargoEntity;
 use App\Models\Repositories\CargoRepository;
-use App\Services\FileHandler;
+use App\Services\MapHandler;
 use App\Services\Router;
 use DateTime;
 
@@ -32,6 +32,7 @@ class CargoController extends AbstractController
   // TO BE DONE
     $router->attachRoute('CargoController', 'orders', ['page', 'sortBy', 'sortOrder']);
     $router->attachRoute('CargoController', 'processOrder', ['id']);
+    $router->attachRoute('CargoController', 'manageOrder', ['id']);
   
   }
 
@@ -46,7 +47,7 @@ class CargoController extends AbstractController
     if (isset($_GET['searchString']) && isset($_GET['column'])) {
       $searchString = $_GET['searchString'];
       $searchColumn = $_GET['column'];
-      $customers = $cargoRepo->getAllPaginated(
+      $cargos = $cargoRepo->getAllPaginated(
         page: $page,
         sortBy: $sortBy,
         sortOrder: $sortOrder,
@@ -71,7 +72,6 @@ class CargoController extends AbstractController
         sortBy: $sortBy,
         sortOrder: $sortOrder
       );
-
       $pages = $cargoRepo->countPages(
         limit: 10
       );
@@ -80,7 +80,7 @@ class CargoController extends AbstractController
     echo $this->twig->render(
       'cargos.html.twig',
       [
-        'route' => 'cargos',
+        'route' => 'orders',
         'cargos' => $cargos,
         'flashes' => App::$app->flashMessenger->getMessages(),
         'pagesCount' => $pages,
@@ -107,26 +107,21 @@ class CargoController extends AbstractController
     if (!empty($_POST)) {
 
       $cargo = new CargoEntity();
-      dump($_POST);
       $data = $_POST;
-     
       // form alread filled
       // processing here
-
       $validator = new FormValidator();
       $errors = [];
       
     
       // TODO: this section must be optimised
    
-      $cargo->setAirportFrom((int)$data['airport_from']);
-      $cargo->setAirportTo((int)$data['airport_to']);
+      $cargo->setCityFrom((int)$data['city_from']);
+      $cargo->setCityTo((int)$data['city_to']);
       $cargo->setCustomer((int)$data['customer_id']);
       $cargo->setWeight((int)$data['weight']);
       $cargo->setSize((int)$data['size']);
       $cargo->setValue((int)$data['value']);
-      $cargo->setStatus(0);
-
       // check if names exists in the database
       // if ($id === 0 && ($cargoRepo->checkIfExists($customer->getCustomerName(), 'customer_name'))) {
       //   $errors[] = 'Name already exists.';
@@ -143,7 +138,6 @@ class CargoController extends AbstractController
             // we have errors 
             // go back to form and fix it by user
           } 
-         dump($cargo);
           $form->setData($cargo); 
         } else {
           // if id is set means we are editing existing entry
@@ -154,17 +148,30 @@ class CargoController extends AbstractController
       
           $cargoRepo->persistOrder($cargo);
         $this->flashMessenger->add('Operation done.');
-         Url::redirect('/customers/1/customer_name/asc');
+         Url::redirect('/orders/1/id/asc');
          return;
         } // form processing ends here
     }
     if ($id != 0) {
-      $customer = $cargoRepo->getById($id);
+      $cargo = $cargoRepo->getById($id);
       $form->setData($cargo);
     }
     echo $this->twig->render('process-cargo.html.twig', 
                           ['form' => $form->getForm(),
                           'flashes' => $this->flashMessenger->getMessages()
                         ]);
+  }
+  public function manageOrder(int $id)
+  {
+    $cargoRepo = new CargoRepository();
+    $cargo = $cargoRepo->getSingleCargoById($id);
+
+  $cargo['location_origin'] = MapHandler::PointToLocation($cargo['location_origin']);
+  $cargo['location_destination'] = MapHandler::PointToLocation($cargo['location_destination']);
+ 
+  echo $this->twig->render('manage-cargo.html.twig', [
+      'cargoNo' => $id,
+      'cargo' => $cargo
+    ]);
   }
 }

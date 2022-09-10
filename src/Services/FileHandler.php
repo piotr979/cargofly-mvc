@@ -18,7 +18,6 @@ class FileHandler
             throw new FileHandlingException("File is too large.");
         }
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            dump($files['file']['tmp_name']);
             if ($files['file']['tmp_name'] === '') {
                 throw new FileHandlingException('No image uploaded.Try again');
                 return false;
@@ -33,7 +32,6 @@ class FileHandler
         $newFileName = str_replace("." . $extension, "", $files['file']['name']);
         $newFileName = $newFileName . uniqid() . "." . $extension;
         $destination = "uploads/" . $newFileName ;
-        dump($destination);
         if (move_uploaded_file($files['file']['tmp_name'], $destination)) {
             return $newFileName;
         } else {

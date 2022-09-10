@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Forms;
 
+use App\Forms\AbstractForm;
 use App\Forms\FormBuilders\FormBuilder;
 use App\Forms\InputTypes\HiddenType;
 use App\Forms\InputTypes\TextType;
@@ -11,12 +12,9 @@ use App\Forms\InputTypes\SelectImageType;
 use App\Forms\InputTypes\SelectType;
 use App\Forms\InputTypes\SubmitType;
 use App\Models\Entities\AircraftEntity;
-use App\Models\Entities\EntityInterface;
-use App\Models\Repositories\AeroplaneRepository;
-use App\Models\Repositories\AirportRepository;
-use PDO;
 
-class PlaneForm 
+
+class PlaneForm extends AbstractForm
 {
     private array $elements;
     private FormBuilder $formBuilder;
@@ -112,32 +110,5 @@ class PlaneForm
         return $elements;
     }
 
-    /**
-     * This function fetches all available plane models from database
-     */
-    private function getAeroplaneModels(): array
-    {
-        $planesRepo = new AeroplaneRepository();
-        $planes = $planesRepo->getAll(PDO::FETCH_CLASS);
-       // dump($planes);
-        return $planes;
-    }
-    private function getAirports(): array
-    {
-        $airportsRepo = new AirportRepository();
-        $airports = $airportsRepo->getAll(PDO::FETCH_CLASS);
-        $airportsLocations = [];
-
-        // if airport's city name is not found use airport name
-        // and IF airports name is not found use airport code
-        foreach ($airports as $airport) {
-            $airportLocations[$airport->getId()] = 
-                ($airport->getCity() === "" ? 
-                        ($airport->getAirportName() === "" ? $airport->getCode() :
-                                $airport->getAirportName() ) : $airport->getCity()) .
-                 "&#47;" . $airport->getCountry();
-        }
-        asort($airportLocations);
-        return $airportLocations;
-    }
+  
 }

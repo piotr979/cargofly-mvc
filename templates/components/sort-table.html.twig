@@ -3,11 +3,11 @@
 							text-primary"
 							
 						{% if sortOrder == 'asc' %}
-									href="/fleet/1/{{ entry }}/desc">{{ cellName }} &uarr;
+									href="/{{ route }}/1/{{ entry }}/desc">{{ cellName }} &uarr;
 						{% else %}
-									href="/fleet/1/{{ entry }}/asc">{{ cellName }} &darr;
+									href="/{{ route }}/1/{{ entry }}/asc">{{ cellName }} &darr;
 						{% endif %}
 		{% else %}
-					" href="/fleet/1/{{ entry }}/asc">{{ cellName }}
+					" href="/{{ route }}/1/{{ entry }}/asc">{{ cellName }}
 {% endif %}
 </a>

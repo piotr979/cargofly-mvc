@@ -10,7 +10,6 @@ use App\Controllers\MainController;
 use App\Controllers\SettingsController;
 use App\Controllers\ActionsController;
 use App\Controllers\CargoController;
-use App\Controllers\OrderController;
 use App\Controllers\CustomerController;
 use App\Controllers\FleetController;
 use App\Controllers\NotFoundController;
@@ -64,8 +63,6 @@ class App
         $this->notFoundController = new NotFoundController();
 
         $this->flashMessenger = new FlashMessenger();
-        
-
         $this->user = new UserEntity();
     }
     public function run()
@@ -96,16 +93,12 @@ class App
         $this->actionsController->attachRoutes($this->router);
         $this->notFoundController->attachRoutes($this->router);
 
-
-
         /**
          * Fixtures to run
          */
         // Uncomment function below to run fixtures
         //$fixtureLauncher = new FixtureLauncher($this->conn);
         // Uncomment function above to run fixtures
-
-
     }
     public function resolve($url)
     {

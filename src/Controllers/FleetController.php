@@ -82,7 +82,6 @@ class FleetController extends AbstractController
       );
     } 
     // return amount of pages 
-
     echo $this->twig->render(
       'fleet.html.twig',
       [

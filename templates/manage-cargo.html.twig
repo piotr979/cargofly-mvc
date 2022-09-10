@@ -1,0 +1,113 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block body %}
+	<div class="container">
+		<div class="row">
+
+			<div class="col-12 col-md-10">
+				{% for flash in flashes %}
+					<div class="alert alert-danger" role="alert">
+						{{ flash }}
+					</div>
+				{% endfor %}
+
+
+				<h2 class="mt-4">Manage no.
+					{{ cargoNo }}</h2>
+				<table class="table table-striped table-bordered table-cargo-details ">
+					<tbody>
+						<tr>
+							<th>City from</th>
+							<td>{{ cargo.city_from }}</td>
+						</tr>
+						<tr>
+							<th>City to</th>
+							<td>{{ cargo.city_to }}</td>
+						</tr>
+						<tr>
+							<th>Status</th>
+							<td>{{ cargo.status }}</td>
+						</tr>
+						<tr>
+							<th>Customer name</th>
+							<td>{{ cargo.customer_name }}</td>
+						</tr>
+						<tr>
+							<th>Value</th>
+							<td>{{ cargo.value }}
+								USD</td>
+						</tr>
+						<tr>
+							<th>Size (WxHxD)</th>
+							<td>{{ cargo.size }}
+								cm</td>
+						</tr>
+						<tr>
+							<th>Weight</th>
+							<td>{{ cargo.weight }}
+								kgs</td>
+						</tr>
+						<tr>
+							<th>Time taken</th>
+							<td>{{ cargo.time_taken }}</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="row">
+					<div class="col-12 col-lg-6">
+						<p class="fw-bold">Origin</p>
+						<div id="map-origin" class="my-4"></div>
+					</div>
+
+					<div class="col-12 col-lg-6">
+						<p class="fw-bold">Destination</p>
+						<div id="map-destination" class="my-4"></div>
+					</div>
+
+
+				</div>
+
+				<div class="row form-group">
+					<div class="col-12">
+						<div class="btn-group" role="group">
+							<button class="btn btn-primary">Change status</button>
+
+							<button class="btn btn-secondary">Redirect delivery</button>
+
+							<button class="btn btn-danger">Cancel delivery</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+	<script>
+   const originLat = '{{ cargo.location_origin.lat }}';
+   const originLon = '{{ cargo.location_origin.lon }}';
+   const destLat = '{{ cargo.location_destination.lat }}';
+   const destLon = '{{ cargo.location_destination.lon }}';
+   console.log(originLat);
+		var mapOrigin = L.map('map-origin').setView([
+originLat, originLon
+], 13);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+maxZoom: 4,
+attribution: '© OpenStreetMap'
+}).addTo(mapOrigin);
+var marker = L.marker([originLat, originLon]).addTo(mapOrigin);
+	
+var mapDestination = L.map('map-destination').setView([
+destLat, destLon
+], 9);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+maxZoom: 4,
+attribution: '© OpenStreetMap'
+}).addTo(mapDestination);
+var marker = L.marker([destLat, destLon]).addTo(mapDestination);
+	</script>
+{% endblock %}

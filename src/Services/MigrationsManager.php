@@ -72,8 +72,8 @@ class MigrationsManager
             (
                 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 value FLOAT NOT NULL,
-                airport_from INT NOT NULL,
-                airport_to INT NOT NULL,
+                city_from INT NOT NULL,
+                city_to INT NOT NULL,
                 status INT NOT NULL,
                 weight INT NO NULL,
                 size INT NOT NULL,

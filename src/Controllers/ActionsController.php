@@ -29,7 +29,7 @@ class ActionsController extends AbstractController
 
     if ($repo->remove($id)) {
         $this->flashMessenger->add('Item removed successfully');
-        Url::redirect('/fleet/1/aircraft_name/asc/noString/noColumn');
+        Url::redirect('/orders/1/id/asc');
     } else {
       $this->flashMessenger->add('Ups! Something wrong!');
     };

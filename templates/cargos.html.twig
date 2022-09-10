@@ -34,36 +34,56 @@
 
 					<thead>
 						<tr>
-							<th scope="col" class="d-none d-sm-table-cell">No.</th>
+							<th scope="col" class="">
+								{{ include('components/sort-table.html.twig', 
+										{   'route': 'orders',
+											'entry': 'id',
+										  'cellName': 'No.' }) }}
+							</th>
 							<th
 								scope="col">
 
 								{# sorting by name. Depending on sortBy and sortOrder params #}
 
 								{{ include('components/sort-table.html.twig', 
-										{ 'entry': 'airport_from',
+										{   'route': 'orders',
+											'entry': 'customer_name',
+										  'cellName': 'Customer' }) }}
+
+							</th>
+							<th
+								scope="col" class="d-none d-xl-table-cell">
+
+								{# sorting by name. Depending on sortBy and sortOrder params #}
+
+								{{ include('components/sort-table.html.twig', 
+										{   'route': 'orders',
+											'entry': 'city_from',
 										  'cellName': 'From' }) }}
 
 							</th>
 
-							<th scope="col">
+							<th scope="col" class="d-none d-lg-table-cell">
 
 								{{ include('components/sort-table.html.twig', 
-										{ 'entry': 'airport_to',
+										{   'route': 'orders',
+											'entry': 'city_to',
 										  'cellName': 'To' }) }}
 
 							</th>
 							<th scope="col" class="d-none d-lg-table-cell">
 
 								{{ include('components/sort-table.html.twig', 
-										{ 'entry': 'status',
-										  'cellName': 'Status' }) }}
+										{   'route': 'orders',
+											'entry': 'status',
+										  'cellName': 'Status *' }) }}
 
 							</th>
-							<th scope="col" class="d-none d-sm-table-cell">
+							<th scope="col" class="d-none d-xl-table-cell">
 
 								{{ include('components/sort-table.html.twig', 
-										{ 'entry': 'time_taken',
+										{   'route': 'orders',
+											'entry': 'time_taken',
 										  'cellName': 'Time taken' }) }}
 
 							</th>
@@ -89,7 +109,7 @@
 										</div>
 										<div class="modal-footer">
 											<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-											<a href="/removeAction/{{ cargo.id }}/aircraft" type="button" class="btn btn-primary">Yes,
+											<a href="/removeAction/{{ cargo.id }}/cargo" type="button" class="btn btn-primary">Yes,
 																								                  delete</a>
 										</div>
 									</div>
@@ -99,17 +119,35 @@
 
 
 							<tr>
-								<th class="d-none d-sm-table-cell" scope="row">{{ cargo.id }}</th>
-								<td>{{ cargo.airport_from }}</td>
-								<td>{{ cargo.airport_to }}</td>
-								<td class="d-none d-lg-table-cell">{{ cargo.status }}T</td>
-								<td class="d-none d-sm-table-cell">{{ cargo.time_taken }}</td>
+								<th scope="row">{{ cargo.id }}</th>
+								<td>{{ cargo.customer_name }}</td>
+								<td class="d-none d-xl-table-cell">{{ cargo.city_from }}</td>
+								<td class="d-none d-lg-table-cell">{{ cargo.city_to }}</td>
+								<td class="d-none d-lg-table-cell">
+											{% if cargo.status == 0 %}
+											<span class="badge bg-danger">NDSP</span>
+											{% elseif  cargo.status == 1 %}
+											<span class="badge bg-primary">DELV</span>
+											{% else %}
+											<span class="badge bg-success">DELV</span>
+											{% endif %}
+											</td>
+								<td class="d-none d-xl-table-cell">
+									{% if cargo.time_taken == -1 %}
+									n/a
+									{% else %}
+									{{ cargo.time_taken / 24 }}D {{cargo.time_taken}}H
+									{% endif %}
+									</td>
 								<td>
 									<a href="/processOrder/{{cargo.id}}" class="btn-icon">
 										<img src="/assets/images/iconly/draw/Edit.svg"/>
 									</a>
+									<a href="/manageOrder/{{cargo.id}}" class="btn-icon">
+										<img src="/assets/images/iconly/draw/Discovery.svg"/>
+									</a>
 
-									<button class="no-border" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ cargo.id }}">
+									<button class="no-border px-0" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ cargo.id }}">
 										<img src="/assets/images/iconly/draw/Delete.svg"/>
 									</button>
 
@@ -119,6 +157,7 @@
 						{% endfor %}
 					</tbody>
 				</table>
+				<p class="d-none d-lg-block">*NDSP - to be dispatched, DELV - on delivery, DONE - done
 				{# #### PAGINATION CONTROLS STARTS HERE ### #}
 				{% if cargos | length == 0 %} 
 					<p>No results found. Try different search. </p>

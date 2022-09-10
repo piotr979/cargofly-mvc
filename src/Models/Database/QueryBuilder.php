@@ -81,7 +81,6 @@ class QueryBuilder
         }
         $this->query = substr_replace($this->query, " ", -1);
         $this->query .= " WHERE id = " . $id;
-      //  dump($this->query);exit;
         return $this;
     }
     public function getQuery(): string
