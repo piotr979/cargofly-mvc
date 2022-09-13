@@ -6,6 +6,7 @@ namespace App\Models\Repositories;
 
 use App\Models\Repositories\AbstractRepository;
 use App\Models\Entities\EntityInterface;
+use DateTime;
 use PDO;
 
 class AircraftRepository extends AbstractRepository implements RepositoryInterface
@@ -80,5 +81,29 @@ class AircraftRepository extends AbstractRepository implements RepositoryInterfa
         } else {
             return false;
         };
+    }
+    public function getPlanesMonthlyByDate()
+    {
+        $data = [];
+        /**
+         * SELECT COUNT(cargo.status) AS orders_delivered,delivery_time, 
+         * date_created FROM cargo WHERE status = '2' 
+         * GROUP BY date_created, delivery_time; 
+         */
+        $query = $this->qb
+                ->select('MONTH(date_created) AS months, COUNT(*) AS amounts')
+                ->from('aircraft')
+                ->groupBy('MONTH(date_created)')
+                ->getQuery();
+        $results = $this->db->runQuery($query);
+        /**
+         * https://stackoverflow.com/a/18467892/1496972
+         */
+        foreach ($results as $result) {
+            $dateObj = DateTime::createFromFormat('!m', (string)$result['months']);
+            $monthName = $dateObj->format('F');
+            $data[$monthName] = $result['amounts'];
+        }
+        return ($data);
     }
 }

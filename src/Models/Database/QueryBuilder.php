@@ -5,7 +5,6 @@ namespace App\Models\Database;
 
 class QueryBuilder
 {
-    private string $table;
     private string $query;
     private string $entity;
 
@@ -26,7 +25,8 @@ class QueryBuilder
      */
     public function insert(string|array $args, string|array $values, string $entity = '')
     {
-        $this->query = "INSERT INTO " . $entity = '' ? $this->entity : $entity;
+        $this->query = "INSERT INTO ";
+        $entity == '' ? $this->query .= $this->entity : $this->query .= $entity;
         $this->query .= " ( " . $this->prepareArgs($args) . " )";
         $this->query .= " VALUE ";
         $this->query .= " ( " . $this->prepareArgs($values, quotes: true) . " )";
@@ -57,7 +57,7 @@ class QueryBuilder
         $this->query .= " ORDER BY " . $orderBy . " " . $sortDirection;
         return $this;
     }
-    public function limitWithOffset(int $limit, int $offset)
+    public function limitWithOffset(int $limit, int $offset = 0)
     {
         $this->query .= " LIMIT " . $limit . " OFFSET " . $offset;
         return $this;
@@ -81,6 +81,11 @@ class QueryBuilder
         }
         $this->query = substr_replace($this->query, " ", -1);
         $this->query .= " WHERE id = " . $id;
+        return $this;
+    }
+    public function groupBy(string $column)
+    {
+        $this->query .= " GROUP BY " . $column;
         return $this;
     }
     public function getQuery(): string

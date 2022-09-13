@@ -26,6 +26,14 @@ $config = require_once __DIR__ . '/../config/app.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\App;
+use App\Fixtures\FixtureLauncher;
+use App\Services\MigrationsManager;
+
+// To migrate database simply run following lines:
+//$migrations = new MigrationsManager();
+//$migrations->dropAllTables();exit;
+//$migrations->migrateDatabase();exit;
+
 
 $app = new App($config);
 

@@ -29,11 +29,11 @@ class FixtureLauncher
      */
     private function runFixtures(): void
     {
-      //  $airportFixture = new AirportFixture($this->conn);
-      // $userFixture = new UserFixture($this->conn);
-      //$aeroplaneFixture = new AeroplaneFixture($this->conn);
-       //$userFixture->addUserTable();
-       //$userFixture->addNewUser('admin@admin.com', '123456', $userFixture, "ROLE_ADMIN");
+       $airportFixture = new AirportFixture($this->conn);
+       $userFixture = new UserFixture($this->conn);
+      $aeroplaneFixture = new AeroplaneFixture($this->conn);
+      $userFixture->addUserTable();
+      $userFixture->addNewUser('admin@admin.com', '123456', $userFixture, "ROLE_ADMIN");
     }
 
 }

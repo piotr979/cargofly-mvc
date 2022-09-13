@@ -83,8 +83,8 @@
 
 								{{ include('components/sort-table.html.twig', 
 										{   'route': 'orders',
-											'entry': 'time_taken',
-										  'cellName': 'Time taken' }) }}
+											'entry': 'delivery_time',
+										  'cellName': 'Delivery time' }) }}
 
 							</th>
 							<th scope="col" class="d-none d-sm-table-cell">Actions</th>
@@ -124,19 +124,14 @@
 								<td class="d-none d-xl-table-cell">{{ cargo.city_from }}</td>
 								<td class="d-none d-lg-table-cell">{{ cargo.city_to }}</td>
 								<td class="d-none d-lg-table-cell">
-											{% if cargo.status == 0 %}
-											<span class="badge bg-danger">NDSP</span>
-											{% elseif  cargo.status == 1 %}
-											<span class="badge bg-primary">DELV</span>
-											{% else %}
-											<span class="badge bg-success">DELV</span>
-											{% endif %}
-											</td>
+
+										{{ include ('components/cargo-status.html.twig', {'status': cargo.status }) }}
+								</td>
 								<td class="d-none d-xl-table-cell">
-									{% if cargo.time_taken == -1 %}
+									{% if cargo.delivery_time == 0 %}
 									n/a
 									{% else %}
-									{{ cargo.time_taken / 24 }}D {{cargo.time_taken}}H
+									{{ cargo.delivery_time }} H
 									{% endif %}
 									</td>
 								<td>
@@ -157,7 +152,10 @@
 						{% endfor %}
 					</tbody>
 				</table>
-				<p class="d-none d-lg-block">*NDSP - to be dispatched, DELV - on delivery, DONE - done
+				<p class="d-none d-lg-block">
+									<span class="badge bg-danger">NDSP</span> - to be dispatched, 
+									<span class="badge bg-primary">ONDLV</span> - on delivery,
+									<span class="badge bg-success">DONE</span> - delivered
 				{# #### PAGINATION CONTROLS STARTS HERE ### #}
 				{% if cargos | length == 0 %} 
 					<p>No results found. Try different search. </p>
@@ -210,6 +208,7 @@
 				{% endif %}
 				{# #####  PAGINATION CONTROLS ENDS HERE ##### #}
 				<a href="/processOrder/0/" class="btn btn-primary">Add order</a>
+				<a href="/generateRandomOrders/10/" class="btn btn-secondary">Generate 10 orders</a>
 
 			</div>
 		</div>

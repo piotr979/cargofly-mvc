@@ -12,7 +12,7 @@
 				{% endfor %}
 
 
-				<h2 class="mt-4">Manage no.
+				<h2 class="mt-4">Manage order
 					{{ cargoNo }}</h2>
 				<table class="table table-striped table-bordered table-cargo-details ">
 					<tbody>
@@ -26,7 +26,10 @@
 						</tr>
 						<tr>
 							<th>Status</th>
-							<td>{{ cargo.status }}</td>
+							<td>
+								{{ include ('components/cargo-status.html.twig', {'status': cargo.status }) }}
+
+							</td>
 						</tr>
 						<tr>
 							<th>Customer name</th>
@@ -35,7 +38,7 @@
 						<tr>
 							<th>Value</th>
 							<td>{{ cargo.value }}
-								USD</td>
+								$</td>
 						</tr>
 						<tr>
 							<th>Size (WxHxD)</th>
@@ -48,8 +51,14 @@
 								kgs</td>
 						</tr>
 						<tr>
-							<th>Time taken</th>
-							<td>{{ cargo.time_taken }}</td>
+							<th>Delivery time</th>
+							<td>
+							{% if cargo.delivery_time == '0' %}
+							N&sol;A
+							{% else %}
+							{{ cargo.delivery_time }} hour(s)
+							{% endif %}
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -70,17 +79,23 @@
 				<div class="row form-group">
 					<div class="col-12">
 						<div class="btn-group" role="group">
-							<button class="btn btn-primary">Change status</button>
-
-							<button class="btn btn-secondary">Redirect delivery</button>
-
-							<button class="btn btn-danger">Cancel delivery</button>
+							<button class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#statusModal">Change status</button>
+							
+							{# show cancel and redirect buttons if on delivery #}
+							{% if cargo.status == 1 %}
+								<button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#redirectModal">Redirect delivery</button>
+								<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancel delivery</button>
+							{% endif %}
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+{% include 'components/modal-cargo-status.html.twig' with { 'id': cargo.id } %}
+{% include 'components/modal-cargo-redirect.html.twig' with { 'airports': airports, 'id': cargo.id } %}
+{% include 'components/modal-cargo-cancel.html.twig' with { 'id': cargo.id } %}
 
 {% endblock %}
 {% block javascripts %}
@@ -91,7 +106,8 @@
    const originLon = '{{ cargo.location_origin.lon }}';
    const destLat = '{{ cargo.location_destination.lat }}';
    const destLon = '{{ cargo.location_destination.lon }}';
-   console.log(originLat);
+
+
 		var mapOrigin = L.map('map-origin').setView([
 originLat, originLon
 ], 13);

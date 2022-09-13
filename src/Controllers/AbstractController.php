@@ -10,6 +10,8 @@ use App\App;
 use App\Models\Repositories\CargoRepository;
 use App\Services\FlashMessenger;
 use App\Services\OrdersManager;
+use App\Services\Settings;
+use Twig\Extra\Intl\IntlExtension;
 
 abstract class AbstractController {
    
@@ -40,9 +42,9 @@ abstract class AbstractController {
             'cache' => ROOT_DIR . '/temp',
             'auto_reload' => true,
         ]);
-
         // attach awaiting orders globally to every page
-        $this->twig->addGlobal('awaitingOrders', OrdersManager::getAwaitingOrdersNumber($this->conn));
+        $this->twig->addGlobal('awaitingOrdersAmount', OrdersManager::getAwaitingOrdersNumber($this->conn));
+        $this->twig->addGlobal('currency', Settings::getCurrencySymbol());
     }
     abstract protected function attachRoutes(Router $router);
 

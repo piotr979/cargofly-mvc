@@ -11,7 +11,7 @@
 body {
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
-    background-color: #F5FCFE;
+    background-color: rgb(245, 252, 254);
 }
 .fs-7 {
     font-size: .875rem;
@@ -89,6 +89,7 @@ a {
 .divider-top {
     border-top: 1px solid #CAEDF0;
 }
+
 .keep-margin {
     margin-left: 18rem;
 }
@@ -150,6 +151,9 @@ th {
     background: none;
     border: none;
 }
+.background-white {
+    background-color: white;
+}
 .logo-uploader {
     width: 84%;
 }
@@ -162,10 +166,37 @@ th {
 .table-cargo-details {
     font-size: .87rem;
 }
-#map-origin, #map-destination { height: 180px;
+.frame {
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+.frame-left {
+    border-right: 3px solid #CF0707;
 
-    width: 100%; }
+}
+#map-origin, #map-destination { 
+    height: 180px;
+    width: 100%;
+ }
+.chart-wrapper {
+    position:relative;
+    max-width:90%;
+}
+.table-orders tbody tr {
+    cursor: pointer;
+    transition: .4s all;
+}
+.table-orders tbody tr:hover {
+    background-color: rgb(184, 210, 218) !important;
+}
+
 @media screen and (min-width: 768px) {
+ 
+    .chart-wrapper {
+        max-width:100%;
+    }
+
     .table-cargo-details {
         font-size: 1rem;
     }
@@ -208,5 +239,7 @@ th {
     .logo-uploader {
         width: 16rem;
     }
- 
+    .divider-right {
+        border-right: 1px solid #CAEDF0;
+    }
 }

@@ -117,7 +117,6 @@ class FormValidator
                     $sanitizied[$key] = $item
                     ;
         }
-        dump($sanitized);exit;
     }
     public function isValid(array $values, array $ommit): mixed
     {

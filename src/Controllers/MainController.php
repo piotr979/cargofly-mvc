@@ -6,6 +6,9 @@ namespace App\Controllers;
 
 use App\Controllers\AbstractController;
 use App\Helpers\Url;
+use App\Models\Repositories\AircraftRepository;
+use App\Models\Repositories\CargoRepository;
+use App\Models\Repositories\CustomerRepository;
 use App\Services\Authorisation;
 use App\Services\Router;
 
@@ -27,7 +30,6 @@ class MainController extends AbstractController
     // TO BE DONE
     $router->attachRoute('MainController', 'index');
     $router->attachRoute('MainController', 'dashboard');
-    $router->attachRoute('MainController', 'routes');
   }
 
   /**
@@ -48,15 +50,34 @@ class MainController extends AbstractController
    */
   public function dashboard()
   {
-    echo $this->twig->render('dashboard.html.twig', ['route' => 'dashboard']);
+    /**
+     * Data below are for front page of the website (dashboard)
+     */
+    $cargoRepo = new CargoRepository();
+    $customerRepo = new CustomerRepository();
+    $aircraftRepo = new AircraftRepository();
+    list($dataOrders, $dataIncomes) = $cargoRepo->getDeliveredCargosByDate();
+    $dataPlanes = $aircraftRepo->getPlanesMonthlyByDate();
+    $dataCustomers = $customerRepo->getCustomersMonthlyByDate();
+    $topCustomers = $customerRepo->getTopCustomers(limit: 2);
+    $awaitingOrders = $cargoRepo->getAwaitingOrders(limit: 3);
+    echo $this->twig->render('dashboard.html.twig',
+           [
+            'route' => 'dashboard',
+            'dataChartOrders' => $dataOrders,
+            'ordersShipped' => array_sum($dataOrders),
+            'dataChartPlanes' => $dataPlanes,
+            'planesAmount' => array_sum($dataPlanes),
+            'dataChartCustomers' => $dataCustomers,
+            'customersAmount' => array_sum($dataCustomers),
+            'dataChartIncomes' => $dataIncomes,
+            'topCustomers' => $topCustomers,
+            'awaitingOrders' => $awaitingOrders
+           ]
+           );
 
     // when twig not in use:
     //$myView = $this->viewRenderer->viewBuilder('home.php');
     // echo $myView;
-  }
-
-  public function routes()
-  {
-    echo $this->twig->render('routes.html.twig', ['route' => 'routes']);
   }
 }

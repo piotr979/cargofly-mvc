@@ -23,13 +23,13 @@ class AeroplaneFixture extends AbstractFixture
                 ],
                 [
                     'vendor' => 'Antonov',
-                    'photo' => 'Antonov An-32.jpg',
+                    'photo' => 'Anotonov An-32.jpg',
                     'model' => 'An-32',
                     'payload' => 28
                 ],  
                 [
                     'vendor' => 'Boeing',
-                    'photo' => 'Beoing 777.jpg',
+                    'photo' => 'Boeing 777.jpg',
                     'model' => '777',
                     'payload' => 50
                 ],
@@ -72,8 +72,8 @@ class AeroplaneFixture extends AbstractFixture
                 model: $data['model'],
                 payload: $data['payload']
             );
-          
-           $this->db->persist(new AeroplaneRepository(), $plane);
+           $aeroplaneRepo = new AeroplaneRepository();
+           $aeroplaneRepo->persist($plane);
         }
       
     }
@@ -89,6 +89,7 @@ class AeroplaneFixture extends AbstractFixture
         $plane->setPhoto($photo);
         $plane->setModel($model);
         $plane->setPayload($payload);
+        $plane->setDistance(0);
         return $plane;
     }
 }

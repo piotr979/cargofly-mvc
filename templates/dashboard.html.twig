@@ -1,37 +1,202 @@
 {% extends 'base-admin.html.twig' %}
 
 {% block body %}
+
+
 	<div class="container">
-		<div class="row">
 
 		
-
-			<div class="col-12">
 				<div class="row">
 
-					<div class="col-12 d-flex flex-row justify-content-end">
-						<a href="messages" class="btn btn-danger mb-4">Messages</a>
+					<div class="col-12 d-flex flex-row justify-content-between">
+                    <h1>Dashboard</h1>
+					<a href="messages" class="btn btn-danger mb-4">Messages</a>
 					</div>
 					<div class="col-12 divider-top">
 
 						<div class="row">
 
 							<div class="col-12 col-lg-4">
-								<p>ORders shipped</p>
+								<div class="row">
+									<div class="col-12 mt-1 mt-md-2 d-flex flex-row justify-content-between">
+								<p class="fw-bold fs-7">Orders shipped</p>
+								<h5 class="fw-bold text-warning">{{ ordersShipped }}</h5>
+									</div>
+									<div class="chart-wrapper divider-right">
+										<canvas id="shippedChart"</canvas>
+									</div>
+								</div>
 							</div>
 
 							<div class="col-12 col-lg-4">
-								<p>ORders shipped</p>
+								<div class="row ">
+									<div class="col-12 mt-1 mt-md-2 d-flex flex-row justify-content-between">
+								<p class="fw-bold fs-7">Planes</p>
+								<h5 class="fw-bold text-danger">{{ planesAmount }}</h5>
+									</div>
+									<div class="chart-wrapper divider-right">
+										<canvas id="planesChart"</canvas>
+									</div>
+								</div>
 							</div>
 
 							<div class="col-12 col-lg-4">
-								<p>ORders shipped</p>
+								<div class="row">
+									<div class="col-12 mt-1 mt-md-2 d-flex flex-row justify-content-between">
+								<p class="fw-bold fs-7">Customers</p>
+								<h5 class="fw-bold text-primary">{{ customersAmount }}</h5>
+									</div>
+									<div class="chart-big-wrapper">
+										<canvas id="customersChart"</canvas>
+									</div>
+								</div>
 							</div>
 
 						</div>
 					</div>
+			
+		</div>
+
+           
+<div class="row">
+
+     {# top customers starts here #}
+	<div class="col-12 col-lg-6">
+		<h3 class="my-4">Top customers</h3>
+
+  {% for topCustomer in topCustomers %}
+		<div class="frame pt-3 ps-4 pb-4 mb-4">
+			<div class="row">
+				<div class="col-5 d-flex flex-column frame-left justify-content-center">
+					<p class="fs-7 mb-1">{{ topCustomer.orders_total }} shipments</p>
+					<p class="fs-7 mb-0">{{ currency | raw }}{{ topCustomer.value }} gross value</p>
 				</div>
+				<div class="frame-logo col-7">
+                    <div class="px-4">
+					<img class="img-fluid" src="/uploads/{{ topCustomer.logo }}" />
+                    </div>
+                </div>
 			</div>
 		</div>
+  {% endfor %}
+	
+
 	</div>
+      {# top customers ends here #}
+
+      {# top customers starts here #}
+	<div class="col-12 col-md-6">
+		<h3 class="my-4">Last week income</h3>
+		<div class="chart-wrapper">
+				<canvas id="incomeChart" height="300"</canvas>
+		</div>
+	</div>
+      {# top customers ends here #}
+</div>
+
+{# destination, customer, arrival time, time left, value #}
+    <div class="row">
+        <div class="col-12">
+        <h3 class="my-4">Latest orders</h3>
+        <table class="table table-striped table-orders">
+  <thead>
+    <tr>
+      <th scope="col">No.</th>
+      <th scope="col">Dest.</th>
+      <th scope="col">Customer</th>
+      <th scope="col">Status</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for awaitingOrder in awaitingOrders %}
+    <tr class="orders-row" data-id={{ awaitingOrder.id }}>
+      <td>{{ awaitingOrder.id }}</td>
+      <td>{{ awaitingOrder.city_to }}</td>
+      <td>{{ awaitingOrder.customer_name }}</td>
+     	<td>{{ include ('components/cargo-status.html.twig', {'status': awaitingOrder.status }) }}</td>
+      <td>{{ currency | raw }}{{ awaitingOrder.value }}.00</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+        </div>
+    </div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script>
+
+const generateChart = (chart, chartLabels, chartData) => {
+    new Chart(chart, {
+    type: 'bar',
+	responsive: true,
+    data: {
+        labels: chartLabels,
+        datasets: [{
+            data: Object.values(chartData),
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        plugins: {
+         legend: {
+            display: false
+         }
+      },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        },
+		maintainAspectRatio: false
+    }
+});
+}
+
+const chart1 = document.getElementById('shippedChart');
+const chart2 = document.getElementById('planesChart');
+const chart3 = document.getElementById('customersChart');
+const incomeChart = document.getElementById('incomeChart');
+const chart1Labels  = JSON.parse('{{ dataChartOrders | keys | json_encode | raw }}');
+const chart1Data  = JSON.parse('{{ dataChartOrders | json_encode | raw }}');
+const chart2Labels  = JSON.parse('{{ dataChartPlanes | keys | json_encode | raw }}');
+const chart2Data  = JSON.parse('{{ dataChartPlanes | json_encode | raw }}');
+const chart3Labels  = JSON.parse('{{ dataChartCustomers | keys | json_encode | raw }}');
+const chart3Data  = JSON.parse('{{ dataChartCustomers | json_encode | raw }}');
+const chartIncomesData  = JSON.parse('{{ dataChartIncomes | json_encode | raw }}');
+
+const tableRows = document.querySelectorAll('.orders-row');
+console.log(tableRows);
+  tableRows.forEach( (row) => {
+    row.addEventListener('click', (e) => {
+      location.href = '/manageOrder/' +  e.target.parentElement.dataset.id;
+    })
+  })
+generateChart(chart1, chart1Labels, chart1Data);
+generateChart(chart2, chart2Labels, chart2Data);
+generateChart(chart3, chart3Labels, chart3Data);
+generateChart(incomeChart, chart1Labels, chartIncomesData);
+
+
+</script>
 {% endblock %}

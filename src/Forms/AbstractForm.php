@@ -18,6 +18,9 @@ class AbstractForm
     {
         $customersRepo = new CustomerRepository();
         $customers = $customersRepo->getAll(PDO::FETCH_CLASS);
+        if (empty($customers)) {
+            return [];
+        }
         foreach ($customers as $customer) {
             $selectCustomers[$customer->getId()] = 
                             $customer->getCustomerName()
@@ -32,7 +35,6 @@ class AbstractForm
     {
         $planesRepo = new AeroplaneRepository();
         $planes = $planesRepo->getAll(PDO::FETCH_CLASS);
-       // dump($planes);
         return $planes;
     }
     protected function getAirports(): array

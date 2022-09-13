@@ -10,12 +10,8 @@ use App\Forms\InputTypes\HiddenType;
 use App\Forms\InputTypes\HtmlType;
 use App\Forms\InputTypes\NumberType;
 use App\Forms\InputTypes\TextType;
-use App\Forms\InputTypes\SelectImageType;
-use App\Forms\InputTypes\SelectType;
 use App\Forms\InputTypes\SubmitType;
 use App\Models\Entities\CustomerEntity;
-use App\Models\Repositories\AeroplaneRepository;
-use App\Models\Repositories\AirportRepository;
 
 class CustomerForm 
 {
@@ -23,10 +19,12 @@ class CustomerForm
     private int $id;
     private $data = [];
     private $image = '';
+    private $imageHtml = '';
 
     public function __construct()
     {
         $this->formBuilder = new FormBuilder();
+        $this->imageHtml = '<img id="image-preview" src="">';
     } 
     public function setData(CustomerEntity $customer)
     {
@@ -48,8 +46,11 @@ class CustomerForm
         }
         $this->id = $customer->getId();
        $this->image = $this->data[9];
-
+        //prepare image html 
+        if ($this->data[9]) {
+            $this->imageHtml = '<img id="image-preview" src="' . '/uploads/' . $this->image . '" />';
         }
+    }
       
     public function getForm()
     {
@@ -217,12 +218,12 @@ class CustomerForm
             HiddenType::class,
             [
                 'param' => 'logo',
-                'data' => $this->data[9]
+                'data' => $this->data[9] ?? ''
             ]
         )
         ->add(
             HtmlType::class,
-            ['<img id="image-preview" src="' . '/uploads/' . $this->image . '" />' ]
+            [$this->imageHtml]
         )
         ->add(
             SubmitType::class,

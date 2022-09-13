@@ -45,6 +45,16 @@ class MigrationsManager
                 FOREIGN KEY (airport_to) REFERENCES airport(id)
             );
 
+            CREATE TABLE aeroplane
+            (
+                id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                vendor VARCHAR(40) NOT NULL,
+                photo VARCHAR(200),
+                model VARCHAR(40) NOT NULL,
+                distance INT DEFAULT 0,
+                payload INT NOT NULL
+            );
+            
             CREATE TABLE aircraft
             (
                 id INT NOT NULL AUTO_INCREMENT,
@@ -52,21 +62,14 @@ class MigrationsManager
                 hours_done INT NOT NULL,
                 in_use BOOLEAN NOT NULL DEFAULT FALSE,
                 airport_base INT NOT NULL,
-                aeroplane INT NOT NULL
-                PRIMARY KEY(id),
+                aeroplane INT NOT NULL,
+                distance_done INT DEFAULT 0,
+                date_created DATETIME DEFAULT NOW(),
                 FOREIGN KEY (airport_base) REFERENCES airport(id),
-                FOREIGN KEY (aeroplane) REFERENCES aeroplane(id)
+                FOREIGN KEY (aeroplane) REFERENCES aeroplane(id),
+                PRIMARY KEY(id)
             );
 
-            CREATE TABLE aeroplane
-            (
-                id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                vendor VARCHAR(40) NOT NULL,
-                photo VARCHAR(200),
-                model VARCHAR(40) NOT NULL,
-                distance INT NOT NULL,
-                payload INT NOT NULL
-            );
 
             CREATE TABLE cargo 
             (
@@ -74,12 +77,13 @@ class MigrationsManager
                 value FLOAT NOT NULL,
                 city_from INT NOT NULL,
                 city_to INT NOT NULL,
-                status INT NOT NULL,
-                weight INT NO NULL,
+                status INT NOT NULL DEFAULT 0,
+                weight INT NOT NULL, 
                 size INT NOT NULL,
-                time_taken INT,
-                FOREIGN KEY (airport_from) REFERENCES airport(id),
-                FOREIGN KEY (airport_to) REFERENCES airport(id)
+                delivery_time INT NOT NULL DEFAULT -1,
+                date_created DATETIME DEFAULT NOW(),
+                FOREIGN KEY (city_from) REFERENCES airport(id),
+                FOREIGN KEY (city_to) REFERENCES airport(id)
             );
 
             CREATE TABLE aircraft_cargos
@@ -104,6 +108,7 @@ class MigrationsManager
                 country VARCHAR(100) NOT NULL,
                 vat VARCHAR(100) NOT NULL,
                 logo VARCHAR(255),
+                date_created DATETIME DEFAULT NOW(),
                 PRIMARY KEY(id)
             );
 
@@ -117,10 +122,11 @@ class MigrationsManager
             );
 
             CREATE TABLE user
-        (
+            (
             id INT NOT NULL AUTO_INCREMENT PRIMARY_KEY,
             login VARCHAR(40) NOT NULL,
             password VARCHAR(255) NOT NULL,
+            date_created DATETIME DEFAULT NOW(),
             role VARCHAR(50) NOT NULL DEFAULT 'ROLE_USER'
         );
         ";

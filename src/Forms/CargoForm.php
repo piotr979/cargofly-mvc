@@ -44,14 +44,17 @@ class CargoForm extends AbstractForm
     }
     public function getForm()
     {
-       
-
         /** mySql Point to Array conversion
          * https://stackoverflow.com/a/42322503/1496972
          */
         $airports = $this->getAirports();
        
         $customers = $this->getAllCustomersNames();
+       
+        if (empty($customers)) {
+            return false;
+       }
+
         $elements = $this->formBuilder
 
         ->add(

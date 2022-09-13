@@ -96,18 +96,6 @@
 							</li>
 						   </a>
 
-                         <a href="/routes"> 
-							{% if route == 'routes' %}
-							<li class="selected-item clean-list-item py-1 px-2 mb-2 admin-articles d-flex flex-row align-items-center">
-								<img class="clean-list--image icon-sidebar__selected" src="/assets/images/iconly/bold/Location.svg">
-							{% else %}		
-							<li class="clean-list-item py-1 px-2 mb-2 admin-articles d-flex flex-row align-items-center">
-								<img class="clean-list--image icon-sidebar__selected" src="/assets/images/iconly/draw/Location.svg">
-							{% endif %}
-                                <p class="sidebar-menu__item mb-0 ms-2">Routes</p>
-							</li>
-						   </a>
-
 					</ul>
 
 					<p class="sidebar--title ps-2 mt-4">Settings &amp; Others</p>
@@ -127,7 +115,7 @@
 						</ul>
 				
 					<div class="logout__box">
-						<h2 class="text-center pt-2 logout__box--number">{{ awaitingOrders }}</h2>
+						<h2 class="text-center pt-2 logout__box--number">{{ awaitingOrdersAmount }}</h2>
 						<h6 class="px-2 logout__box--subtext text-center">Orders awaiting</h6>
 						<div class="text-center py-2">
 						<a href="/logout" class="btn btn-light mb-2 py-0 logout__box--button">Log out</a>

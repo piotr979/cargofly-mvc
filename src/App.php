@@ -13,12 +13,14 @@ use App\Controllers\CargoController;
 use App\Controllers\CustomerController;
 use App\Controllers\FleetController;
 use App\Controllers\NotFoundController;
+use App\Fixtures\FixtureLauncher;
 use App\Services\Router;
 use App\Services\Request;
 use App\Models\Database\PDOClient;
 use App\Models\Entities\UserEntity;
 use App\Services\SessionManager;
 use App\Services\FlashMessenger;
+use App\Services\MigrationsManager;
 use Environment;
 
 class App
@@ -71,18 +73,11 @@ class App
         // each controller has attachRoutes method which adds
         // routes to the router;
 
+        // Uncomment function below to run fixtures
+       // $fixtureLauncher = new FixtureLauncher($this->conn);
+        // Uncomment function above to run fixtures
+
         SessionManager::sessionStart();
-
-        // run this command below to do migrations
-        //$migrations = new MigrationsManager();
-
-        // command below drops all databases
-        // $migrations->dropAllTables();
-
-        // this command migrates the whole DB
-        // $migrations->migrateDatabase();
-
-
         $this->mainController->attachRoutes($this->router);
         $this->adminController->attachRoutes($this->router);
         $this->authController->attachRoutes($this->router);
@@ -92,13 +87,6 @@ class App
         $this->settingsController->attachRoutes($this->router);
         $this->actionsController->attachRoutes($this->router);
         $this->notFoundController->attachRoutes($this->router);
-
-        /**
-         * Fixtures to run
-         */
-        // Uncomment function below to run fixtures
-        //$fixtureLauncher = new FixtureLauncher($this->conn);
-        // Uncomment function above to run fixtures
     }
     public function resolve($url)
     {

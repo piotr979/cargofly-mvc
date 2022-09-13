@@ -27,10 +27,20 @@ class SessionManager
         }
         session_destroy();
     }
+
+    /**
+     * Set session key/value pair
+     * @param string $sessionKey
+     * @param string $sessionValue
+     */
     public static function setSessionData(string $sessionKey, $sessionValue)
     {
         $_SESSION[$sessionKey] = $sessionValue;
     }
+
+    /**
+     * Returns session value by key
+     */
     public function getSessionData(string $sessionKey)
     {
         if (isset($_SESSION[$sessionKey])) {

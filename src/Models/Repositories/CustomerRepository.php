@@ -6,8 +6,10 @@ namespace App\Models\Repositories;
 
 use App\Models\Database\QueryBuilder;
 use App\Models\Entities\AircraftEntity;
+use App\Models\Entities\CargoEntity;
 use App\Models\Entities\EntityInterface;
 use App\Models\Repositories\AbstractRepository;
+use DateTime;
 use PDO;
 
 class CustomerRepository extends AbstractRepository implements RepositoryInterface
@@ -78,5 +80,65 @@ class CustomerRepository extends AbstractRepository implements RepositoryInterfa
         $result = $this->db->runQuery($query);
         $count = $result[0]['count'];
         return (int)ceil($count / $limit);
+    }
+    public function countSingleCustomerOrdersWithDetails()
+    {
+        /** SELECT SUM(cargo.value) AS value_total,
+         *  COUNT(cargo.id) AS orders_total FROM `customer` 
+         * LEFT JOIN customer_cargos ON customer.id = customer_cargos.customer_id 
+         * LEFT JOIN cargo ON customer_cargos.id = cargo.id 
+         * WHERE customer.id = 1; 
+         */
+        $query = $this->qb
+                ->select('SUM(cargo.value) AS value_total, COUNT(cargo.id) AS orders_total')
+                ->from('customer')
+                ->leftJoin('customer_cargos', 'customer.id', 'customer_cargos.customer_id')
+                ->leftJoin('cargo', 'customer_cargos.id', 'cargo.id')
+                ->where('customer.id', '3')
+                ->getQuery();
+       // dump($query);exit;
+        return $this->db->runQuery($query);
+    }
+    public function getTopCustomers(int $limit)
+    {
+        /**
+         * SELECT customer.id, COUNT(customer_cargos.id) AS orders_total FROM customer 
+         *LEFT JOIN customer_cargos ON customer.id = customer_cargos.customer_id 
+         *LEFT JOIN cargo ON customer_cargos.id = cargo.id GROUP BY customer.id DESC;
+         */
+        $query = $this->qb
+        ->select('customer.id, COUNT(customer_cargos.id) AS orders_total, 
+                customer_name, CONCAT( FORMAT(SUM(cargo.value),2)) AS value, customer.logo')
+        ->from('customer')
+        ->leftJoin('customer_cargos', 'customer.id', 'customer_cargos.customer_id')
+        ->leftJoin('cargo', 'customer_cargos.id', 'cargo.id')
+        ->groupBy('customer.id DESC')
+        ->limitWithOffset(limit: $limit, offset: 0)
+        ->getQuery();
+        return $this->db->runQuery($query);
+    }
+    public function getCustomersMonthlyByDate()
+    {
+        $data = [];
+        /**
+         * SELECT COUNT(cargo.status) AS orders_delivered,delivery_time, 
+         * date_created FROM cargo WHERE status = '2' 
+         * GROUP BY date_created, delivery_time; 
+         */
+        $query = $this->qb
+                ->select('MONTH(date_created) AS months, COUNT(*) AS amounts')
+                ->from('customer')
+                ->groupBy('MONTH(date_created)')
+                ->getQuery();
+        $results = $this->db->runQuery($query);
+        /** 
+         * https://stackoverflow.com/a/18467892/1496972
+         */
+        foreach ($results as $result) {
+            $dateObj = DateTime::createFromFormat('!m', (string)$result['months']);
+            $monthName = $dateObj->format('F');
+            $data[$monthName] = $result['amounts'];
+        }
+        return ($data);
     }
 }

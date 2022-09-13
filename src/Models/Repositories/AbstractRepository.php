@@ -78,6 +78,7 @@ class AbstractRepository
                                             id: $object->getId() 
                                             )
                         ->getQuery();
+
         }
        return $this->db->pushQuery($query);
     }

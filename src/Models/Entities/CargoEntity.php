@@ -52,11 +52,11 @@ class CargoEntity extends AbstractEntity implements EntityInterface
     private int $status;
 
     /**
-     * @var time_taken
+     * @var delivery_time
      * Time taken to deliver (in hours)
      */
 
-    private int $time_taken = -1;
+    private int $delivery_time = 0;
 
     /**
      * @var weight
@@ -105,11 +105,11 @@ class CargoEntity extends AbstractEntity implements EntityInterface
 
     public function getTimeTaken(): int
     {
-        return $this->time_taken;
+        return $this->delivery_time;
     }
-    public function setTimeTaken(int $time_taken)
+    public function setTimeTaken(int $delivery_time)
     {
-        $this->time_taken = $time_taken;
+        $this->delivery_time = $delivery_time;
     }
 
     public function getWeight(): int
@@ -146,5 +146,12 @@ class CargoEntity extends AbstractEntity implements EntityInterface
     {
         $this->status = $status;
     }
-
+    public function getDeliveryTime(): int
+    {
+        return $this->delivery_time;
+    }
+    public function setDeliveryTime(int $deliveryTime)
+    {
+        $this->delivery_time = $deliveryTime; 
+    }
 }

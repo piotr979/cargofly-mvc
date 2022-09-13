@@ -4,6 +4,12 @@ declare(strict_types = 1);
 
 namespace App\Models\Entities;
 
+/**
+ * Describes aeroplane used for buildin the fleet
+ * You can only have one type of aeroplane but with 
+ * different qty (planes)
+ */
+
 class AeroplaneEntity extends AbstractEntity implements EntityInterface
 {
     /**
@@ -32,6 +38,13 @@ class AeroplaneEntity extends AbstractEntity implements EntityInterface
       */
 
       private int $payload;
+
+        /**
+      * @var distance
+      * Capacity of the plane
+      */
+
+      private int $distance;
 
        /**
         * Getters and setters
@@ -74,6 +87,13 @@ class AeroplaneEntity extends AbstractEntity implements EntityInterface
        {
         $this->payload = $payload;
        }
+       public function getDistance(): int
+       {
+        return $this->distance;
+       }
 
-
+       public function setDistance(int $distance)
+       {
+        $this->distance = $distance;
+       }
 }

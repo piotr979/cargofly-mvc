@@ -11,7 +11,12 @@
 					</div>
 			{% endfor %}
         <h2 class="mt-4">Edit order</h2>
+        {% if form is empty %}
+        Some data for form are missing (customers?).
+        {% endif %}
+
         {{ form | raw }}
+
         </div>
     </div>
 </div>

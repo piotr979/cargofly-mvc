@@ -39,7 +39,6 @@ class CustomerController extends AbstractController
     $searchString = '';
     $searchColumn = '';
     $customerRepo = new CustomerRepository();
-   
     $searchForm = new SearchColumnForm(action: '/customers/1/customer_name/asc/', entity: 'customer');
     // if search form was already submitted
     if (isset($_GET['searchString']) && isset($_GET['column'])) {

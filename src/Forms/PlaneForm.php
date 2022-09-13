@@ -55,7 +55,6 @@ class PlaneForm extends AbstractForm
          * https://stackoverflow.com/a/42322503/1496972
          */
         $airports = $this->getAirports();
-
         $elements = $this->formBuilder
         ->add(
             TextType::class, 
@@ -109,6 +108,4 @@ class PlaneForm extends AbstractForm
         ;
         return $elements;
     }
-
-  
 }

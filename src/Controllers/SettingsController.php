@@ -5,7 +5,9 @@ declare(strict_types = 1);
 namespace App\Controllers;
 
 use App\Controllers\AbstractController;
+use App\Forms\SettingsForm;
 use App\Services\Router;
+use App\Services\Settings;
 
 class SettingsController extends AbstractController
 {
@@ -23,6 +25,16 @@ class SettingsController extends AbstractController
 
    public function settings()
    {
-    echo $this->twig->render('settings.html.twig', ['route' => 'settings']);
+    $data = $_GET;
+      if (isset($data['currency'])) {
+        Settings::setCurrencyIndex((int)$data['currency']);
+      }
+
+    $settingsForm = new SettingsForm();
+      $settingsForm->setData();
+    echo $this->twig->render('settings.html.twig', 
+                ['route' => 'settings',
+                 'form' => $settingsForm->getForm()
+                ]);
    }
 }

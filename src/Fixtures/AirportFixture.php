@@ -14,7 +14,7 @@ class AirportFixture extends AbstractFixture
     public function __construct($conn)
     {
        parent::__construct($conn);
-       $countriesJson = ROOT_DIR . "/public/assets/airports.json";
+       $countriesJson = ROOT_DIR . "/public/assets/someAirports.json";
        $handle = fopen($countriesJson, 'r' );
        $countries = fread($handle, filesize($countriesJson));
        $cts = json_decode($countries, true);

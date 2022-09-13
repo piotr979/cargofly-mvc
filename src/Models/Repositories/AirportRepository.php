@@ -14,14 +14,6 @@ class AirportRepository extends AbstractRepository implements RepositoryInterfac
     {
         parent::__construct('airport');
     }
-    public function getAllAirports()
-    {
-
-        $stmt = $this->conn->prepare('SELECT * FROM airport');
-        $stmt->setFetchMode(PDO::FETCH_CLASS, '\App\Models\Entities\AirportEntity');
-        $stmt->execute();
-        return $stmt->fetchAll();
-    }
     public function persist($plane)
     {
         $mysql = "

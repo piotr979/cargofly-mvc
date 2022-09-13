@@ -11,10 +11,10 @@ use App\Forms\SearchColumnForm;
 use App\Forms\Validators\FormValidator;
 use App\Helpers\Url;
 use App\Models\Entities\CargoEntity;
+use App\Models\Repositories\AirportRepository;
 use App\Models\Repositories\CargoRepository;
 use App\Services\MapHandler;
 use App\Services\Router;
-use DateTime;
 
 /**
  * all pages are stored here. There are accessible for
@@ -29,10 +29,12 @@ class CargoController extends AbstractController
   {
 
     // also all methods can be retrieved with ReflectionClass
-  // TO BE DONE
+    // TO DO: loop over functions to generate routes
     $router->attachRoute('CargoController', 'orders', ['page', 'sortBy', 'sortOrder']);
     $router->attachRoute('CargoController', 'processOrder', ['id']);
     $router->attachRoute('CargoController', 'manageOrder', ['id']);
+    $router->attachRoute('CargoController', 'updateOrder', ['id']);
+    $router->attachRoute('CargoController', 'generateRandomOrders', ['amount']);
   
   }
 
@@ -161,17 +163,70 @@ class CargoController extends AbstractController
                           'flashes' => $this->flashMessenger->getMessages()
                         ]);
   }
+
+  /**
+   * Displays single order with all details and maps 
+   * @param int $id Id of the order
+   */
   public function manageOrder(int $id)
   {
     $cargoRepo = new CargoRepository();
     $cargo = $cargoRepo->getSingleCargoById($id);
-
-  $cargo['location_origin'] = MapHandler::PointToLocation($cargo['location_origin']);
-  $cargo['location_destination'] = MapHandler::PointToLocation($cargo['location_destination']);
+    $airportRepo = new AirportRepository();
+    $airports = $airportRepo->getAll();
+    $cargo['location_origin'] = MapHandler::PointToLocation($cargo['location_origin']);
+    $cargo['location_destination'] = MapHandler::PointToLocation($cargo['location_destination']);
  
   echo $this->twig->render('manage-cargo.html.twig', [
       'cargoNo' => $id,
-      'cargo' => $cargo
+      'cargo' => $cargo,
+      'airports' => $airports
     ]);
+  }
+
+  /**
+   * This function updates order status (if delivered or not),
+   * redirects delivery, cancels delivery
+   * @param int $id Id of the order
+   */
+  public function updateOrder(int $id)
+  {
+    $cargoRepo = new CargoRepository();
+    $data = $_GET;
+    if (isset($data['status'])) {
+      $status = (int)$data['status'];
+      $cargoRepo->setStatus($id, $status);
+
+      /**
+       * If cargo is on delivery random delivery time is generated (for demo purposes)
+       * TO DO: calc distance between cities and set correct delivery time
+       */
+        if ($status != 0 ) {
+          $deliveryTime = rand(36,96);
+          $cargoRepo->setDeliveryTime(id: $id, time: $deliveryTime);
+        } 
+    }
+    if (isset($data['airportId'])) {
+      $deliveryTime = rand(36,96);
+      $cargoRepo->redirectDelivery($id, (int)$data['airportId']);
+      $cargoRepo->setDeliveryTime(id: $id, time: $deliveryTime);
+    }
+    if ((isset($data['cancel']) && ($data['cancel'] === 'yes')) ) {
+      $cargoRepo->setStatus($id, status: 0);
+    }
+    Url::redirect("/manageOrder/{$id}");
+    return;
+  }
+
+  /**
+   * Generates random orders and adds to the database
+   * @param int $amount Amount of orders to be generated
+   */
+
+  public function generateRandomOrders(int $amount)
+  {
+    $cargoRepo = new CargoRepository();
+    $cargoRepo->generateRandomOrders($amount);
+    Url::redirect('/orders/1/id/asc');
   }
 }
