@@ -54,6 +54,8 @@ class App
         self::$app = $this;
         $this->router = new Router();
         $this->request = new Request();
+
+        
         $this->mainController = new MainController();
         $this->fleetController = new FleetController();
         $this->adminController = new AdminController();

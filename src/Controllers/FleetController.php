@@ -26,10 +26,12 @@ class FleetController extends AbstractController
    */
   public function attachRoutes(Router $router)
   {
-
-    $router->attachRoute('FleetController', 'fleet', ['page', 'sortBy', 'sortOrder']);
-    $router->attachRoute('FleetController', 'processPlane', ['id']);
-    $router->attachRoute('FleetController', 'addAeroplane');
+    $routes = [
+        'addAeroplane',
+        'processPlane' => ['id'],
+        'fleet' => ['page', 'sortBy', 'sortOrder']
+    ];
+    $router->attachRoutes('FleetController', $routes);
   }
 
   /** 

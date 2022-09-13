@@ -28,14 +28,14 @@ class CargoController extends AbstractController
   public function attachRoutes(Router $router)
   {
 
-    // also all methods can be retrieved with ReflectionClass
-    // TO DO: loop over functions to generate routes
-    $router->attachRoute('CargoController', 'orders', ['page', 'sortBy', 'sortOrder']);
-    $router->attachRoute('CargoController', 'processOrder', ['id']);
-    $router->attachRoute('CargoController', 'manageOrder', ['id']);
-    $router->attachRoute('CargoController', 'updateOrder', ['id']);
-    $router->attachRoute('CargoController', 'generateRandomOrders', ['amount']);
-  
+    $routes = [
+       'orders' => ['page', 'sortBy', 'sortOrder'],
+       'processOrder' => ['id'],
+       'manageOrder' => ['id'],
+       'updateOrder' => ['id'],
+       'generateRandomOrders' => ['amount']
+  ];
+  $router->attachRoutes('CargoController', $routes);  
   }
 
   public function orders(int $page, string $sortBy, string $sortOrder)
@@ -124,6 +124,7 @@ class CargoController extends AbstractController
       $cargo->setWeight((int)$data['weight']);
       $cargo->setSize((int)$data['size']);
       $cargo->setValue((int)$data['value']);
+      
       // check if names exists in the database
       // if ($id === 0 && ($cargoRepo->checkIfExists($customer->getCustomerName(), 'customer_name'))) {
       //   $errors[] = 'Name already exists.';

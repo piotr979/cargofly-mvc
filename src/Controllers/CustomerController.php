@@ -27,13 +27,13 @@ class CustomerController extends AbstractController
   public function attachRoutes(Router $router)
   {
 
-    // also all methods can be retrieved with ReflectionClass
-    // TO BE DONE
-    $router->attachRoute('CustomerController', 'customers', ['page', 'sortBy', 'sortOrder']);
-    $router->attachRoute('CustomerController', 'processCustomer', ['id']);
-  
-  }
-
+    $routes = [
+      'customers' => ['page', 'sortBy', 'sortOrder'],
+      'processCustomer' => ['id']
+      ];
+ $router->attachRoutes('CustomerController', $routes);  
+ }
+ 
   public function customers(int $page, string $sortBy, string $sortOrder)
   {
     $searchString = '';
@@ -114,7 +114,7 @@ class CustomerController extends AbstractController
       $errors = $validator->isValid(values: $data, ommit: ['id', 'logo', 'street2']);
       
     
-      // TODO: this section must be optimised
+      // TODO: this section must be optimised, looks bad
       $customer->setCustomerName($data['customer_name']);
       $customer->setOwnerFName($data['owner_fname']);
       $customer->setOwnerLName($data['owner_lname']);

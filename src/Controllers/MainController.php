@@ -25,11 +25,9 @@ class MainController extends AbstractController
    */
   public function attachRoutes(Router $router)
   {
-
-    // also all methods can be retrieved with ReflectionClass
-    // TO BE DONE
-    $router->attachRoute('MainController', 'index');
-    $router->attachRoute('MainController', 'dashboard');
+    dump('test');
+    $routes = ['index', 'dashboard'];
+    $router->attachRoutes('MainController', $routes);
   }
 
   /**
@@ -63,7 +61,7 @@ class MainController extends AbstractController
 
     // to display most regular customers (2 of them)
     $topCustomers = $customerRepo->getTopCustomers(limit: 2);
-    
+
     $awaitingOrders = $cargoRepo->getAwaitingOrders(limit: 3);
     echo $this->twig->render('dashboard.html.twig',
            [

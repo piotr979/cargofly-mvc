@@ -104,6 +104,25 @@ class Router
     }
 
     /**
+     * Attaches bulk of routes
+     * @param string $controllerName like "MainController"
+     * @param array $routeNames name of a route with params ex. ["index"] => ["id"]
+     */
+    public function attachRoutes(string $controllerName, array $routeNames)
+    {
+        foreach($routeNames as $key => $value) {
+                    if (is_array($value)) {
+                     $this->attachRoute(
+                        controller:$controllerName, 
+                        routeName: $key, 
+                        params: $value);
+                    } else {
+                $this->attachRoute($controllerName, $value);
+                }
+        }
+    }
+
+    /**
      * Get all routes
      * @return all registered routes
      */

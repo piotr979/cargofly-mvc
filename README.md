@@ -6,6 +6,13 @@ For now the whole app is working, except live feature (real-time cargo tracking)
 
 The structure consists of: Controllers,Forms (with form builder and form validator), Fixtures, Entites, Repositories, Services and templates (at the beginning views were based on custom classes, but eventually I decided to use Twig).
 
+TODO:
+- real-time cargo tracking,
+- eliminate bloated code,
+- better logic seperation
+- better error handling,
+- update environemts
+
 DASHBOARD
 It's like eagle view of deliveries. Some stats and recent shipments.
 ![alt text](https://github.com/piotr979/cargofly-mvc/blob/main/preview_dashboard.jpg)
