@@ -11,6 +11,7 @@ use App\Models\Repositories\CargoRepository;
 use App\Services\FlashMessenger;
 use App\Services\OrdersManager;
 use App\Services\Settings;
+use App\Services\Twig;
 use Twig\Extra\Intl\IntlExtension;
 
 abstract class AbstractController {
@@ -23,6 +24,11 @@ abstract class AbstractController {
    // protected $conn;
     public ViewRenderer $viewRenderer;
 
+    /**
+     * Initialises FlashMessenger which is responsible for 
+     * displaying messages after operations like entering/removing entries, etc.
+     * Also launches twig
+     */
     public function __construct()
     {
         /**
@@ -33,18 +39,8 @@ abstract class AbstractController {
         $this->flashMessenger = new FlashMessenger();
         $this->db = App::$app->db;
         $this->conn = App::$app->conn;
-        /**
-         * configure Twig
-         */
+        $this->twig = (new Twig($this->conn))->launchTwig();
 
-        $loader = new \Twig\Loader\FilesystemLoader( ROOT_DIR . '/templates');
-        $this->twig = new \Twig\Environment($loader, [
-            'cache' => ROOT_DIR . '/temp',
-            'auto_reload' => true,
-        ]);
-        // attach awaiting orders globally to every page
-        $this->twig->addGlobal('awaitingOrdersAmount', OrdersManager::getAwaitingOrdersNumber($this->conn));
-        $this->twig->addGlobal('currency', Settings::getCurrencySymbol());
     }
     abstract protected function attachRoutes(Router $router);
 

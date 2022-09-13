@@ -56,10 +56,14 @@ class MainController extends AbstractController
     $cargoRepo = new CargoRepository();
     $customerRepo = new CustomerRepository();
     $aircraftRepo = new AircraftRepository();
+
     list($dataOrders, $dataIncomes) = $cargoRepo->getDeliveredCargosByDate();
     $dataPlanes = $aircraftRepo->getPlanesMonthlyByDate();
     $dataCustomers = $customerRepo->getCustomersMonthlyByDate();
+
+    // to display most regular customers (2 of them)
     $topCustomers = $customerRepo->getTopCustomers(limit: 2);
+    
     $awaitingOrders = $cargoRepo->getAwaitingOrders(limit: 3);
     echo $this->twig->render('dashboard.html.twig',
            [

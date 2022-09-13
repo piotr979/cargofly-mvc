@@ -11,4 +11,7 @@ The structure consists of: Controllers,Forms (with form builder and form validat
 FLEET PAGE:
 Displays paginated list of all named planes available. Models are taken from aeroplane (another) list. Results can be sorted by columns and filtered by search form.
 
-
+![alt text](https://github.com/piotr979/cargofly-mvc/blob/main/preview_dashboard.jpg)
+![alt text](https://github.com/piotr979/cargofly-mvc/blob/main/preview_manage.jpg)
+![alt text](https://github.com/piotr979/cargofly-mvc/blob/main/preview_orders.jpg)
+![alt text](https://github.com/piotr979/cargofly-mvc/blob/main/preview_planes.jpg)

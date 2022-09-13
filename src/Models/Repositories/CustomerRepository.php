@@ -113,6 +113,7 @@ class CustomerRepository extends AbstractRepository implements RepositoryInterfa
         ->leftJoin('customer_cargos', 'customer.id', 'customer_cargos.customer_id')
         ->leftJoin('cargo', 'customer_cargos.id', 'cargo.id')
         ->groupBy('customer.id DESC')
+        ->orderBy('orders_total', 'DESC')
         ->limitWithOffset(limit: $limit, offset: 0)
         ->getQuery();
         return $this->db->runQuery($query);
