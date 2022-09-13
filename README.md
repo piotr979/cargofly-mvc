@@ -12,10 +12,15 @@ It's like eagle view of deliveries. Some stats and recent shipments.
 
 MANAGE ORDER
 Each order (cargo) can be redirected, canceled or its status changed.
+
 ![alt text](https://github.com/piotr979/cargofly-mvc/blob/main/preview_order.jpg)
+
 ORDERS
 Table with all orders. It's possible to sort (asc/desc) and filter with search form.
+
 ![alt text](https://github.com/piotr979/cargofly-mvc/blob/main/preview_orders.jpg)
+
 PLANES
 New planes can be added to the fleet. 
+
 ![alt text](https://github.com/piotr979/cargofly-mvc/blob/main/preview_planes.jpg)
