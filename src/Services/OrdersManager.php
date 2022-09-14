@@ -12,10 +12,9 @@ use App\Models\Repositories\CargoRepository;
 
 class OrdersManager
 {
-
-    public static function getAwaitingOrdersNumber(object $conn)
+    public static function getAwaitingOrdersNumber(): int
     {
         $cargoRepo = new CargoRepository();
         return $cargoRepo->getAwaitingOrdersNumber();
     }
-}
+} 

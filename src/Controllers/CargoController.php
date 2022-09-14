@@ -25,7 +25,7 @@ class CargoController extends AbstractController
   /**
    * Required function attaches all routes of the controller
    */
-  public function attachRoutes(Router $router)
+  public function attachRoutes(Router $router): void
   {
 
     $routes = [
@@ -38,14 +38,15 @@ class CargoController extends AbstractController
   $router->attachRoutes('CargoController', $routes);  
   }
 
-  public function orders(int $page, string $sortBy, string $sortOrder)
+  public function orders(int $page, string $sortBy, string $sortOrder): void
   {
     $searchString = '';
     $searchColumn = '';
     $cargoRepo = new CargoRepository();
    
     $searchForm = new SearchColumnForm(action: '/orders/1/id/asc/', entity: 'cargo');
-    // if search form was already submitted
+    
+    // if search form was submitted check entered data
     if (isset($_GET['searchString']) && isset($_GET['column'])) {
       $searchString = $_GET['searchString'];
       $searchColumn = $_GET['column'];
@@ -84,7 +85,7 @@ class CargoController extends AbstractController
       [
         'route' => 'orders',
         'cargos' => $cargos,
-        'flashes' => App::$app->flashMessenger->getMessages(),
+        'flashes' => App::$app->flashMessenger->get(),
         'pagesCount' => $pages,
         'page' => $page,
         'sortBy' => $sortBy,
@@ -161,7 +162,7 @@ class CargoController extends AbstractController
     }
     echo $this->twig->render('process-cargo.html.twig', 
                           ['form' => $form->getForm(),
-                          'flashes' => $this->flashMessenger->getMessages()
+                          'flashes' => $this->flashMessenger->get()
                         ]);
   }
 
@@ -169,7 +170,7 @@ class CargoController extends AbstractController
    * Displays single order with all details and maps 
    * @param int $id Id of the order
    */
-  public function manageOrder(int $id)
+  public function manageOrder(int $id): void
   {
     $cargoRepo = new CargoRepository();
     $cargo = $cargoRepo->getSingleCargoById($id);
@@ -190,7 +191,7 @@ class CargoController extends AbstractController
    * redirects delivery, cancels delivery
    * @param int $id Id of the order
    */
-  public function updateOrder(int $id)
+  public function updateOrder(int $id): void
   {
     $cargoRepo = new CargoRepository();
     $data = $_GET;
@@ -224,7 +225,7 @@ class CargoController extends AbstractController
    * @param int $amount Amount of orders to be generated
    */
 
-  public function generateRandomOrders(int $amount)
+  public function generateRandomOrders(int $amount): void
   {
     $cargoRepo = new CargoRepository();
     $cargoRepo->generateRandomOrders($amount);

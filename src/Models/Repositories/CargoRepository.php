@@ -241,7 +241,6 @@ class CargoRepository extends AbstractRepository implements RepositoryInterface
             $order->setSize(rand(200,1500));
             $order->setCustomer(rand(1,4));
             $order->setDeliveryTime(rand(5,50));
-            dump($order);exit;
             $this->persistOrder($order);
         }
     }

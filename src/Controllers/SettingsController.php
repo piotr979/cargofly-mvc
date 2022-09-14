@@ -15,23 +15,19 @@ class SettingsController extends AbstractController
     /**
      * Required function attaches all routes of the controller
      */
-   public function attachRoutes(Router $router)
+   public function attachRoutes(Router $router): void
    {
-
-    // also all methods can be retrieved with ReflectionClass
-    // TO BE DONE
     $router->attachRoute('SettingsController', 'settings');
    }
 
-   public function settings()
+   public function settings(): void
    {
     $data = $_GET;
       if (isset($data['currency'])) {
         Settings::setCurrencyIndex((int)$data['currency']);
       }
-
     $settingsForm = new SettingsForm();
-      $settingsForm->setData();
+    $settingsForm->setData();
     echo $this->twig->render('settings.html.twig', 
                 ['route' => 'settings',
                  'form' => $settingsForm->getForm()

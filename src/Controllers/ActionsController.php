@@ -14,15 +14,17 @@ class ActionsController extends AbstractController
     /**
      * Required function attaches all routes of the controller
      */
-   public function attachRoutes(Router $router)
+   public function attachRoutes(Router $router): void
    {
-
-    // also all methods can be retrieved with ReflectionClass
-    // TO BE DONE
     $router->attachRoute('ActionsController', 'removeAction', ['id', 'entity']);
    }
 
-   public function removeAction(int $id, string $entity)
+   /**
+    * Deletes selected entity 
+    * @param int $id Id of the item
+    * @param string $entity Entity name. Must end with "Repository" keyword.
+    */
+   public function removeAction(int $id, string $entity): void
    {
     $repositoryName = "\App\Models\Repositories\\" . ucfirst($entity) . "Repository";
     $repo = new $repositoryName();

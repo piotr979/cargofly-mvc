@@ -4,6 +4,9 @@ declare(strict_types = 1);
 
 namespace App\Services;
 
+/**
+ * This class provides Twig config and launches Twig itself.
+ */
 class Twig
 {
 

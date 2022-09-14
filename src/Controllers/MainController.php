@@ -23,9 +23,8 @@ class MainController extends AbstractController
   /**
    * Required function attaches all routes of the controller
    */
-  public function attachRoutes(Router $router)
+  public function attachRoutes(Router $router): void
   {
-    dump('test');
     $routes = ['index', 'dashboard'];
     $router->attachRoutes('MainController', $routes);
   }

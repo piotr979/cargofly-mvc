@@ -8,7 +8,7 @@ use App\Services\Router;
 
 class NotFoundController extends AbstractController
 {
-    public function attachRoutes(Router $router)
+    public function attachRoutes(Router $router): void
     {
         $router->attachRoute('NotFoundController', 'pageNotFound');
     }

@@ -24,20 +24,22 @@ class CustomerController extends AbstractController
   /**
    * Required function attaches all routes of the controller
    */
-  public function attachRoutes(Router $router)
+  public function attachRoutes(Router $router): void
   {
 
-    $routes = [
-      'customers' => ['page', 'sortBy', 'sortOrder'],
-      'processCustomer' => ['id']
-      ];
- $router->attachRoutes('CustomerController', $routes);  
- }
+      $routes = [
+        'customers' => ['page', 'sortBy', 'sortOrder'],
+        'processCustomer' => ['id']
+        ];
+      $router->attachRoutes('CustomerController', $routes);  
+ 
+}
  
   public function customers(int $page, string $sortBy, string $sortOrder)
   {
     $searchString = '';
     $searchColumn = '';
+
     $customerRepo = new CustomerRepository();
     $searchForm = new SearchColumnForm(action: '/customers/1/customer_name/asc/', entity: 'customer');
     // if search form was already submitted
@@ -80,7 +82,7 @@ class CustomerController extends AbstractController
       [
         'route' => 'customers',
         'customers' => $customers,
-        'flashes' => App::$app->flashMessenger->getMessages(),
+        'flashes' => App::$app->flashMessenger->get(),
         'pagesCount' => $pages,
         'page' => $page,
         'sortBy' => $sortBy,
@@ -94,6 +96,8 @@ class CustomerController extends AbstractController
   /**
    * This function is responsible for editing and adding new plane
    * If $id is different than zero means old entry is being edited.
+   * If user fills the data this route is reopened again with
+   * $_POST data checked.
    * @param int $id Id of the entry
    */
   public function processCustomer(int $id)
@@ -102,13 +106,14 @@ class CustomerController extends AbstractController
     $form = new CustomerForm();
     $customerRepo = new CustomerRepository();
 
+    /**
+     * Form filled?
+     * Process it
+     */
     if (!empty($_POST)) {
 
       $customer = new CustomerEntity();
       $data = $_POST;
-     
-      // form alread filled
-      // processing here
 
       $validator = new FormValidator();
       $errors = $validator->isValid(values: $data, ommit: ['id', 'logo', 'street2']);
@@ -169,7 +174,7 @@ class CustomerController extends AbstractController
     }
     echo $this->twig->render('process-customer.html.twig', 
                           ['form' => $form->getForm(),
-                          'flashes' => $this->flashMessenger->getMessages()
+                          'flashes' => $this->flashMessenger->get()
                         ]);
   }
 }

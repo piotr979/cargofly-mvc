@@ -6,6 +6,7 @@ use App\Models\Database\PDOClient;
 
 /**
  * This is simple migration 
+ * Builds the whole database and lets to migrate in to server.
  */
 class MigrationsManager
 {
@@ -14,12 +15,10 @@ class MigrationsManager
     public function __construct()
     {
         $this->conn = $this->connect();
-
     }
 
-    public function migrateDatabase()
+    public function migrateDatabase(): void
     {
-    
         $sql = 
         "
             CREATE TABLE airport 
@@ -69,7 +68,6 @@ class MigrationsManager
                 FOREIGN KEY (aeroplane) REFERENCES aeroplane(id),
                 PRIMARY KEY(id)
             );
-
 
             CREATE TABLE cargo 
             (
@@ -134,7 +132,7 @@ class MigrationsManager
       $this->executeSql($sql);
     }
 
-    public function dropAllTables()
+    public function dropAllTables(): void
     {
         /**
          * Script taken from
@@ -154,14 +152,17 @@ class MigrationsManager
 
         $this->executeSql($deleteTablesSql);
     }
-    private function connect()
+    /**
+     * Migrations Manager has own connect function.
+     */
+    private function connect(): object
     {
         $this->db = new PDOClient(DB_DRIVER, DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
         $this->db->connect();
 
         return $this->db->getConnection();
     }
-    private function executeSql(string $sql)
+    private function executeSql(string $sql): void
     {
         $this->conn = $this->connect();
         $stmt = $this->conn->prepare($sql);

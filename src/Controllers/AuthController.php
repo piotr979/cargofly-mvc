@@ -15,7 +15,7 @@ use FormRules;
 
 class AuthController extends AbstractController
 {
-  public function attachRoutes(Router $router)
+  public function attachRoutes(Router $router): void
   {
     $routes = ['login', 'logout', 'loggingAction'];
     $router->attachRoutes('AuthController', $routes);
@@ -31,23 +31,22 @@ class AuthController extends AbstractController
       'login.html.twig',
       [
         'form' => $loginForm->getForm(),
-        'flashes' => App::$app->flashMessenger->getMessages()
+        'flashes' => App::$app->flashMessenger->get()
       ]
     );
   }
-  public function logout()
+
+  public function logout(): void
   {
     Authorisation::logOut();
-
     $this->flashMessenger->add('You\'ve been successfully logged out.');
-
     Url::redirect('login');
   }
 
   /**
    * This function is triggered when user attempts to login in
    */
-  public function loggingAction()
+  public function loggingAction(): void
   {
     $data = $_POST;
     $errors = [];
@@ -56,33 +55,21 @@ class AuthController extends AbstractController
     $errors = $validator->validateForm(
       $data,
       [
-        'login' => [
-          FormRules::Required,
-          FormRules::Email
-        ],
-        'password' => [
-          FormRules::Required,
-          [FormRules::MinLength, '6']
-        ]
+        'login' => [FormRules::Required, FormRules::Email],
+        'password' => [FormRules::Required,[FormRules::MinLength, '6']]
       ]
     );
-
     if (empty($errors)) {
       // if validation's error didn't occur try to login
-      if (Authorisation::login(
-        login: $data['login'],
-        password: $data['password']
-      )) {
+      if (Authorisation::login(login: $data['login'],password: $data['password'])) {
         Url::redirect('dashboard');
       } else {
         $this->flashMessenger->add('Wrong credentials');
-
         Url::redirect('login');
       }
     } else {
       foreach ($errors as $error) {
         $this->flashMessenger->add($error);
-
         Url::redirect('login');
       }
     }

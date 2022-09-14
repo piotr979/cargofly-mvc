@@ -14,6 +14,7 @@ TODO:
 - update environemts
 
 DASHBOARD
+
 It's like eagle view of deliveries. Some stats and recent shipments.
 ![alt text](https://github.com/piotr979/cargofly-mvc/blob/main/preview_dashboard.jpg)
 

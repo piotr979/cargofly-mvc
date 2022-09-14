@@ -26,17 +26,19 @@ $config = require_once __DIR__ . '/../config/app.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\App;
+
+/**
+ * "use" required when migration is uncommented:
+ */
 use App\Fixtures\FixtureLauncher;
 use App\Services\MigrationsManager;
 
-// To migrate database simply run following lines:
+// To migrate database simply run uncomment following lines:
 //$migrations = new MigrationsManager();
 //$migrations->dropAllTables();exit;
 //$migrations->migrateDatabase();exit;
 
-
-$app = new App($config);
-
+$app = new App($config, ...['public x= 1']);
 $app->run();
 
 /**
@@ -48,12 +50,8 @@ $url = $_SERVER['REQUEST_URI'];
 /**
  * for now all request are maintained by POST router
  */
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || 
+    $_SERVER['REQUEST_METHOD'] == 'GET') 
+    {
     $app->resolve($url);
 }
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-
-    $app->resolve($url);
-}
- 

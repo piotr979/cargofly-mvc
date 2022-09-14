@@ -5,12 +5,7 @@ declare(strict_types = 1 );
 namespace App\Services;
 
 use App\App;
-use App\Models\Database\PDOClient;
-use App\Models\Entities\UserEntity;
-use App\Models\Repositories\UserRepository;
 use PDO;
-
-use function PHPUnit\Framework\throwException;
 
 class Authorisation
 {

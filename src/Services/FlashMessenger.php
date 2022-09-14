@@ -4,19 +4,18 @@ declare(strict_types = 1 );
 
 namespace App\Services;
 
+/**
+ * FlashMessenger is responsible for managing flash messages
+ * like in Symfony framework. Data rae stored in sessions.
+ */
 class FlashMessenger
 {
- 
-    public function __construct()
-    {
-
-    }
-    public function add(string $text, string $key = '')
+    public function add(string $text): void
     {
        $this->messages[] = $text;
        $_SESSION['flashes'] = [$text];
     }
-    public function getMessages()
+    public function get(): array
     {
         if (isset($_SESSION['flashes'])) {
             $flashes = $_SESSION['flashes'];
@@ -24,7 +23,5 @@ class FlashMessenger
             return $flashes;
         }
         return [];
-       
     }
-
 }

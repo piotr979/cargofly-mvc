@@ -21,11 +21,16 @@ class CustomerRepository extends AbstractRepository implements RepositoryInterfa
     }
     public function getAllPaginated(int $page, string $sortBy, string $sortOrder = 'asc', string $searchString = '', string $searchColumn = '')
     {
+        // SELECT customer_name, owner_lname, country, COUNT(customer_cargos.customer_id) AS cargos FROM `customer`
+        // LEFT JOIN customer_cargos ON customer.id = customer_cargos.customer_id
+        // GROUP BY customer.id;
         $offset = ($page - 1) * 10;
         $query = $this->qb
-            ->select('*')
+            ->select('customer_name, owner_lname, country, COUNT(customer_cargos.customer_id) AS cargos')
             ->from($this->entityName)
+            ->leftJoin('customer_cargos', 'customer.id', 'customer_cargos.customer_id')
             ->whereLike($searchColumn, $searchString)
+            ->groupBy('customer.id')
             ->orderBy($sortBy, $sortOrder)
             ->limitWithOffset(limit: 10, offset: $offset)
             ->getQuery();

@@ -33,7 +33,7 @@ class SessionManager
      * @param string $sessionKey
      * @param string $sessionValue
      */
-    public static function setSessionData(string $sessionKey, $sessionValue)
+    public static function setSessionData(string $sessionKey, $sessionValue): void
     {
         $_SESSION[$sessionKey] = $sessionValue;
     }
@@ -41,7 +41,7 @@ class SessionManager
     /**
      * Returns session value by key
      */
-    public function getSessionData(string $sessionKey)
+    public function getSessionData(string $sessionKey): bool|string
     {
         if (isset($_SESSION[$sessionKey])) {
             return $_SESSION[$sessionKey];

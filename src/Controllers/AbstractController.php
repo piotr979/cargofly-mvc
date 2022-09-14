@@ -21,7 +21,6 @@ abstract class AbstractController {
     protected $db;
     protected FlashMessenger $flashMessenger;
     protected int $awaitingOrders;
-   // protected $conn;
     public ViewRenderer $viewRenderer;
 
     /**
@@ -36,12 +35,13 @@ abstract class AbstractController {
          * anymore, however I left it here as it may be useful in the future.
          */
         //$this->viewRenderer = new ViewRenderer();
+
         $this->flashMessenger = new FlashMessenger();
         $this->db = App::$app->db;
         $this->conn = App::$app->conn;
         $this->twig = (new Twig($this->conn))->launchTwig();
 
     }
-    abstract protected function attachRoutes(Router $router);
+    abstract protected function attachRoutes(Router $router): void;
 
 }

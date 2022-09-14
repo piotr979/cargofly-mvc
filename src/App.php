@@ -4,28 +4,16 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Controllers\AdminController;
-use App\Controllers\AuthController;
-use App\Controllers\MainController;
-use App\Controllers\SettingsController;
-use App\Controllers\ActionsController;
-use App\Controllers\CargoController;
-use App\Controllers\CustomerController;
-use App\Controllers\FleetController;
-use App\Controllers\NotFoundController;
-use App\Fixtures\FixtureLauncher;
 use App\Services\Router;
 use App\Services\Request;
 use App\Models\Database\PDOClient;
 use App\Models\Entities\UserEntity;
 use App\Services\SessionManager;
 use App\Services\FlashMessenger;
-use App\Services\MigrationsManager;
 use Environment;
 
 class App
 {
-
     public Router $router;
     private Request $request;
     public PDOClient $db;
@@ -33,14 +21,6 @@ class App
     private array $config;
     public static App $app;
     public FlashMessenger $flashMessenger;
-
-    public MainController $mainController;
-    public AdminController $adminController;
-    public AuthController $authController;
-    public CustomerController $customerController;
-    public CargoController $cargoController;
-    public FleetController $fleetController;
-    public SettingsController $settingsController;
 
     public function __construct(array $config)
     {
@@ -55,42 +35,26 @@ class App
         $this->router = new Router();
         $this->request = new Request();
 
-        
-        $this->mainController = new MainController();
-        $this->fleetController = new FleetController();
-        $this->adminController = new AdminController();
-        $this->authController = new AuthController();
-        $this->customerController = new CustomerController();
-        $this->cargoController = new CargoController();
-        $this->settingsController = new SettingsController();
-        $this->actionsController = new ActionsController();
-        $this->notFoundController = new NotFoundController();
-
+        // call the function which install controllers dynamically
+        $this->installControllersAndAttachRoutes();
+       
         $this->flashMessenger = new FlashMessenger();
         $this->user = new UserEntity();
     }
     public function run()
     {
-        // all routes from controllers to be attached here
-        // each controller has attachRoutes method which adds
-        // routes to the router;
-
         // Uncomment function below to run fixtures
        // $fixtureLauncher = new FixtureLauncher($this->conn);
         // Uncomment function above to run fixtures
-
         SessionManager::sessionStart();
-        $this->mainController->attachRoutes($this->router);
-        $this->adminController->attachRoutes($this->router);
-        $this->authController->attachRoutes($this->router);
-        $this->customerController->attachRoutes($this->router);
-        $this->cargoController->attachRoutes($this->router);
-        $this->fleetController->attachRoutes($this->router);
-        $this->settingsController->attachRoutes($this->router);
-        $this->actionsController->attachRoutes($this->router);
-        $this->notFoundController->attachRoutes($this->router);
     }
-    public function resolve($url)
+
+    /**
+     * When new url is entered this function is triggered 
+     * to process given url
+     * @param string $url 
+     */
+    public function resolve($url): void
     {
         $routeWithParams = $this->request->makeRouteWithParamsFromUrl(
             $url,
@@ -110,11 +74,42 @@ class App
                 );
         }
     }
+
+    /**
+     * @return bool If true app is dev mode, production otherwise
+     */
     public function isDebugMode(): bool
     {
      if ($this->config['environment'] === Environment::Dev) {  
       return true;
     }
       return false;
+    }
+
+    /**
+     * This function creates controllers 
+     * by scanning "Controllers" folder (except AbstractController)
+     * more exclusions can be added
+     * Also attaches routes
+     */
+    private function installControllersAndAttachRoutes(): void
+    {
+       
+       $controllers = [];
+       $allFiles = scandir(__DIR__ . "/Controllers");
+       $files = array_diff($allFiles, array('.','..'));
+
+       foreach ($files as $file) {
+            if ($file == "AbstractController.php") {
+                continue;
+            }
+        $controllers[] = str_replace(".php", '', $file);
+       }
+       foreach ($controllers as $controller) {
+        $controllerObject = lcfirst($controller);
+        $controllerWithNamespace = 'App\Controllers\\' . $controller;
+        $this->{$controllerObject} = new $controllerWithNamespace();
+        $this->{$controllerObject}->attachRoutes($this->router);
+       }
     }
 }

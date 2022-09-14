@@ -24,7 +24,7 @@ class FleetController extends AbstractController
   /**
    * Required function attaches all routes of the controller
    */
-  public function attachRoutes(Router $router)
+  public function attachRoutes(Router $router): void
   {
     $routes = [
         'addAeroplane',
@@ -89,7 +89,7 @@ class FleetController extends AbstractController
       [
         'route' => 'fleet',
         'planes' => $planes,
-        'flashes' => App::$app->flashMessenger->getMessages(),
+        'flashes' => App::$app->flashMessenger->get(),
         'pagesCount' => $pages,
         'page' => $page,
         'sortBy' => $sortBy,
@@ -169,7 +169,7 @@ class FleetController extends AbstractController
     }
     echo $this->twig->render('add-plane.html.twig', 
                           ['form' => $form->getForm(),
-                          'flashes' => $this->flashMessenger->getMessages()
+                          'flashes' => $this->flashMessenger->get()
                         ]);
   }
 

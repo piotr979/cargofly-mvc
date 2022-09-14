@@ -6,6 +6,7 @@ namespace App\Views;
 /**
  * This class is responsible for passing data to view
  * and display them on the screen
+ * DEPRECATED
  */
 
 class ViewRenderer
