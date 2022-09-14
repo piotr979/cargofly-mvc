@@ -30,6 +30,7 @@ class Twig
         // attach awaiting orders globally to every page
         $twig->addGlobal('awaitingOrdersAmount', OrdersManager::getAwaitingOrdersNumber($this->conn));
         $twig->addGlobal('currency', Settings::getCurrencySymbol());
+
         return $twig;
     }
 }

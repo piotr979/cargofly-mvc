@@ -6,9 +6,15 @@ namespace App\Services;
 
 class Cookies
 {
-  public static function storeCurrency(int $currencyIndex)
+  /**
+   * Stores currency in cookie.
+   * @param int $currency Index
+   */
+  public static function storeCurrency(string $currencyIndex): void
   {
-    // cookie must be set directly, otherwise is not refreshed in the form
-    $_COOKIE["currency"] = (string)$currencyIndex;
+    // setcookie is repeated because it wasn't available straight away
+    // also it disappared when page changed
+    setcookie("currency", $currencyIndex, time() + 60*60*24*30,'/');
+    $_COOKIE['currency'] = $currencyIndex;
   }
 }

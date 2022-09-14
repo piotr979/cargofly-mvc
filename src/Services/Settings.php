@@ -41,6 +41,6 @@ class Settings
      */
     public static function setCurrencyIndex(int $currencyIndex): void
     {
-        Cookies::storeCurrency($currencyIndex);
+        Cookies::storeCurrency((string)$currencyIndex);
     }
 }

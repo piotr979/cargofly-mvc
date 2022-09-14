@@ -28,12 +28,12 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use App\App;
 
 /**
- * "use" required when migration is uncommented:
+ * required namespaces when migration is uncommented:
  */
 use App\Fixtures\FixtureLauncher;
 use App\Services\MigrationsManager;
 
-// To migrate database simply run uncomment following lines:
+// To migrate database simply uncomment following lines:
 //$migrations = new MigrationsManager();
 //$migrations->dropAllTables();exit;
 //$migrations->migrateDatabase();exit;
