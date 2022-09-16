@@ -8,7 +8,9 @@ use App\Models\Repositories\AbstractRepository;
 use App\Models\Entities\EntityInterface;
 use DateTime;
 
-class AircraftRepository extends AbstractRepository implements RepositoryInterface
+class AircraftRepository 
+            extends AbstractRepository 
+            implements RepositoryInterface, SearchInterface
 {
     public function __construct()
     {

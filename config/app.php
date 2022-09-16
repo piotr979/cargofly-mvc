@@ -30,7 +30,6 @@ enum DeliveryStatus: int
     case onDelivery = 1;
     case Delivered = 2;
 }
-
 return [
     'environment' => Environment::Dev,
     'databaseDriver' => DatabaseDriver::MySQL,

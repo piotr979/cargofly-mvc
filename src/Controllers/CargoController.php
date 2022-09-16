@@ -115,15 +115,6 @@ class CargoController extends AbstractController
       $cargo->setSize((int)$data['size']);
       $cargo->setValue((int)$data['value']);
       
-      // check if names exists in the database
-      // if ($id === 0 && ($cargoRepo->checkIfExists($customer->getCustomerName(), 'customer_name'))) {
-      //   $errors[] = 'Name already exists.';
-      // }
-      // $findInDB = $customerRepo->getWhere('id', 'customer_name', $customer->getCustomerName());
-      // if (isset($findInDB['id']) && ($findInDB['id'] != $id)) {
-      //   $errors[] = 'Name already exists in the database.';
-
-      // }
       
         if ($errors) {
           forEach($errors as $error) {

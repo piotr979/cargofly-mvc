@@ -30,6 +30,9 @@ class SearchColumnForm
        
     } 
 
+    /** 
+     * delivers data (values) to inputs 
+     */
     public function setData(array $existingData = [])
     {
             $this->searchString = $existingData['searchString'];

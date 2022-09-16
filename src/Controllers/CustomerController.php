@@ -59,6 +59,10 @@ class CustomerController extends AbstractController
 
     $customers = $data['results'];
     $pages = $data['pages'];
+    if (isset($data['searchString'])  && (isset($data['searchColumn']))) {
+      $searchString = $data['searchString'];
+      $searchColumn = $data['searchColumn'];
+    }
     
     // return amount of pages 
     echo $this->twig->render(

@@ -15,6 +15,7 @@ use App\Models\Entities\AircraftEntity;
 use App\Models\Repositories\AeroplaneRepository;
 use App\Models\Repositories\AircraftRepository;
 use App\Services\Router;
+use App\Services\SearchInquirer;
 use FormRules;
 
 class FleetController extends AbstractController
@@ -46,41 +47,27 @@ class FleetController extends AbstractController
   
     $fleetRepo = new AircraftRepository();
     $searchForm = new SearchColumnForm(action: '/fleet/1/aircraft_name/asc/', entity: 'aircraft');
-    // if search form was already submitted
-    if (isset($_GET['searchString']) && isset($_GET['column'])) {
-      $searchString = $_GET['searchString'];
-      $searchColumn = $_GET['column'];
+    /**
+     * SearchInquirer is class which implements search engine
+     * for SerachInterface classes.
+     */
+    $searchInq = new SearchInquirer();
+    $data = $searchInq->processSearchWithPagination(
+              data: $_GET, 
+              page: $page, 
+              repository: $fleetRepo,
+              searchForm: $searchForm,
+              sortBy: $sortBy,
+              sortOrder: $sortOrder
+    );
 
-      $planes = $fleetRepo->getAllPaginated(
-        page: $page,
-        sortBy: $sortBy,
-        sortOrder: $sortOrder,
-        searchString: $searchString,
-        searchColumn: $searchColumn
-      );
-      $pages = $fleetRepo->countPages(
-        limit: 10,
-        searchString: $searchString,
-        searchColumn: $searchColumn
-      );
-      // prepares Data for search Form (if entered already)
-      $searchForm->setData(
-        [
-          'searchString' => $searchString,
-          'searchColumn' => $searchColumn
-        ]
-      );
-    } else {
-      $planes = $fleetRepo->getAllPaginated(
-        page: $page,
-        sortBy: $sortBy,
-        sortOrder: $sortOrder
-      );
+    $planes = $data['results'];
+    $pages = $data['pages'];
+    if (isset($data['searchString'])  && (isset($data['searchColumn']))) {
+      $searchString = $data['searchString'];
+      $searchColumn = $data['searchColumn'];
+    }
 
-      $pages = $fleetRepo->countPages(
-        limit: 10
-      );
-    } 
     // return amount of pages 
     echo $this->twig->render(
       'fleet.html.twig',
