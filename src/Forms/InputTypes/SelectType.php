@@ -38,9 +38,8 @@ class SelectType extends AbstractInputType implements InputTypeInterface
         foreach( $attr['options'] as $value => $option) {
             
                 $this->input .= sprintf('<option');
-           
                 if ( isset($attr['selectedValue']) && $attr['selectedValue'] === $value ) {
-    
+                  
                     $this->input .= sprintf(' selected value="%s">%s', $value, $option);
                 } else {
                     $this->input .= sprintf(' value="%s">%s', $value, $option);

@@ -43,7 +43,7 @@ class App
     }
     public function run()
     {
-        set_exception_handler([new \App\Exceptions\ExceptionHandler, 'handle']);
+      //  set_exception_handler([new \App\Exceptions\ExceptionHandler, 'handle']);
         // Uncomment function below to run fixtures
        // $fixtureLauncher = new FixtureLauncher($this->conn);
         // Uncomment function above to run fixtures

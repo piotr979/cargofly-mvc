@@ -5,7 +5,6 @@ declare(strict_types = 1 );
 namespace App\Models\Repositories;
 
 use App\App;
-
 use PDO;
 use App\Models\Database\QueryBuilder;
 use App\Models\Entities\EntityInterface;

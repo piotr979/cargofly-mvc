@@ -20,7 +20,7 @@ class SearchColumnForm
     private string $searchString;
     private string $action;
     private string $entity;
-    private int $searchColumn;
+    private string $searchColumn;
 
     public function __construct(string $action, string $entity)
     {
@@ -33,7 +33,7 @@ class SearchColumnForm
     public function setData(array $existingData = [])
     {
             $this->searchString = $existingData['searchString'];
-            $this->searchColumn = (int)$existingData['searchColumn'];
+            $this->searchColumn = $existingData['searchColumn'];
     }
 
     public function getForm(string $exisitingData = "")
@@ -57,7 +57,7 @@ class SearchColumnForm
                 'name' => 'column',
                 'selectCssClasses' => 'ms-md-2 mt-3 mt-md-0 width-xsmall class-control',
                 'options' => $this->getOptions(),
-                'selectedValue' => $this->searchColumn ?? 1
+                'selectedValue' => $this->searchColumn ?? ''
             ]
         )
         ->add(
@@ -94,12 +94,12 @@ class SearchColumnForm
                 break;
             case "cargo":
                 return [
-                    'id' => 'Order number',
-                    'airport_from' => 'From',
-                    'airport_to' => 'To',
-                    'status' => 'Status',
-                    ];
-                    break;            
+                    'cargo.id' => 'Order number',
+                    'customer_name' => 'Customer',
+                    'air_from.city' => 'City from',
+                    'air_to.city' => 'City to',
+                ];
+                break;            
                 
         }
     }

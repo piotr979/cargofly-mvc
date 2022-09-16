@@ -15,6 +15,7 @@ use App\Models\Repositories\AirportRepository;
 use App\Models\Repositories\CargoRepository;
 use App\Services\MapHandler;
 use App\Services\Router;
+use App\Services\SearchInquirer;
 
 /**
  * all pages are stored here. There are accessible for
@@ -47,38 +48,27 @@ class CargoController extends AbstractController
     $searchForm = new SearchColumnForm(action: '/orders/1/id/asc/', entity: 'cargo');
     
     // if search form was submitted check entered data
-    if (isset($_GET['searchString']) && isset($_GET['column'])) {
-      $searchString = $_GET['searchString'];
-      $searchColumn = $_GET['column'];
-      $cargos = $cargoRepo->getAllPaginated(
-        page: $page,
-        sortBy: $sortBy,
-        sortOrder: $sortOrder,
-        searchString: $searchString,
-        searchColumn: $searchColumn
-      );
-      $pages = $cargoRepo->countPages(
-        limit: 10,
-        searchString: $searchString,
-        searchColumn: $searchColumn
-      );
-      // prepares Data for search Form (if entered already)
-      $searchForm->setData(
-        [
-          'searchString' => $searchString,
-          'searchColumn' => $searchColumn
-        ]
-      );
-    } else {
-      $cargos = $cargoRepo->getAllPaginated(
-        page: $page,
-        sortBy: $sortBy,
-        sortOrder: $sortOrder
-      );
-      $pages = $cargoRepo->countPages(
-        limit: 10
-      );
+     /**
+     * SearchInquirer is class which implements search engine
+     * for SerachInterface classes.
+     */
+    $searchInq = new SearchInquirer();
+    $data = $searchInq->processSearchWithPagination(
+              data: $_GET, 
+              page: $page, 
+              repository: $cargoRepo,
+              searchForm: $searchForm,
+              sortBy: $sortBy,
+              sortOrder: $sortOrder
+    );
+
+    $cargos = $data['results'];
+    $pages = $data['pages'];
+    if (isset($data['searchString'])  && (isset($data['searchColumn']))) {
+      $searchString = $data['searchString'];
+      $searchColumn = $data['searchColumn'];
     }
+
     // return amount of pages 
     echo $this->twig->render(
       'cargos.html.twig',
@@ -116,7 +106,6 @@ class CargoController extends AbstractController
       $validator = new FormValidator();
       $errors = [];
       
-    
       // TODO: this section must be optimised
    
       $cargo->setCityFrom((int)$data['city_from']);

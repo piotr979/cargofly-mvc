@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\Models\Repositories;
 
-use App\Models\Database\QueryBuilder;
-use App\Models\Entities\AircraftEntity;
-use App\Models\Entities\CargoEntity;
 use App\Models\Entities\EntityInterface;
+use App\Models\Repositories\SearchInterface;
 use App\Models\Repositories\AbstractRepository;
 use DateTime;
-use PDO;
 
-class CustomerRepository extends AbstractRepository implements RepositoryInterface
+class CustomerRepository 
+                extends AbstractRepository 
+                implements RepositoryInterface, SearchInterface
 {
-
     public function __construct()
     {
         parent::__construct('customer');
@@ -26,7 +24,7 @@ class CustomerRepository extends AbstractRepository implements RepositoryInterfa
         // GROUP BY customer.id;
         $offset = ($page - 1) * 10;
         $query = $this->qb
-            ->select('customer_name, owner_lname, country, COUNT(customer_cargos.customer_id) AS cargos')
+            ->select('customer.id, customer_name, owner_lname, country, COUNT(customer_cargos.customer_id) AS cargos')
             ->from($this->entityName)
             ->leftJoin('customer_cargos', 'customer.id', 'customer_cargos.customer_id')
             ->whereLike($searchColumn, $searchString)

@@ -8,12 +8,13 @@ use App\Services\Router;
 use App\Views\ViewRenderer;
 use App\App;
 use App\Models\Repositories\CargoRepository;
+use App\Models\Repositories\RepositoryInterface;
 use App\Services\FlashMessenger;
 use App\Services\OrdersManager;
 use App\Services\Settings;
 use App\Services\Twig;
 use Twig\Extra\Intl\IntlExtension;
-
+use App\Forms\SearchColumnForm;
 abstract class AbstractController {
    
     protected $twig;
@@ -40,8 +41,7 @@ abstract class AbstractController {
         $this->db = App::$app->db;
         $this->conn = App::$app->conn;
         $this->twig = (new Twig($this->conn))->launchTwig();
-
     }
+    
     abstract protected function attachRoutes(Router $router): void;
-
 }

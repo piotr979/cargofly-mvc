@@ -9,7 +9,9 @@ use App\Models\Entities\EntityInterface;
 use App\Models\Repositories\AbstractRepository;
 use DateTime;
 
-class CargoRepository extends AbstractRepository implements RepositoryInterface
+class CargoRepository 
+            extends AbstractRepository 
+            implements RepositoryInterface, SearchInterface
 {
     private $columns = ['value', 'city_from', 'city_to', 'weight', 'size'];
     public function __construct()
@@ -50,23 +52,14 @@ class CargoRepository extends AbstractRepository implements RepositoryInterface
         return $this->db->runQuery($query);
     }
 
-    /** 
-     * Calls persistTo from parent class
-     * @param $customer Any class compatible with EntityInterface
-     */
     public function persist(EntityInterface $cargo)
     {
-        parent::persistTo(
-            columns: [
-                "value",
-                "city_from",
-                "city_to",
-                "weight",
-                "size"
-            ],
-            object: $cargo
-        );
+        $this->persistOrder($cargo);
     }
+    /**
+     * Persisting order requires unique method (different than persist
+     * from AbstractController)
+     */
     public function persistOrder(CargoEntity $cargo)
     {
         $values = [
@@ -183,15 +176,29 @@ class CargoRepository extends AbstractRepository implements RepositoryInterface
         string $searchString = '',
         string $searchColumn = ''
     ): int {
+        $query = '';
+        if ($searchColumn === '') {
         $query = $this->qb
             ->select("COUNT(cargo.id) AS count")
             ->from("cargo")
-            ->whereLike($searchColumn, $searchString)
             ->getQuery();
+        } else {
+            $query = $this->qb
+            ->select("COUNT(cargo.id) AS count, " . $searchColumn)
+            ->from("cargo")
+            ->leftJoin('customer_cargos', 'customer_cargos.cargo_id', 'cargo.id')
+            ->leftJoin('customer', 'customer.id', 'customer_cargos.customer_id')
+            ->leftJoin('airport AS air_from ', 'cargo.city_from', 'air_from.id')
+            ->leftJoin('airport AS air_to ', 'cargo.city_to', 'air_to.id')
+            ->whereLike($searchColumn, $searchString)
+            ->groupBy($searchColumn)
+            ->getQuery();
+        }
         $result = $this->db->runQuery($query);
         $count = $result[0]['count'];
         return (int)ceil($count / $limit);
     }
+
     public function getAwaitingOrders(int $limit)
     {
         $query = $this->qb

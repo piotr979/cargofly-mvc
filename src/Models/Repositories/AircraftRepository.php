@@ -7,7 +7,6 @@ namespace App\Models\Repositories;
 use App\Models\Repositories\AbstractRepository;
 use App\Models\Entities\EntityInterface;
 use DateTime;
-use PDO;
 
 class AircraftRepository extends AbstractRepository implements RepositoryInterface
 {

@@ -14,6 +14,8 @@ use App\Models\Entities\CustomerEntity;
 use App\Models\Repositories\CustomerRepository;
 use App\Services\FileHandler;
 use App\Services\Router;
+use App\Services\SearchInquirer;
+
 
 /**
  * all pages are stored here. There are accessible for
@@ -32,50 +34,32 @@ class CustomerController extends AbstractController
         'processCustomer' => ['id']
         ];
       $router->attachRoutes('CustomerController', $routes);  
- 
 }
  
   public function customers(int $page, string $sortBy, string $sortOrder)
   {
-    $searchString = '';
-    $searchColumn = '';
+    $searchString = ''; $searchColumn = '';
 
     $customerRepo = new CustomerRepository();
     $searchForm = new SearchColumnForm(action: '/customers/1/customer_name/asc/', entity: 'customer');
-    // if search form was already submitted
-    if (isset($_GET['searchString']) && isset($_GET['column'])) {
-      $searchString = $_GET['searchString'];
-      $searchColumn = $_GET['column'];
-      $customers = $customerRepo->getAllPaginated(
-        page: $page,
-        sortBy: $sortBy,
-        sortOrder: $sortOrder,
-        searchString: $searchString,
-        searchColumn: $searchColumn
-      );
-      $pages = $customerRepo->countPages(
-        limit: 10,
-        searchString: $searchString,
-        searchColumn: $searchColumn
-      );
-      // prepares Data for search Form (if entered already)
-      $searchForm->setData(
-        [
-          'searchString' => $searchString,
-          'searchColumn' => $searchColumn
-        ]
-      );
-    } else {
-      $customers = $customerRepo->getAllPaginated(
-        page: $page,
-        sortBy: $sortBy,
-        sortOrder: $sortOrder
-      );
+    
+    /**
+     * SearchInquirer is class which implements search engine
+     * for SerachInterface classes.
+     */
+    $searchInq = new SearchInquirer();
+    $data = $searchInq->processSearchWithPagination(
+              data: $_GET, 
+              page: $page, 
+              repository: $customerRepo,
+              searchForm: $searchForm,
+              sortBy: $sortBy,
+              sortOrder: $sortOrder
+    );
 
-      $pages = $customerRepo->countPages(
-        limit: 10
-      );
-    }
+    $customers = $data['results'];
+    $pages = $data['pages'];
+    
     // return amount of pages 
     echo $this->twig->render(
       'customers.html.twig',
@@ -117,7 +101,6 @@ class CustomerController extends AbstractController
 
       $validator = new FormValidator();
       $errors = $validator->isValid(values: $data, ommit: ['id', 'logo', 'street2']);
-      
     
       // TODO: this section must be optimised, looks bad
       $customer->setCustomerName($data['customer_name']);
@@ -135,9 +118,9 @@ class CustomerController extends AbstractController
         $errors[] = 'Name already exists.';
       }
       $findInDB = $customerRepo->getWhere('id', 'customer_name', $customer->getCustomerName());
+      
       if (isset($findInDB['id']) && ($findInDB['id'] != $id)) {
         $errors[] = 'Name already exists in the database.';
-
       }
       
         if ($errors) {

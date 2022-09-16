@@ -8,7 +8,6 @@ use App\App;
 use App\Controllers\AbstractController;
 use App\Forms\PlaneForm;
 use App\Forms\SearchColumnForm;
-use App\Forms\SearchFleetForm;
 use App\Forms\Validators\FormValidator;
 use App\Helpers\Url;
 use App\Models\Entities\AeroplaneEntity;
@@ -47,7 +46,6 @@ class FleetController extends AbstractController
   
     $fleetRepo = new AircraftRepository();
     $searchForm = new SearchColumnForm(action: '/fleet/1/aircraft_name/asc/', entity: 'aircraft');
-    
     // if search form was already submitted
     if (isset($_GET['searchString']) && isset($_GET['column'])) {
       $searchString = $_GET['searchString'];

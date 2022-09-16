@@ -22,7 +22,7 @@ class SearchFleetForm
 
     public function setData(array $existingData = [])
     {
-           
+          
             $this->searchString = $existingData['searchString'];
             $this->searchColumn = (int)$existingData['searchColumn'];
     }
