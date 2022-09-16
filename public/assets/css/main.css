@@ -173,11 +173,20 @@ th {
 }
 .frame-left {
     border-right: 3px solid #CF0707;
-
+}
+.nav-buttons__wrapper {
+    background-color: #6B97A3;
+    position: fixed;
+    height: 2rem;
+    z-index: 999;
+    width: 3rem;
+    top: .5rem;
+    left: .2rem;
 }
 #map-origin, #map-destination { 
     height: 180px;
     width: 100%;
+    z-index: 0;
  }
 .chart-wrapper {
     position:relative;
