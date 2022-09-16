@@ -10,7 +10,6 @@ use function PHPUnit\Framework\assertNotNull;
 
 class QueryBuilderTest extends TestCase
 {
-
     public function testQueryBuilderIfExists()
     {
         $qb = new QueryBuilder('customer');
