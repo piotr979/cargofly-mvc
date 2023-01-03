@@ -13,7 +13,7 @@ class CargoRepository
             extends AbstractRepository 
             implements RepositoryInterface, SearchInterface
 {
-    private $columns = ['value', 'city_from', 'city_to', 'weight', 'size'];
+    private $columns = ['value', 'city_from', 'city_to', 'weight', 'size', 'delivery_time'];
     public function __construct()
     {
         parent::__construct('cargo');
@@ -67,7 +67,8 @@ class CargoRepository
             $cargo->getCityFrom(),
             $cargo->getCityTo(),
             $cargo->getWeight(),
-            $cargo->getSize()
+            $cargo->getSize(),
+            $cargo->getDeliveryTime()
         ];
         if ($cargo->getId() == 0) {
             $query = $this->qb
