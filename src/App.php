@@ -11,7 +11,7 @@ use App\Models\Entities\UserEntity;
 use App\Services\SessionManager;
 use App\Services\FlashMessenger;
 use Environment;
-
+use App\Fixtures\FixtureLauncher;
 class App
 {
     public Router $router;
@@ -45,7 +45,7 @@ class App
     {
       //  set_exception_handler([new \App\Exceptions\ExceptionHandler, 'handle']);
         // Uncomment function below to run fixtures
-       // $fixtureLauncher = new FixtureLauncher($this->conn);
+        //$fixtureLauncher = new FixtureLauncher($this->conn);
         // Uncomment function above to run fixtures
         SessionManager::sessionStart();
     }

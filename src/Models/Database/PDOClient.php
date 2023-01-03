@@ -7,6 +7,7 @@ namespace App\Models\Database;
 use App\Models\Database\Database;
 use PDO;
 use App\Exceptions\ConnectionException;
+use PDOException;
 
 class PDOClient extends Database implements DatabaseClientInterface
 {
@@ -20,8 +21,14 @@ class PDOClient extends Database implements DatabaseClientInterface
     }
     public function connect(): object
     {
-            $this->connection = new PDO($this->dsn, $this->db_user, $this->db_password);
-            $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            
+            try {
+                $this->connection = new PDO($this->dsn, $this->db_user, $this->db_password);
+            }  catch ( PDOException $e) {
+                print "Error: " . $e->getMessage();
+                exit;
+            }
+                $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $this;
     }
     /**

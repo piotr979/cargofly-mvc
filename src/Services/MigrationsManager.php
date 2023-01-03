@@ -116,7 +116,7 @@ class MigrationsManager
                 customer_id INT NOT NULL,
                 cargo_id INT NOT NULL,
                 FOREIGN KEY (customer_id) REFERENCES customer(id),
-                FOREIGN KEY (cargo_id) REFERENCES cargo(id) 
+                FOREIGN KEY (cargo_id) REFERENCES cargo(id) ON DELETE CASCADE
             );
 
             CREATE TABLE user
